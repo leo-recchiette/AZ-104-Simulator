@@ -31,6 +31,7 @@ function toSaveDto(state: SessionState): SaveActiveSessionDto | null {
     currentIndex: state.currentIndex,
     timeLimitSeconds: state.timeLimitSeconds,
     autoReveal: state.autoReveal,
+    openEnded: state.openEnded,
     startedAt: new Date(state.startedAt).toISOString(),
     savedAt: new Date().toISOString(),
   };
@@ -52,6 +53,7 @@ function fromDto(dto: ActiveSessionDto): SessionState {
     flags,
     timeLimitSeconds: dto.timeLimitSeconds,
     autoReveal: dto.autoReveal,
+    openEnded: dto.openEnded,
     startedAt: Date.now() - playedMs,
     status: "in-progress",
   };

@@ -18,6 +18,9 @@ public sealed record ActiveSession
     public int? TimeLimitSeconds { get; init; }
     public required bool AutoReveal { get; init; }
 
+    /// <summary>Practice a oltranza: QuestionNumbers sono solo le domande gia' proposte.</summary>
+    public required bool OpenEnded { get; init; }
+
     /// <summary>Orologio del client: la differenza e' il tempo giocato.</summary>
     public required DateTimeOffset StartedAt { get; init; }
 

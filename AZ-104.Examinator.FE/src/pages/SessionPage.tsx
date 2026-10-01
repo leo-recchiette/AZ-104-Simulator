@@ -4,14 +4,16 @@ import { useSession } from "../session/SessionContext";
 import { useTheme } from "../theme/ThemeContext";
 import { useElapsedTime } from "../hooks/useElapsedTime";
 import { checkAnswers, getScore, saveAttempt } from "../api/results";
+import { getExam } from "../api/questions";
 import { ApiError } from "../api/client";
 import { QuestionCard } from "../components/session/QuestionCard";
 import { GroupNav } from "../components/session/GroupNav";
 import { QuestionNavigator } from "../components/session/QuestionNavigator";
-import { groupMembers, sessionUnits, unitsAnswered } from "../utils/groups";
+import { groupMembers, sessionUnits, unitsAnswered, unitsStarted } from "../utils/groups";
 import { isAnswerStarted } from "../utils/questionShape";
 import { OptionsMenu } from "../components/OptionsMenu";
 import { HEADER_GRADIENT } from "../theme/tokens";
+import { MAX_QUESTION_COUNT } from "../constants";
 
 // Non token del tema: stanno sul banner blu, uguale in light e dark.
 const CLOCK_OK = "#3ddc84";
@@ -40,6 +42,7 @@ export function SessionPage() {
   // null = chiuso. Aperto "unanswered" quando si arriva dal riepilogo cercando i buchi.
   const [navFilter, setNavFilter] = useState<null | "all" | "unanswered">(null);
   const [submitting, setSubmitting] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const firedRef = useRef(false);
   // Evita di ricreare handleFinish a ogni tick.
@@ -53,17 +56,39 @@ export function SessionPage() {
   const total = state.questions.length;
   const isPractice = state.mode === "practice";
 
+  // I conteggi mostrati vanno per unita': un gruppo di sotto-domande conta come una.
+  const units = useMemo(() => sessionUnits(state.questions), [state.questions]);
+  const unitAnswered = useMemo(
+    () => unitsAnswered(state.questions, units, state.answers),
+    [state.questions, units, state.answers],
+  );
+  const unitStarted = useMemo(
+    () => unitsStarted(state.questions, units, state.answers),
+    [state.questions, units, state.answers],
+  );
+
   const handleFinish = useCallback(async () => {
+    // A numero fisso tutte, anche senza risposta: quelle omesse non conterebbero nel denominatore.
+    // A oltranza solo le unita' cominciate, ma intere: le parti lasciate in bianco valgono zero.
+    const scored = state.openEnded
+      ? state.questions.filter((_, i) => unitStarted[units.unitOf[i]])
+      : state.questions;
+    // A oltranza senza risposte non c'e' niente da valutare: la sessione si scarta.
+    if (scored.length === 0) {
+      dispatch({ type: "RESET" });
+      navigate("/");
+      return;
+    }
+
     setError(null);
     setSubmitting(true);
     try {
-      // Tutte le domande, anche senza risposta: quelle omesse non conterebbero nel denominatore.
-      const submissions = state.questions.map((q) => ({
+      const submissions = scored.map((q) => ({
         questionNumber: q.number,
         userAnswers: state.answers[q.number] ?? [],
       }));
       const score = await getScore(submissions);
-      dispatch({ type: "FINISH_SESSION", score, timeUsedSeconds: elapsedSecRef.current });
+      dispatch({ type: "FINISH_SESSION", score, timeUsedSeconds: elapsedSecRef.current, questions: scored });
       navigate("/results");
 
       // Una sessione senza alcuna risposta non va nello storico. Il salvataggio e' best-effort.
@@ -77,7 +102,7 @@ export function SessionPage() {
         const startTime = new Date(endTime.getTime() - elapsedSecRef.current * 1000);
         saveAttempt({
           mode: state.mode,
-          questionCount: state.questions.length,
+          questionCount: scored.length,
           percentage: score.percentage,
           startTime: startTime.toISOString(),
           endTime: endTime.toISOString(),
@@ -91,7 +116,7 @@ export function SessionPage() {
       setError(err instanceof ApiError ? err.message : "Impossibile calcolare il punteggio.");
       setSubmitting(false);
     }
-  }, [dispatch, navigate, state.answers, state.questions, state.mode, state.startedAt]);
+  }, [dispatch, navigate, state.answers, state.questions, state.mode, state.startedAt, state.openEnded, units, unitStarted]);
 
   const elapsedMs = useElapsedTime(state.startedAt, paused);
   const elapsedSec = Math.floor(elapsedMs / 1000);
@@ -128,13 +153,6 @@ export function SessionPage() {
     return () => clearTimeout(timer);
   }, [isPractice, state.autoReveal, state.checkResults, question, value, dispatch]);
 
-  // I conteggi mostrati vanno per unita': un gruppo di sotto-domande conta come una.
-  const units = useMemo(() => sessionUnits(state.questions), [state.questions]);
-  const unitAnswered = useMemo(
-    () => unitsAnswered(state.questions, units, state.answers),
-    [state.questions, units, state.answers],
-  );
-
   if (!question) return null;
 
   async function handleReveal() {
@@ -155,6 +173,45 @@ export function SessionPage() {
   const flagCount = Object.values(state.flags).filter(Boolean).length;
   const flagged = !!state.flags[state.currentIndex];
   const isLast = state.currentIndex === total - 1;
+  const bankExhausted = state.openEnded && state.pool !== null && state.pool.length === 0;
+  const scoredUnits = unitStarted.filter(Boolean).length;
+  const nothingToScore = state.openEnded && scoredUnits === 0;
+
+  async function handleNext() {
+    if (!isLast) {
+      dispatch({ type: "GO_NEXT" });
+      return;
+    }
+    if (!state.openEnded || bankExhausted) {
+      setShowConfirm(true);
+      return;
+    }
+    // Il pool non si salva: dopo un ripristino si ripesca il bank, il reducer scarta le domande gia' viste.
+    if (state.pool === null) {
+      setError(null);
+      setLoadingMore(true);
+      try {
+        dispatch({ type: "SET_POOL", questions: await getExam(MAX_QUESTION_COUNT) });
+      } catch (err) {
+        setError(err instanceof ApiError ? err.message : "Impossibile caricare altre domande.");
+        return;
+      } finally {
+        setLoadingMore(false);
+      }
+    }
+    dispatch({ type: "GO_NEXT" });
+  }
+
+  let nextLabel = "Next →";
+  if (loadingMore) nextLabel = "Loading...";
+  else if (isLast && (!state.openEnded || bankExhausted)) nextLabel = "Review & submit";
+
+  let confirmText = "Once submitted you cannot change your answers. Unanswered questions score zero.";
+  if (nothingToScore) confirmText = "You haven't answered any question yet, so there's nothing to score.";
+  else if (state.openEnded) {
+    confirmText =
+      "Only the questions you answered are scored: the ones you skipped are left out. Blank parts of a question you started still score zero.";
+  }
 
   const timerCaption = limit ? "Time remaining" : "Elapsed";
   const timeLabel = fmt(limit ? remaining : elapsedSec);
@@ -165,7 +222,10 @@ export function SessionPage() {
     else if (remaining <= limit * WARN_FRACTION) clockColor = CLOCK_WARN;
   }
   const timeColor = clockColor === CLOCK_OK ? "#ffffff" : clockColor;
-  const timePct = limit ? (elapsedSec / limit) * 100 : (answeredCount / totalUnits) * 100;
+  // A oltranza non c'e' un totale verso cui avanzare: senza limite di tempo la barra resta vuota.
+  let timePct = 0;
+  if (limit) timePct = (elapsedSec / limit) * 100;
+  else if (!state.openEnded) timePct = (answeredCount / totalUnits) * 100;
 
   const members = groupMembers(state.questions, state.currentIndex);
   const card = (
@@ -180,7 +240,8 @@ export function SessionPage() {
       autoReveal={state.autoReveal}
       checkResult={state.checkResults[question.number]}
       onReveal={handleReveal}
-      onRequestExit={() => setShowExitConfirm(true)}
+      // A oltranza uscire e' il modo normale di finire: si passa dal riepilogo, non dall'avviso.
+      onRequestExit={() => (state.openEnded ? setShowConfirm(true) : setShowExitConfirm(true))}
     />
   );
   const questionCard = members.length === 0 ? card : (
@@ -243,7 +304,8 @@ export function SessionPage() {
           )}
           <div style={{ width: 1, height: 22, background: "rgba(255,255,255,.3)" }} />
           <div style={{ fontSize: 13.5, color: "#e4e7ee", fontVariantNumeric: "tabular-nums" }}>
-            Question <strong style={{ color: "#fff" }}>{currentUnit + 1}</strong> of {totalUnits}
+            Question <strong style={{ color: "#fff" }}>{currentUnit + 1}</strong>
+            {!state.openEnded && ` of ${totalUnits}`}
           </div>
           <OptionsMenu
             variant="onDark"
@@ -268,14 +330,23 @@ export function SessionPage() {
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 0" }}>
               <div style={{ width: "100%", maxWidth: 560, background: t.card, border: `1px solid ${t.bd}`, borderRadius: 16, padding: "34px 32px", boxShadow: `0 2px 10px ${t.sh}` }}>
                 <h2 style={{ fontFamily: "'Source Serif 4', Georgia, serif", fontWeight: 600, fontSize: 27, margin: "0 0 8px" }}>
-                  Submit your exam?
+                  {state.openEnded ? "Finish this session?" : "Submit your exam?"}
                 </h2>
                 <p style={{ margin: "0 0 24px", color: t.mu, fontSize: 14.5, lineHeight: 1.55 }}>
-                  Once submitted you cannot change your answers. Unanswered questions score zero.
+                  {confirmText}
                 </p>
                 <div style={{ display: "flex", flexDirection: "column", gap: 1, background: t.bd2, border: `1px solid ${t.bd2}`, borderRadius: 12, overflow: "hidden", marginBottom: 26 }}>
-                  <SummaryRow label="Questions answered" value={`${answeredCount} / ${totalUnits}`} fg={t.tx} />
-                  <SummaryRow label="Unanswered" value={String(totalUnits - answeredCount)} fg={totalUnits - answeredCount ? t.er : t.tx} />
+                  {state.openEnded ? (
+                    <>
+                      <SummaryRow label="Questions to be scored" value={String(scoredUnits)} fg={t.tx} />
+                      <SummaryRow label="Skipped (not scored)" value={String(totalUnits - scoredUnits)} fg={t.tx} />
+                    </>
+                  ) : (
+                    <>
+                      <SummaryRow label="Questions answered" value={`${answeredCount} / ${totalUnits}`} fg={t.tx} />
+                      <SummaryRow label="Unanswered" value={String(totalUnits - answeredCount)} fg={totalUnits - answeredCount ? t.er : t.tx} />
+                    </>
+                  )}
                   <SummaryRow label="Flagged for review" value={String(flagCount)} fg={flagCount ? t.warn : t.tx} />
                   <SummaryRow label="Time used" value={fmt(elapsedSec)} fg={t.tx} />
                 </div>
@@ -296,7 +367,7 @@ export function SessionPage() {
                     Keep working
                   </button>
                   <button onClick={handleFinish} disabled={submitting} style={wideButtonStyle("none", t.ac, "#fff")}>
-                    {submitting ? "Submitting..." : "Submit"}
+                    {submitting ? "Submitting..." : nothingToScore ? "Discard session" : "Submit"}
                   </button>
                 </div>
               </div>
@@ -397,13 +468,14 @@ export function SessionPage() {
               ← Previous
             </button>
             <div style={{ flex: 1, textAlign: "center", fontSize: 12.5, color: t.fa }}>
-              {answeredCount} of {totalUnits} answered{flagCount ? ` · ${flagCount} flagged` : ""}
+              {answeredCount}{!state.openEnded && ` of ${totalUnits}`} answered{flagCount ? ` · ${flagCount} flagged` : ""}
             </div>
             <button
-              onClick={() => (isLast ? setShowConfirm(true) : dispatch({ type: "GO_NEXT" }))}
-              style={primaryButtonStyle(t.ac)}
+              onClick={handleNext}
+              disabled={loadingMore}
+              style={{ ...primaryButtonStyle(t.ac), opacity: loadingMore ? 0.8 : 1 }}
             >
-              {isLast ? "Review & submit" : "Next →"}
+              {nextLabel}
             </button>
           </div>
         </div>

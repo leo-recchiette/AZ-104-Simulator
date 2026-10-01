@@ -10,6 +10,7 @@ internal sealed record ActiveSessionRow
     public required int CurrentIndex { get; init; }
     public int? TimeLimitSeconds { get; init; }
     public required bool AutoReveal { get; init; }
+    public required bool OpenEnded { get; init; }
     public required DateTimeOffset StartedAt { get; init; }
     public required DateTimeOffset SavedAt { get; init; }
 }

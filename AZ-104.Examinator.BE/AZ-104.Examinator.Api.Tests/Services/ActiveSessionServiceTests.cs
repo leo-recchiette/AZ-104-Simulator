@@ -23,6 +23,7 @@ public sealed class ActiveSessionServiceTests
         actual!.Questions.Select(q => q.Number).Should().Equal(7, 3, 9);
         actual.CurrentIndex.Should().Be(1);
         actual.Answers.Should().ContainKey(7);
+        actual.OpenEnded.Should().BeTrue();
     }
 
     [TestMethod]
@@ -77,6 +78,7 @@ public sealed class ActiveSessionServiceTests
                 && s.QuestionNumbers.SequenceEqual(new[] { 7, 3 })
                 && s.FlaggedIndexes.SequenceEqual(new[] { 1 })
                 && s.AutoReveal
+                && s.OpenEnded
                 && s.TimeLimitSeconds == 1800),
             Arg.Any<CancellationToken>());
     }
@@ -165,6 +167,7 @@ public sealed class ActiveSessionServiceTests
         CurrentIndex = 1,
         TimeLimitSeconds = 1800,
         AutoReveal = false,
+        OpenEnded = true,
         StartedAt = DateTimeOffset.UnixEpoch,
         SavedAt = DateTimeOffset.UnixEpoch.AddMinutes(5),
     };
@@ -181,6 +184,7 @@ public sealed class ActiveSessionServiceTests
             currentIndex,
             1800,
             AutoReveal: true,
+            OpenEnded: true,
             DateTimeOffset.UnixEpoch,
             DateTimeOffset.UnixEpoch.AddMinutes(5));
 

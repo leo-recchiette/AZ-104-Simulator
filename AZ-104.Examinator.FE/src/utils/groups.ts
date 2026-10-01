@@ -1,5 +1,5 @@
 import type { QuestionDto } from "../types/question";
-import { isQuestionAnswered } from "./questionShape";
+import { isAnswerStarted, isQuestionAnswered } from "./questionShape";
 
 export interface GroupMember {
   index: number;
@@ -54,4 +54,23 @@ export function unitsAnswered(
   return units.members.map((memberIndexes) =>
     memberIndexes.every((i) => isQuestionAnswered(questions[i], answers[questions[i].number] ?? [])),
   );
+}
+
+/** Basta una risposta, anche parziale, a una sola sotto-domanda. */
+export function unitsStarted(
+  questions: QuestionDto[],
+  units: SessionUnits,
+  answers: Record<number, string[]>,
+): boolean[] {
+  return units.members.map((memberIndexes) =>
+    memberIndexes.some((i) => isAnswerStarted(questions[i], answers[questions[i].number] ?? [])),
+  );
+}
+
+/** Quante domande in testa formano la prima unita': il backend restituisce i gruppi interi e contigui. */
+export function leadingUnitSize(questions: QuestionDto[]): number {
+  const groupId = questions[0]?.groupId;
+  if (!groupId) return Math.min(1, questions.length);
+  const end = questions.findIndex((question) => question.groupId !== groupId);
+  return end === -1 ? questions.length : end;
 }

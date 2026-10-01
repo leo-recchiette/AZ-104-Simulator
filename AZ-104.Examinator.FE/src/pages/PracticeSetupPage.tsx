@@ -7,15 +7,22 @@ import { ApiError } from "../api/client";
 import { FloatingThemeToggle } from "../components/FloatingThemeToggle";
 import { EmptyBankDialog } from "../components/EmptyBankDialog";
 import { ResumeSessionBanner } from "../components/ResumeSessionBanner";
+import { MAX_QUESTION_COUNT } from "../constants";
 
 const COUNT_OPTIONS = [10, 20, 30, 40, 50, 60, 70, 80];
 const MINUTE_OPTIONS = [15, 30, 45, 60, 90, 120];
+
+const LENGTH_OPTIONS = [
+  { openEnded: false, title: "Fixed number", text: "Pick how many questions before you start." },
+  { openEnded: true, title: "Open-ended", text: "Stop whenever you like: only the questions you answer are scored." },
+];
 
 export function PracticeSetupPage() {
   const navigate = useNavigate();
   const { tokens: t } = useTheme();
   const { dispatch } = useSession();
 
+  const [openEnded, setOpenEnded] = useState(false);
   const [count, setCount] = useState(20);
   const [timed, setTimed] = useState(false);
   const [autoReveal, setAutoReveal] = useState(false);
@@ -28,14 +35,15 @@ export function PracticeSetupPage() {
     setError(null);
     setLoading(true);
     try {
-      const questions = await getExam(count);
+      // A oltranza serve l'intero bank, gia' mescolato: le domande si propongono un'unita' alla volta.
+      const questions = await getExam(openEnded ? MAX_QUESTION_COUNT : count);
       // 200 con []: question bank vuoto, non un errore dell'API.
       if (questions.length === 0) {
         setEmptyBank(true);
         setLoading(false);
         return;
       }
-      dispatch({ type: "START_SESSION", mode: "practice", questions, timeLimitSeconds: timed ? minutes * 60 : null, autoReveal });
+      dispatch({ type: "START_SESSION", mode: "practice", questions, timeLimitSeconds: timed ? minutes * 60 : null, autoReveal, openEnded });
       navigate("/session");
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Impossibile caricare le domande.");
@@ -45,7 +53,7 @@ export function PracticeSetupPage() {
 
   const startLabel = loading
     ? "Loading..."
-    : `Start ${count} questions${timed ? ` · ${minutes} min` : " · untimed"}`;
+    : `Start ${openEnded ? "open-ended session" : `${count} questions`}${timed ? ` · ${minutes} min` : " · untimed"}`;
 
   return (
     <>
@@ -66,23 +74,46 @@ export function PracticeSetupPage() {
           <ResumeSessionBanner style={{ marginBottom: 26 }} />
 
           <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 10 }}>How many questions?</div>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 28 }}>
-            {COUNT_OPTIONS.map((n) => {
-              const on = count === n;
+          <div role="radiogroup" aria-label="Session length" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10, marginBottom: openEnded ? 28 : 14 }}>
+            {LENGTH_OPTIONS.map((option) => {
+              const on = openEnded === option.openEnded;
               return (
                 <button
-                  key={n}
-                  onClick={() => setCount(n)}
+                  key={option.title}
+                  role="radio"
+                  aria-checked={on}
+                  onClick={() => setOpenEnded(option.openEnded)}
                   style={{
-                    padding: "9px 16px", borderRadius: 9, fontSize: 14, fontWeight: 500, font: "inherit",
-                    border: `1px solid ${on ? t.ac : t.bd3}`, background: on ? t.acs : t.card, color: on ? t.ac : t.tx2,
+                    font: "inherit", textAlign: "left", padding: "13px 15px", borderRadius: 11,
+                    border: `1px solid ${on ? t.ac : t.bd3}`, background: on ? t.acs : t.card,
                   }}
                 >
-                  {n} questions
+                  <div style={{ fontSize: 14.5, fontWeight: 600, color: on ? t.ac : t.tx }}>{option.title}</div>
+                  <div style={{ fontSize: 12.5, lineHeight: 1.45, color: t.mu, marginTop: 3 }}>{option.text}</div>
                 </button>
               );
             })}
           </div>
+
+          {!openEnded && (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 28 }}>
+              {COUNT_OPTIONS.map((n) => {
+                const on = count === n;
+                return (
+                  <button
+                    key={n}
+                    onClick={() => setCount(n)}
+                    style={{
+                      padding: "9px 16px", borderRadius: 9, fontSize: 14, fontWeight: 500, font: "inherit",
+                      border: `1px solid ${on ? t.ac : t.bd3}`, background: on ? t.acs : t.card, color: on ? t.ac : t.tx2,
+                    }}
+                  >
+                    {n} questions
+                  </button>
+                );
+              })}
+            </div>
+          )}
 
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, padding: "16px 0", borderTop: `1px solid ${t.bd2}` }}>
             <div>
