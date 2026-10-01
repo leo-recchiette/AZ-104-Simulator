@@ -1,0 +1,40 @@
+using Simulator.Api.Models.Contracts;
+using Simulator.Api.Models.Domains;
+
+namespace Simulator.Api.Mapper;
+
+public static class QuestionMapper
+{
+    private const string OrderedAnswer = "ordered_answer";
+    private const string YesNo = "yes_no";
+    private const string QuestionImageKind = "question";
+    private static readonly string[] YesNoOptions = ["Yes", "No"];
+
+    public static QuestionDto ToQuestionDto(
+        this Question question,
+        IEnumerable<Option> options,
+        IEnumerable<AnswerRow> answerRows,
+        ILookup<int, AnswerRowOption> rowOptionsByAnswerRowId,
+        IEnumerable<QuestionImage> images)
+    {
+        var isMultipleChoice = question.Type == QuestionType.MultipleChoice;
+        var isOrderedAnswer = question.AnswerLayout == OrderedAnswer;
+        var isYesNo = question.AnswerLayout == YesNo;
+
+        return new QuestionDto(
+            Number: question.Number,
+            Type: QuestionTypeMapper.ToDb(question.Type),
+            Text: question.Text,
+            Options: isMultipleChoice ? options.Select(o => new OptionDto(o.Letter!, o.Text)).ToList() : [],
+            DraggableItems: isOrderedAnswer ? options.Select(o => o.Text).ToList() : [],
+            SequenceLength: isOrderedAnswer ? answerRows.Count() : 0,
+            Prompts: isMultipleChoice || isOrderedAnswer
+                ? []
+                : answerRows.Where(r => r.Prompt is not null).Select(r => new PromptOptionsDto(
+                    r.Prompt!,
+                    isYesNo ? YesNoOptions : rowOptionsByAnswerRowId[r.Id].Select(o => o.Text).ToList())).ToList(),
+            Images: images.Where(i => i.Kind == QuestionImageKind).OrderBy(i => i.Ord).Select(i => i.Filename).ToList(),
+            GroupId: question.GroupId,
+            GroupType: question.GroupType);
+    }
+}

@@ -1,4 +1,4 @@
-# AZ-104 Examinator
+# AZ-104 Simulator
 
 An exam simulator for the Microsoft AZ-104 (Azure Administrator Associate) certification, built around a question
 bank of 584 items. 
@@ -38,9 +38,9 @@ History of submitted sessions: open any past attempt to go through its questions
 ## Project layout
 
 ```
-AZ-104.Examinator.BE/          .NET backend (API + test project)
-AZ-104.Examinator.FE/          React + TypeScript frontend
-AZ-104.Examinator.Database/    SQL schema and question bank importer
+AZ-104.Simulator.BE/          .NET backend (API + test project)
+AZ-104.Simulator.FE/          React + TypeScript frontend
+AZ-104.Simulator.Database/    SQL schema and question bank importer
 AZ-104.QuestionsDataset/       Source data (JSON + a human-readable Markdown version)
 docker-compose.yml
 ```
@@ -126,7 +126,7 @@ docker compose up -d
 ## Tests
 
 ```bash
-cd AZ-104.Examinator.BE/AZ-104.Examinator.Api.Tests
+cd AZ-104.Simulator.BE/AZ-104.Simulator.Api.Tests
 dotnet test
 ```
 
@@ -135,7 +135,7 @@ No local Postgres is required: the repositories are substituted, never hit again
 Without a local .NET SDK, the same suite runs in a container:
 
 ```bash
-docker run --rm -v "$PWD/AZ-104.Examinator.BE:/src" -w /src/AZ-104.Examinator.Api.Tests \
+docker run --rm -v "$PWD/AZ-104.Simulator.BE:/src" -w /src/AZ-104.Simulator.Api.Tests \
   mcr.microsoft.com/dotnet/sdk:10.0 dotnet test
 ```
 

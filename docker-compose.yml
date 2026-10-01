@@ -1,19 +1,21 @@
+name: az-104-simulator
+
 services:
   db:
     image: postgres:17-alpine
     environment:
-      POSTGRES_USER: examinator
-      POSTGRES_PASSWORD: examinator
-      POSTGRES_DB: examinator
+      POSTGRES_USER: simulator
+      POSTGRES_PASSWORD: simulator
+      POSTGRES_DB: simulator
     volumes:
       - pgdata:/var/lib/postgresql/data
       # Eseguito solo alla prima creazione del volume. Su un database esistente le modifiche allo
       # schema vanno applicate a mano: ricreare il volume (down -v) cancellerebbe anche lo storico.
-      - ./AZ-104.Examinator.Database/db/01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ./AZ-104.Simulator.Database/db/01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U examinator -d examinator"]
+      test: ["CMD-SHELL", "pg_isready -U simulator -d simulator"]
       interval: 3s
       timeout: 3s
       retries: 20
@@ -22,12 +24,12 @@ services:
   importer:
     build:
       context: .
-      dockerfile: AZ-104.Examinator.Database/database-importer/Dockerfile
+      dockerfile: AZ-104.Simulator.Database/database-importer/Dockerfile
     image: az-104-questions-importer
     container_name: az-104-questions-importer
     profiles: ["setup"]
     environment:
-      DATABASE_URL: postgresql://examinator:examinator@db:5432/examinator
+      DATABASE_URL: postgresql://simulator:simulator@db:5432/simulator
     depends_on:
       db:
         condition: service_healthy
@@ -36,11 +38,11 @@ services:
   api:
     build:
       context: .
-      dockerfile: AZ-104.Examinator.BE/AZ-104.Examinator.Api/Dockerfile
-    image: az-104-examinator-api
-    container_name: az-104-examinator-api
+      dockerfile: AZ-104.Simulator.BE/AZ-104.Simulator.Api/Dockerfile
+    image: az-104-simulator-api
+    container_name: az-104-simulator-api
     environment:
-      ConnectionStrings__Default: Host=db;Port=5432;Database=examinator;Username=examinator;Password=examinator
+      ConnectionStrings__Default: Host=db;Port=5432;Database=simulator;Username=simulator;Password=simulator
       ASPNETCORE_ENVIRONMENT: Development
     ports:
       - "5080:8080"
@@ -51,14 +53,14 @@ services:
 
   web:
     build:
-      context: ./AZ-104.Examinator.FE
+      context: ./AZ-104.Simulator.FE
       dockerfile: Dockerfile
-    image: az-104-examinator-web
-    container_name: az-104-examinator-web
+    image: az-104-simulator-web
+    container_name: az-104-simulator-web
     environment:
       VITE_API_BASE_URL: http://localhost:5080
     volumes:
-      - ./AZ-104.Examinator.FE:/app
+      - ./AZ-104.Simulator.FE:/app
       - web_node_modules:/app/node_modules
     ports:
       - "5173:5173"
@@ -77,7 +79,7 @@ services:
     image: sosedoff/pgweb:latest
     profiles: ["dev"]
     environment:
-      PGWEB_DATABASE_URL: postgresql://examinator:examinator@db:5432/examinator?sslmode=disable
+      PGWEB_DATABASE_URL: postgresql://simulator:simulator@db:5432/simulator?sslmode=disable
     # --lock-session aggancia la sessione del browser alla connessione aperta
     # all'avvio, cosi' la UI non chiede le credenziali.
     command: ["--bind=0.0.0.0", "--listen=8081", "--lock-session"]
