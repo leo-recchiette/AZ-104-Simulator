@@ -10,7 +10,7 @@ RUN dotnet publish AZ-104.Simulator.BE/AZ-104.Simulator.Api/AZ-104.Simulator.Api
 
 # Screenshot delle domande hotspot/drag_and_drop/hotspot_yes_no/alcune
 # multiple_choice, serviti da app.UseStaticFiles() su /images/<file>. Nel repo
-# resta solo lo zip (857 PNG sciolti gonfierebbero troppo la git history): si
+# resta solo lo zip (817 PNG sciolti gonfierebbero troppo la git history): si
 # scompatta qui, in una fase di build usa-e-getta - lo zip non arriva mai
 # nell'immagine finale ne' viene mai scritto sciolto sull'host. Un rebuild va
 # rilanciato dopo un aggiornamento dello zip.

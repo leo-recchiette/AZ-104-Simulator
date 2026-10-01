@@ -53,12 +53,12 @@ Note: The question is included in a number of questions that depicts the identic
 
 Note: The question is included in a number of questions that depicts the identical set-up. However, every question has a distinctive result. Establish if the solution satisfies the requirements. Your company has an Azure Active Directory (Azure AD) subscription. You want to implement an Azure AD conditional access policy. The policy must be configured to require members of the Global Administrators group to use Multi- Factor Authentication and an Azure AD-joined device when they connect to Azure AD from untrusted locations. Solution: You access the Azure portal to alter the grant control of the Azure AD conditional access policy. Does the solution meet the goal?
 
-- **A.** Yes
-- **B.** No **← CORRETTA**
+- **A.** Yes **← CORRETTA**
+- **B.** No
 
-**Risposta corretta:** B
+**Risposta corretta:** A
 
-**Spiegazione:** The solution does not meet the goal. While altering the grant control of the Azure AD conditional access policy in the Azure portal can be part of the solution, it is not sufficient on its own. The policy needs to be configured with specific conditions and controls to require Multi-Factor Authentication (MFA) and the use of an Azure AD-joined device when connecting from untrusted locations. Altering the grant control alone does not cover these requirements; conditions must also be set to specify untrusted locations. Therefore, the correct answer is No.
+**Spiegazione:** Yes. In a conditional access policy the requirements a user must satisfy to be granted access - here Require multi-factor authentication and Require an Azure AD joined (hybrid joined) device - are configured in the Grant control. The assignment to the Global Administrators group and the untrusted-locations condition complete the policy, but the access requirements themselves live in Grant; session controls only shape the experience inside an already granted session. Reference: https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-conditional-access-grant
 
 ---
 
@@ -111,12 +111,12 @@ Note: The question is included in a number of questions that depicts the identic
 
 Note: The question is included in a number of questions that depicts the identical set-up. However, every question has a distinctive result. Establish if the solution satisfies the requirements. Your company's Azure solution makes use of Multi-Factor Authentication for when users are not in the office. The Per Authentication option has been configured as the usage model. After the acquisition of a smaller business and the addition of the new staff to Azure Active Directory (Azure AD) obtains a different company and adding the new employees to Azure Active Directory (Azure AD), you are informed that these employees should also make use of Multi-Factor Authentication. To achieve this, the Per Enabled User setting must be set for the usage model. Solution: You create a new Multi-Factor Authentication provider with a backup from the existing Multi- Factor Authentication provider data. Does the solution meet the goal?
 
-- **A.** Yes
-- **B.** No **← CORRETTA**
+- **A.** Yes **← CORRETTA**
+- **B.** No
 
-**Risposta corretta:** B
+**Risposta corretta:** A
 
-**Spiegazione:** Creating a new Multi-Factor Authentication provider does not meet the goal of changing the MFA usage model from 'Per Authentication' to 'Per Enabled User.' Azure AD MFA usage models are immutable once an MFA provider is created, and as of September 1, 2018, new MFA providers cannot be created. Thus, the existing setup must be used with appropriate licenses that include MFA features.
+**Spiegazione:** Yes. The usage model of a Multi-Factor Authentication provider (per authentication or per enabled user) cannot be changed once the provider exists, neither from the portal nor from the CLI. To switch, you create a new provider with the per-enabled-user model, back up the data of the existing provider and restore it into the new one, then reactivate MFA Server with the new provider's credentials. Note that MFA providers are a legacy feature: since 1 September 2018 new providers can no longer be created and MFA is licensed per user instead. Reference: https://learn.microsoft.com/en-us/entra/identity/authentication/concept-mfa-authprovider
 
 ---
 
@@ -336,7 +336,7 @@ Your company has an Azure subscription that includes a number of Azure virtual m
 **Risposta corretta:** 1. Hyper-V site -> 2. Azure Recovery Services Vault -> 3. Replication policy
 > Immagini: q023_post0.png
 
-**Spiegazione:**
+**Spiegazione:** To replicate an on-premises Hyper-V VM that is not managed by System Center VMM, Azure Site Recovery needs three objects: a Hyper-V site that groups the Hyper-V hosts (registered to it through the Site Recovery provider), a Recovery Services vault that holds the replication data and settings, and a replication policy - recovery point retention, app-consistent snapshot frequency - associated with the Hyper-V site. Reference: https://learn.microsoft.com/en-us/azure/site-recovery/hyper-v-azure-tutorial
 
 ---
 
@@ -454,7 +454,7 @@ Your company has two on-premises servers named SRV01 and SRV02. Developers have 
 
 **Risposta corretta:** C
 
-**Spiegazione:**
+**Spiegazione:** In Azure the private IP address belongs to the VM's network interface, not to the guest OS: in the portal open the network interface, go to IP configurations and switch the assignment from Dynamic to Static. Setting the address inside Windows (Network and Sharing Center) breaks connectivity, because Azure DHCP is what delivers the address to the VM, while Set-AzureStaticVNetIP and Set-AzureSubnet belong to the retired classic deployment model. Reference: https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/virtual-networks-static-private-ip-arm-pportal
 
 ---
 
@@ -605,7 +605,7 @@ You have an Azure subscription named Subscription1 that contains a resource grou
 **Risposta corretta:** To add a backend pool to LB1 -> Network Contributor on LB1 | To add a health probe to LB2 -> Network Contributor on LB2
 > Immagini: q041_post0.png
 
-**Spiegazione:** The Network Contributor role lets you manage networks, but not access them. Reference: https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
+**Spiegazione:** Network Contributor lets a user manage network resources such as load balancers - including their backend pools and health probes - without granting access to anything else. Assigning it on each load balancer (LB1 for the backend pool, LB2 for the health probe) follows the principle of least privilege: Contributor and Owner grant far broader rights, Owner even including access management, and Network Contributor on RG1 would extend the permissions to every network resource in the resource group. Reference: https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
 
 ---
 
@@ -650,7 +650,7 @@ You have an Azure Active Directory (Azure AD) tenant named contoso.com that cont
 **Risposta corretta:** User3 can perform an access review of User1 -> No | User3 can perform an access review of UserA -> No | User3 can perform an access review of UserB -> Yes
 > Immagini: q044_post0.png
 
-**Spiegazione:** Reference: https://docs.microsoft.com/en-us/azure/active-directory/governance/create-access-review
+**Spiegazione:** Review1 reviews the members of Group1, scoped to guest users only, and the reviewers are the group owners - User3 owns Group1, so User3 is the reviewer. User1 and UserA are members, not guests, so they fall outside the scope of the review. UserB is a guest and belongs to Group1 through Group2, which is a member of Group1, so UserB is reviewed. Reference: https://docs.microsoft.com/en-us/azure/active-directory/governance/create-access-review
 
 ---
 
@@ -662,7 +662,7 @@ You have the Azure management groups shown in the following table: You add Azure
 **Risposta corretta:** You can create a virtual network in Subscription1. -> No | You can create a virtual machine in Subscription2. -> No | You can add Subscription1 to ManagementGroup11. -> No
 > Immagini: q045_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Subscription1 sits in ManagementGroup21, under ManagementGroup11 and the Tenant Root Group, so it inherits the Not allowed resource types policy for virtual networks assigned at the root: no virtual network can be created there. Subscription2 sits in ManagementGroup12, where Allowed resource types permits only virtual networks - so a virtual machine is denied (and the root policy denies the virtual networks too). A subscription has exactly one parent management group: Subscription1 already belongs to ManagementGroup21 and cannot also be added to ManagementGroup11, only moved. Reference: https://learn.microsoft.com/en-us/azure/governance/management-groups/overview
 
 ---
 
@@ -671,15 +671,15 @@ You have the Azure management groups shown in the following table: You add Azure
 
 You have an Azure policy as shown in the following exhibit: What is the effect of the policy?
 
-- **A.** You are prevented from creating Azure SQL servers anywhere in Subscription 1. **← CORRETTA**
-- **B.** You can create Azure SQL servers in ContosoRG1 only.
+- **A.** You are prevented from creating Azure SQL servers anywhere in Subscription 1.
+- **B.** You can create Azure SQL servers in ContosoRG1 only. **← CORRETTA**
 - **C.** You are prevented from creating Azure SQL Servers in ContosoRG1 only.
 - **D.** You can create Azure SQL servers in any resource group within Subscription 1.
 
-**Risposta corretta:** A
+**Risposta corretta:** B
 > Esibito: q046_pre0.png
 
-**Spiegazione:** The policy's scope is set to Subscription 1, and it explicitly states 'Not allowed resource types' for 'Microsoft.Sql/servers.' The exclusion applies to the resource group 'ContosoRG1,' meaning the restriction does not apply there. Therefore, you are prevented from creating Azure SQL servers anywhere in Subscription 1, except in ContosoRG1. However, since option A precisely states the effect without ambiguity, it is the correct one. Thus, you are prevented from creating Azure SQL servers anywhere in Subscription 1.
+**Spiegazione:** The assignment is scoped to Subscription 1 with ContosoRG1 listed as an exclusion, and it uses the Not allowed resource types definition with Microsoft.Sql/servers as the parameter. Excluded scopes are not evaluated by the assignment, so SQL servers are denied everywhere in Subscription 1 except ContosoRG1, which is the only place where you can still create them. Reference: https://learn.microsoft.com/en-us/azure/governance/policy/concepts/assignment-structure#excluded-scopes
 
 ---
 
@@ -691,7 +691,7 @@ You have an Azure subscription that contains the resources shown in the followin
 **Risposta corretta:** VNET1 -> Department: D1 only | VNET2 -> Label: Value1 only
 > Immagini: q047_post0.png
 
-**Spiegazione:**
+**Spiegazione:** The Apply tag and its default value policy (append effect) acts only on resources created or updated after it is assigned: VNET1 already existed, so it keeps just Department: D1, while VNET2, deployed afterwards, receives Label: Value1. Tags are not inherited from the resource group, so the RGroup: RG6 tag applied to RG6 reaches neither virtual network. Reference: https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources
 
 ---
 
@@ -799,7 +799,7 @@ You have Azure Active Directory tenant named Contoso.com that includes following
 **Risposta corretta:** User1 can add Device2 to Group1 -> No | User2 can add Device1 to Group1 -> Yes | User2 can add Device2 to Group2 -> No
 > Immagini: q054_post0.png
 
-**Spiegazione:**
+**Spiegazione:** User1 is a Cloud device administrator: the role manages devices (enable, disable, delete) but not group membership, so User1 cannot add Device2 to Group1. User2 is a User administrator and the owner of Group1, an assigned group, so User2 can add Device1 to it. Group2 uses the Dynamic Device membership type: its members come only from the membership rule and cannot be added by hand, by anyone. Reference: https://learn.microsoft.com/en-us/entra/identity/users/groups-dynamic-membership
 
 ---
 
@@ -912,13 +912,13 @@ You have an Azure subscription that is used by four departments in your company.
 You have an Azure subscription named Subscription1 that contains an Azure Log Analytics workspace named Workspace1. You need to view the error events from a table named Event. Which query should you run in Workspace1?
 
 - **A.** Get-Event Event | where {$_.EventType == "error"}
-- **B.** search in (Event) "error"
+- **B.** search in (Event) "error" **← CORRETTA**
 - **C.** select * from Event where EventType == "error"
-- **D.** search in (Event) * | where EventType -eq "error" **← CORRETTA**
+- **D.** search in (Event) * | where EventType -eq "error"
 
-**Risposta corretta:** D
+**Risposta corretta:** B
 
-**Spiegazione:** The correct query uses Kusto Query Language (KQL) which is the query language for Azure Log Analytics. Option D correctly applies KQL syntax to search the Event table and filter based on the EventType field. The query 'search in (Event) * | where EventType -eq "error"' first searches within the Event table and then applies the filter to return only the rows where EventType equals 'error'. The usage of '-eq' is not standard in KQL; it should use '==', making the exact correct query 'search in (Event) * | where EventType == "error"'. Despite this slight deviation, D is the closest to the correct syntax when compared to the other options.
+**Spiegazione:** Log Analytics queries are written in the Kusto Query Language (KQL). search in (Event) "error" searches every column of the Event table for the term error and returns the matching events. Option D is not valid KQL, because -eq is a PowerShell operator (KQL uses ==); option A is a PowerShell pipeline and option C is SQL. Reference: https://learn.microsoft.com/en-us/kusto/query/search-operator
 
 ---
 
@@ -930,7 +930,7 @@ You have an Azure subscription that contains a virtual network named VNET1 in th
 **Risposta corretta:** VM1 and VM2 can connect to VNET1 -> Yes | If an Azure datacenter becomes unavailable, VM1 or VM2 will be available. -> Yes | If the East US 2 region becomes unavailable, VM1 or VM2 will be available. -> No
 > Immagini: q063_post0.png
 
-**Spiegazione:** Box 1: Yes - Box 2: Yes - VM1 is in Zone1, while VM2 is on Zone2. Box 3: No - Reference: https://docs.microsoft.com/en-us/azure/architecture/resiliency/recovery-loss-azure-region
+**Spiegazione:** Both VMs are deployed in East US 2 with network interfaces (VM1-NI and VM2-NI) attached to VNET1, so they connect to VNET1. VM1 is placed in availability zone 1 and VM2 in zone 2: zones are physically separate datacenters within the region, so if one datacenter fails the VM in the other zone stays available. Both zones belong to East US 2, so an outage of the whole region takes down both VMs. Reference: https://docs.microsoft.com/en-us/azure/architecture/resiliency/recovery-loss-azure-region
 
 ---
 
@@ -959,7 +959,7 @@ You have an Azure subscription named Subscription1 that has a subscription ID of
 **Risposta corretta:** assignableScopes -> "/subscriptions/c276fc76-9cd4-44c9-99a7-4fd71546436e" | notActions -> "Microsoft.Authorization/*"
 > Immagini: q065_post0.png
 
-**Spiegazione:**
+**Spiegazione:** assignableScopes decides where a custom role can be assigned: listing the subscription, /subscriptions/c276fc76-9cd4-44c9-99a7-4fd71546436e, makes CR1 assignable within Subscription1 and its resource groups only ("/" is not allowed for custom roles, and .../resourceGroups on its own is not a valid scope). To allow viewing, creating, modifying and deleting resources while preventing access management, Actions is * and NotActions excludes Microsoft.Authorization/*, the provider that handles role assignments - the same pattern as the built-in Contributor role. Reference: https://learn.microsoft.com/en-us/azure/role-based-access-control/custom-roles
 
 ---
 
@@ -1005,7 +1005,7 @@ You have an Azure Active Directory (Azure AD) tenant. You need to create a condi
 > Nota: Le tre sezioni da configurare per Policy1 sono evidenziate: Users and groups, Cloud apps, Grant
 > Immagini: q068_post0.png
 
-**Spiegazione:** Reference: https://docs.microsoft.com/en-us/azure/active-directory/conditional-access/app-based-mfa
+**Spiegazione:** A conditional access policy is made of assignments and access controls. Users and groups defines who the policy applies to (all users), Cloud apps defines what it protects (Microsoft Azure Management, which covers the Azure portal), and the Grant access control enforces Require multi-factor authentication. Conditions are optional refinements (locations, platforms, sign-in risk), and Session controls do not require MFA. Reference: https://docs.microsoft.com/en-us/azure/active-directory/conditional-access/app-based-mfa
 
 ---
 
@@ -1131,7 +1131,7 @@ You have an Azure Active Directory (Azure AD) tenant that contains three global 
 **Risposta corretta:** Admin1 can add Admin 2 as an owner of the subscription. -> Yes | Admin3 can add Admin 2 as an owner of the subscription. -> Yes | Admin2 can create a resource group in the subscription. -> No
 > Immagini: q077_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Admin1 set Access management for Azure resources to Yes, which elevates Admin1 - and only Admin1 - to User Access Administrator at the root scope (/), so Admin1 can assign any role, Owner included, on every subscription of the tenant. Admin3 is Owner of the subscription, and owners can assign roles too. Admin2 is a Global administrator, but Azure AD roles grant no rights over Azure resources and Admin2 holds no Azure role on the subscription, so Admin2 cannot create a resource group. Reference: https://learn.microsoft.com/en-us/azure/role-based-access-control/elevate-access-global-admin
 
 ---
 
@@ -1287,10 +1287,10 @@ You have an Azure Active Directory (Azure AD) tenant. You plan to delete multipl
 
 You have an Azure subscription named Sub1 that contains the Azure resources shown in the following table. You assign an Azure policy that has the following settings: Scope: Sub1 Exclusions: Sub1/RG1/VNET1 Policy definition: Append a tag and its value to resources Policy enforcement: Enabled Tag name: Tag4 Tag value: value4 You assign tags to the resources as shown in the following table. For each of the following statements, select Yes if the statement is true. Otherwise, select No. NOTE: Each correct selection is worth one point.
 
-**Risposta corretta:** RG1 has the Tag2:IT tag assigned only -> No | Storage1 has the Tag1:subscription, Tag2:IT, Tag3:value1, and Tag4:value4 tags assigned. -> No | VNET1 has the Tag2:IT and Tag3:value2 tags assigned only -> No
-> Immagini: q088_post0.png
+**Risposta corretta:** RG1 has the Tag2:IT tag assigned only -> Yes | Storage1 has the Tag1:subscription, Tag2:IT, Tag3:value1, and Tag4:value4 tags assigned. -> No | VNET1 has the Tag2:IT and Tag3:value2 tags assigned only -> No
+> Esibito: q088_pre0.png, q088_pre1.png, q088_pre2.png
 
-**Spiegazione:** Box 1: No - The Azure Policy will add Tag4 to RG1. Box 2: No - Tags applied to the resource group or subscription aren't inherited by the resources although you can enable inheritance with Azure Policy. Storage1 has Tag3: Value1 and the Azure Policy will add Tag4. Box 3: No - Tags applied to the resource group or subscription aren't inherited by the resources so VNET1 does not have Tag2. VNET1 has Tag3:value2. VNET1 is excluded from the Azure Policy so Tag4 will not be added to VNET1. Reference: https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources? tabs=json
+**Spiegazione:** Box 1: Yes - The built-in Append a tag and its value to resources definition does not apply to resource groups (there is a separate definition for them), so RG1 keeps only Tag2:IT. Box 2: No - Tags are not inherited from the subscription or the resource group: storage1 has Tag3:value1 plus Tag4:value4, which the policy appends when the resource is updated, but neither Tag1 nor Tag2. Box 3: No - VNET1 is excluded from the assignment, so it receives no Tag4, and it does not inherit Tag2:IT from RG1: it has Tag3:value2 only. Reference: https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/tag-policies
 
 ---
 
@@ -1346,7 +1346,7 @@ You have an Azure Load Balancer named LB1. You assign a user named User1 the rol
 **Risposta corretta:** User1 can [answer choice] LB1. -> assign access to other users for | User1 can [answer choice] the resource group. -> delete a virtual machine from
 > Immagini: q092_post0.png
 
-**Spiegazione:** Reference: https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#virtual-machine- contributor https://docs.microsoft.com/en-us/azure/role-based-access-control/rbac-and-directory- admin-roles
+**Spiegazione:** User1 holds two roles. User Access Administrator, assigned directly on LB1, lets User1 manage access to LB1 - assign roles to other users - but not modify or delete the load balancer. Virtual Machine Contributor, inherited from the resource group, lets User1 manage virtual machines, deleting them included, but not load balancing rules or other resource types such as an AKS cluster. Reference: https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#virtual-machine-contributor
 
 ---
 
@@ -1374,7 +1374,7 @@ You configure the custom role shown in the following exhibit. Use the drop-down 
 **Risposta corretta:** To ensure that users can sign in to virtual machines that are assigned role1, modify the [answer choice] section -> dataActions | To ensure that role1 can be assigned only to a resource group named RG1, modify the [answer choice] section -> assignableScopes
 > Immagini: q094_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Signing in to a virtual machine with Azure AD credentials is a data-plane operation (Microsoft.Compute/virtualMachines/login/action), so it belongs in the dataActions section; actions only covers management-plane operations. Where a role can be assigned is controlled by assignableScopes: setting it to the resource group's ID (/subscriptions/<id>/resourceGroups/RG1) makes role1 assignable to RG1 only. Reference: https://learn.microsoft.com/en-us/azure/role-based-access-control/role-definitions
 
 ---
 
@@ -1418,7 +1418,7 @@ You have an Azure subscription that contains the hierarchy shown in the followin
 **Risposta corretta:** You can assign Policy1 to -> Tenant Root Group, ManagementGroup1, Subscription1, and RG1 only | You can exclude Policy1 from -> ManagementGroup1, Subscription1, RG1, and VM1 only
 > Immagini: q097_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Azure Policy assignments target management groups, subscriptions and resource groups, so Policy1 can be assigned to the Tenant Root Group, ManagementGroup1, Subscription1 and RG1, but not to VM1. Exclusions are child scopes of an assignment: below the root you can exclude ManagementGroup1, Subscription1, RG1 and individual resources such as VM1, while the Tenant Root Group, being the top of the hierarchy, can never be excluded. Reference: https://learn.microsoft.com/en-us/azure/governance/policy/concepts/assignment-structure
 
 ---
 
@@ -1507,13 +1507,13 @@ You have an Azure Subscription that contains a storage account named storageacct
 You have an Azure subscription named Subscription1 that contains an Azure Log Analytics workspace named Workspace1. You need to view the error events from a table named Event. Which query should you run in Workspace1?
 
 - **A.** select * from Event where EventType == "error"
-- **B.** Event | search "error"
-- **C.** Event | where EventType is "error" **← CORRETTA**
+- **B.** Event | search "error" **← CORRETTA**
+- **C.** Event | where EventType is "error"
 - **D.** Get-Event Event | where {$_.EventType == "error"}
 
-**Risposta corretta:** C
+**Risposta corretta:** B
 
-**Spiegazione:** To view error events from the 'Event' table in an Azure Log Analytics workspace, you should use a Kusto Query Language (KQL) command. The correct syntax for filtering data by a specific field is to use the 'where' keyword. The correct query is 'Event | where EventType == "error"'. This command filters events in the 'Event' table where the 'EventType' field equals 'error'.
+**Spiegazione:** Log Analytics uses the Kusto Query Language (KQL). Event | search "error" pipes the Event table into the search operator, which returns the rows containing the term error. Option C is not valid KQL - a where filter needs a comparison operator such as ==, and is does not exist - while option A is a PowerShell pipeline and option D is SQL. Reference: https://learn.microsoft.com/en-us/kusto/query/search-operator
 
 ---
 
@@ -1555,7 +1555,7 @@ You have an Azure subscription that is linked to an Azure AD tenant. The tenant 
 **Risposta corretta:** Role3 -> Role1 and built-in Azure subscription roles only | Role4 -> Role2 only
 > Immagini: q106_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Role1 is an Azure (subscription) custom role and Role2 is an Azure AD custom role. A new Azure custom role can be cloned from an existing role of the same kind, built-in or custom, so Role3 can start from Role1 or from any built-in Azure role. Azure AD custom roles can only be cloned from another Azure AD custom role - built-in Azure AD roles cannot be cloned - so Role4 can start only from Role2. Azure roles and Azure AD roles are separate systems and can never be cloned into each other. Reference: https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/custom-create
 
 ---
 
@@ -1567,7 +1567,7 @@ You have an Azure subscription named Sub1 that contains two users named User1 an
 **Risposta corretta:** User1 -> Reader and Data Access | User2 -> Owner
 > Immagini: q107_post0.png
 
-**Spiegazione:**
+**Spiegazione:** User1 must read the data in the storage accounts: Reader and Data Access gives read access to the account plus the permission to list its access keys, so the data can be viewed, without allowing any change - the least privilege among the options. User2 must assign the Contributor role to others, which requires Microsoft.Authorization/roleAssignments/write: among the listed roles only Owner includes it (Contributor and Storage Account Contributor explicitly exclude Microsoft.Authorization). Reference: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
 
 ---
 
@@ -1611,7 +1611,7 @@ You have an Azure AD tenant named contoso.com. You have two external partner org
 **Risposta corretta:** Litwareinc.com users can be assigned to package1. -> No | After 365 days, fabrikam.com users will be removed from Group1. -> Yes | After 395 days, fabrikam.com users will be removed from the contoso.com tenant. -> Yes
 > Immagini: q110_post0.png
 
-**Spiegazione:**
+**Spiegazione:** package1 accepts requests only from all configured connected organizations: fabrikam.com is one, litwareinc.com is not, so litwareinc.com users cannot be assigned to it. Assignments expire after 365 days, and when the assignment ends the user loses the package's resource roles, so fabrikam.com users are removed from Group1. The external user lifecycle settings then block the user from signing in and remove the account 30 days later: 365 + 30 = 395 days after the assignment, fabrikam.com users are removed from the contoso.com tenant. Reference: https://learn.microsoft.com/en-us/entra/id-governance/entitlement-management-external-users
 
 ---
 
@@ -1639,7 +1639,7 @@ You have an Azure subscription that contains the users shown in the following ta
 **Risposta corretta:** You can assign User2 the Owner role for RG1 by adding Group2 as a member of Group1. -> No | You can assign User3 the Owner role for RG1 by adding Group3 as a member of Group1. -> No | You can assign User3 the Owner role for RG1 by assigning the Owner role to Group3 for RG1. -> Yes
 > Immagini: q112_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Group1 is assigned the Owner role on RG1, but it is a role-assignable group (Azure AD roles can be assigned to it), and role-assignable groups cannot contain other groups: neither Group2 nor Group3 can be added as a member of Group1, so nesting cannot give User2 or User3 the Owner role. Assigning the Owner role directly to Group3 for RG1 works: User3, a member of Group3, inherits it. Reference: https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/groups-concept
 
 ---
 
@@ -1684,7 +1684,7 @@ You have an Azure subscription that contains a user named User1 and the resource
 **Risposta corretta:** User1 can create a storage account in RG1. -> Yes | User1 can modify the DNS settings of networkinterface1. -> No | User1 can create an inbound security rule to filter inbound traffic to networkinterface1. -> Yes
 > Immagini: q115_post0.png
 
-**Spiegazione:**
+**Spiegazione:** User1 has Contributor on NSG1 only, Reader on the subscription and Storage Account Contributor inherited from the resource group. Storage Account Contributor on RG1 is enough to create a storage account there. On networkinterface1 User1 only has Reader, inherited from the subscription, so its DNS settings cannot be changed. Contributor on NSG1 lets User1 add security rules to the NSG, and since NSG1 is associated to networkinterface1 a new inbound rule filters traffic to that interface. Reference: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
 
 ---
 
@@ -1712,7 +1712,7 @@ You have three Azure subscriptions named Sub1, Sub2, and Sub3 that are linked to
 **Risposta corretta:** The Group1 members can view the configurations of the Azure functions. -> Yes | User1 can assign the Owner role for RG1. -> Yes | User1 can create a new resource group and deploy a virtual machine to the new group. -> No
 > Immagini: q117_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Group1 has the Reader role on MG1, inherited by Sub1 and everything in it, so its members can view the configuration of the functions in RG1. User1 has User Access Administrator on MG1, which lets User1 manage role assignments - Owner included - for any scope below MG1, such as RG1. Virtual Machine Contributor, assigned to User1 on Sub1 and Sub2, allows managing virtual machines but not creating resource groups (Microsoft.Resources/subscriptions/resourceGroups/write), so User1 cannot create a new resource group. Reference: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
 
 ---
 
@@ -1757,7 +1757,7 @@ You have an Azure AD tenant named adatum.com that contains the groups shown in t
 **Risposta corretta:** You can assign User1 the Microsoft Defender for Cloud Apps Discovery license. -> Yes | You can remove the Azure Active Directory Premium P2 license from User1. -> No | User2 is assigned the Azure Active Directory Premium P2. -> No
 > Immagini: q120_post0.png
 
-**Spiegazione:**
+**Spiegazione:** The P2 license is assigned to Group1 with the Microsoft Defender for Cloud Apps Discovery service plan turned off. User1 can still receive that plan through a direct assignment, so it can be assigned. A license inherited from a group cannot be removed from the single user - you have to remove the user from the group or change the group assignment. Group-based licensing does not apply to nested groups, so User2, a member of Group2 (itself a member of Group1), does not get the P2 license. Reference: https://learn.microsoft.com/en-us/entra/fundamentals/concept-group-based-licensing
 
 ---
 
@@ -1769,7 +1769,7 @@ You have a hybrid deployment of Azure Active Directory (Azure AD) that contains 
 **Risposta corretta:** JobTitle -> User1 and User3 only | UsageLocation -> User1, User2, and User3
 > Immagini: q121_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Identity, contact and job information - JobTitle included - can be edited in Azure AD only for users whose source of authority is Azure AD: User1 (cloud member) and User3 (guest). User2 is synced from on-premises Active Directory, so its job title must be changed in AD DS and synced. UsageLocation is an Azure AD-only attribute, not synchronized from on-premises, so it can be set for all three users. Reference: https://learn.microsoft.com/en-us/entra/fundamentals/how-to-manage-user-profile-info
 
 ---
 
@@ -1841,7 +1841,7 @@ You have an Azure Storage account named storage1 that uses Azure Blob storage an
 **Risposta corretta:** Blob storage -> Azure AD and shared access signatures (SAS) | File storage -> Shared access signatures (SAS) only
 > Immagini: q126_post0.png
 
-**Spiegazione:**
+**Spiegazione:** AzCopy can authorize Blob storage requests with either Azure AD (azcopy login, plus a data role such as Storage Blob Data Contributor) or a SAS token appended to the URL. For Azure Files the answer expected here is SAS only, which was the sole option AzCopy supported for file shares for a long time; recent AzCopy versions added Microsoft Entra ID authorization for Azure Files as well. Reference: https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azcopy-v10
 
 ---
 
@@ -1853,7 +1853,7 @@ You have an Azure AD tenant that contains a user named External User. External U
 **Risposta corretta:** Setting 1 -> Identities | Setting 2 -> B2B collaboration
 > Immagini: q127_post0.png
 
-**Spiegazione:**
+**Spiegazione:** External User is a B2B guest that signs in with external195@gmail.com. To switch it to contractor@gmail.com you first update the user's email/identity (the Identities property shown on the Overview blade), then, from the B2B collaboration tile, select Reset redemption status: the guest receives a new invitation and redeems it with the new address, while keeping its object ID, group memberships and app assignments. Reference: https://learn.microsoft.com/en-us/entra/external-id/reset-redemption-status
 
 ---
 
@@ -1917,7 +1917,7 @@ You have an Azure AD tenant. You need to create a Microsoft 365 group that conta
 > Nota: Regola completa: (user.department -eq "Marketing") and (user.country -eq "France")
 > Immagini: q131_post0.png
 
-**Spiegazione:**
+**Spiegazione:** The rule must keep only users of the marketing department who are in France: (user.department -eq "Marketing") and (user.country -eq "France"). department is a user property, -eq compares it with an exact value, and the two expressions are combined with and because both conditions must be true; device properties do not apply to a group of users. Reference: https://learn.microsoft.com/en-us/entra/identity/users/groups-dynamic-membership
 
 ---
 
@@ -1926,11 +1926,11 @@ You have an Azure AD tenant. You need to create a Microsoft 365 group that conta
 
 You have an Azure AD tenant. You need to modify the Default user role permissions settings for the tenant. The solution must meet the following requirements: Standard users must be prevented from creating new service principals. Standard users must only be able to use PowerShell or Microsoft Graph to manage their own Azure resources. Which two settings should you modify? To answer, select the appropriate settings in the answer area. NOTE: Each correct answer is worth one point.
 
-**Risposta corretta:** Users can register applications -> Yes | Restrict access to Azure AD administration portal -> No
-> Nota: Due interruttori evidenziati nel pannello User settings
-> Immagini: q132_post0.png
+**Risposta corretta:** Users can register applications -> No | Restrict access to Azure AD administration portal -> Yes
+> Nota: Le due impostazioni da modificare sono evidenziate nel pannello User settings: Users can register applications va portata da Yes a No, Restrict access to Azure AD administration portal da No a Yes.
+> Esibito: q132_pre0.png
 
-**Spiegazione:**
+**Spiegazione:** Both settings are currently in the wrong state and must be flipped. Users can register applications set to No stops standard users from registering applications, which is what creates new service principals in the tenant. Restrict access to Azure AD administration portal set to Yes blocks non-administrators from the Azure AD portal, so they can manage their own resources only through PowerShell or Microsoft Graph. Reference: https://learn.microsoft.com/en-us/entra/fundamentals/users-default-permissions
 
 ---
 
@@ -1942,7 +1942,7 @@ You have an Azure subscription named Sub1 that contains the blob containers show
 **Risposta corretta:** User1 can read blob2. -> No | User1 can read blob3. -> No | User2 can read blob1. -> Yes
 > Immagini: q133_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Condition1 limits User1's Storage Blob Data Reader role: a blob read is allowed only when the container name equals cont1, so User1 can read blob1 but neither blob2 (cont2) nor blob3 (cont3). Condition2 restricts only write operations of User2's Storage Blob Data Owner role (allowed only on paths containing 2); reads are not affected, and the role is scoped to storage1, so User2 can read blob1. Reference: https://learn.microsoft.com/en-us/azure/role-based-access-control/conditions-format
 
 ---
 
@@ -1968,7 +1968,7 @@ You purchase a new Azure subscription. You create an Azure Resource Manager (ARM
 **Risposta corretta:** Three resource groups are created when you run the script. -> No | A resource group named RGroup5 is created. -> No | All the resource groups are created in the East US Azure region. -> Yes
 > Immagini: q135_post0.png
 
-**Spiegazione:**
+**Spiegazione:** The subscription-level deployment creates four resource groups, not three: the copy loop with count 2 creates RGS0 and RGS1, then ResGrp8, and finally RGroup plus length(parameters('obj1')) - obj1 has four properties (propA to propD), so the group is RGroup4, not RGroup5. Every location resolves to East US: the copy loop uses eastus, last(variables('var1')) is eastus, and par1 defaults to eastus. Reference: https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/deploy-to-subscription
 
 ---
 
@@ -2048,7 +2048,7 @@ You have a Microsoft Entra tenant that contains the groups shown in the followin
 **Risposta corretta:** Users -> User1, User2, User3, and User4 | Groups -> Group2 and Group4 only
 > Immagini: q140_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Licenses never block the deletion of a user, whether assigned directly or through a group, so all four users can be deleted. A group cannot be deleted while it has licenses assigned to it - you must remove the license assignment first - so only Group2 and Group4, which have no assigned licenses, can be deleted. Reference: https://learn.microsoft.com/en-us/entra/identity/users/licensing-groups-assign
 
 ---
 
@@ -2077,7 +2077,7 @@ You have a Microsoft Entra tenant that is linked to the subscriptions shown in t
 **Risposta corretta:** User1 can resize VM1. -> Yes | User2 can create a new storage account in RG1. -> No | User3 can assign User1 the Owner role for RG3. -> Yes
 > Immagini: q142_post0.png
 
-**Spiegazione:**
+**Spiegazione:** User1 is Contributor on MG2, which contains Sub3 and therefore RG3 and VM1, so User1 can resize VM1. User2 has Storage Account Contributor only on storage1: the role is scoped to that single account and does not allow creating new storage accounts in RG1. User3 is User Access Administrator at the Tenant Root Group, inherited by every subscription and resource group, so User3 can assign User1 the Owner role for RG3. Reference: https://learn.microsoft.com/en-us/azure/role-based-access-control/scope-overview
 
 ---
 
@@ -2094,7 +2094,7 @@ Your on-premises network contains a VPN gateway. You have an Azure subscription 
 **Risposta corretta:** B
 > Esibito: q143_pre0.png
 
-**Spiegazione:**
+**Spiegazione:** A private endpoint gives storage1 a private IP address inside the virtual network of VM1, through Azure Private Link: traffic from VM1 to storage1 then stays on the Microsoft backbone and never crosses the internet. An NSG only filters traffic, Microsoft Entra Application Proxy publishes on-premises web apps, and Azure Virtual WAN connects branches and networks, not a VM to a PaaS service. Reference: https://learn.microsoft.com/en-us/azure/storage/common/storage-private-endpoints
 
 ---
 
@@ -2112,7 +2112,7 @@ You have a Microsoft Entra tenant. You plan to perform a bulk import of users. Y
 
 **Risposta corretta:** C, F
 
-**Spiegazione:**
+**Spiegazione:** Bulk create in the Microsoft Entra admin center imports users from a CSV file that you download as a template and fill in with the user attributes, department included. Groups with the Dynamic User membership type and a rule on user.department then add each imported user to the right group automatically, with no further work; assigned groups, a PowerShell parser or an ARM template would all require extra effort. Reference: https://learn.microsoft.com/en-us/entra/identity/users/users-bulk-add
 
 ---
 
@@ -2129,7 +2129,7 @@ You have an Azure subscription that contains a storage account named storage1. Y
 
 **Risposta corretta:** D
 
-**Spiegazione:**
+**Spiegazione:** Azure Key Vault can manage the access keys of a storage account: once the account is added to the vault as a managed storage account, Key Vault regenerates its keys on a defined schedule (for example every 90 days), so they rotate automatically. Lifecycle management moves or deletes blobs, redundancy and backup or Recovery Services vaults protect data, and none of them touch the account keys. Reference: https://learn.microsoft.com/en-us/azure/key-vault/secrets/overview-storage-keys
 
 ---
 
@@ -2147,7 +2147,7 @@ You have an Azure subscription that contains the Microsoft Entra identities show
 **Risposta corretta:** D
 > Esibito: q146_pre0.png
 
-**Spiegazione:**
+**Spiegazione:** Self-service password reset is enabled tenant-wide either for All users or for Selected groups - there is no option to target a single user directly. In the Selected scope you can choose groups, both security groups and Microsoft 365 groups, so SSPR can be enabled for Group1 and Group2; User1 gets it only by being a member of one of those groups. Reference: https://learn.microsoft.com/en-us/entra/identity/authentication/tutorial-enable-sspr
 
 ---
 
@@ -2159,7 +2159,7 @@ You have a Microsoft Entra tenant. You need to ensure that when a new Microsoft 
 **Risposta corretta:** 1. Create a group naming policy. -> 2. Set Add prefix to Attribute. -> 3. Set Select type to Department.
 > Immagini: q147_post0.png
 
-**Spiegazione:**
+**Spiegazione:** The format <Department><Group name> puts a value taken from the user's profile before the group name. In the Microsoft Entra admin center you create a group naming policy, add a prefix of type Attribute (rather than a fixed String) and select the Department attribute. The policy applies to Microsoft 365 groups created afterwards; company branding has nothing to do with group names. Reference: https://learn.microsoft.com/en-us/entra/identity/users/groups-naming-policy
 
 ---
 
@@ -2171,7 +2171,7 @@ You have a Microsoft Entra tenant that contains the users shown in the following
 **Risposta corretta:** Users -> User1, User2, User3, and User4 | Groups -> Group1 and Group3 only
 > Immagini: q148_post0.png
 
-**Spiegazione:**
+**Spiegazione:** A license, whether assigned directly or inherited from a group, never prevents deleting a user, so all four users can be deleted. A group with a license assigned to it cannot be deleted until the license assignment is removed: Group2 and Group4 have Microsoft Entra ID P2 assigned, so only Group1 and Group3 can be deleted. Reference: https://learn.microsoft.com/en-us/entra/identity/users/licensing-groups-assign
 
 ---
 
@@ -2183,7 +2183,7 @@ You have an Azure subscription that contains the resources shown in the followin
 **Risposta corretta:** Create a -> Managed identity | Use the secret from -> Vault1, Vault2, or Vault3
 > Immagini: q149_post0.png
 
-**Spiegazione:**
+**Spiegazione:** app1 should authenticate to Key Vault with a managed identity: Azure manages the credentials, so no secret has to be stored in the app, and the identity is then granted access to the secrets (Key Vault Secrets User role or an access policy). A key vault can be reached by any identity in the same Microsoft Entra tenant, whatever its resource group or region, so app1 can use the secret from Vault1, Vault2 or Vault3. Reference: https://learn.microsoft.com/en-us/azure/key-vault/general/authentication
 
 ---
 
@@ -2199,7 +2199,7 @@ You have a Microsoft Entra tenant named contoso.com. You collaborate with an ext
 
 **Risposta corretta:** D
 
-**Spiegazione:**
+**Spiegazione:** Collaboration restrictions, in External collaboration settings, decide which domains can be invited: setting it to Allow invitations only to the specified domains (most restrictive) and listing fabrikam.com limits B2B invitations to that partner. Tenant restrictions control which external tenants your own users can sign in to, Microsoft cloud settings govern collaboration with other Microsoft clouds, and guest user access restrictions decide what guests can see in the directory. Reference: https://learn.microsoft.com/en-us/entra/external-id/allow-deny-list
 
 ---
 
@@ -2217,7 +2217,7 @@ You have an Azure subscription that contains a storage account named storage1. T
 
 **Risposta corretta:** D, E
 
-**Spiegazione:**
+**Spiegazione:** Azure ABAC role assignment conditions are supported on the storage data roles for blobs and queues, such as Storage Blob Data Reader, Storage Blob Data Contributor and Storage Blob Data Owner: they are the roles that grant access to the blob data and can carry a condition. Owner and Storage Account Contributor are management-plane roles, Storage Account Backup Contributor serves Azure Backup, and Storage Blob Delegator only allows getting a user delegation key. Reference: https://learn.microsoft.com/en-us/azure/role-based-access-control/conditions-overview
 
 ---
 
@@ -2229,7 +2229,7 @@ Case study - This is a case study. Case studies are not timed separately. You ca
 **Risposta corretta:** Admin1 can assign Attribute1 to Group1. -> No | Admin2 can assign Attribute1 to User1. -> No | Admin3 can assign Attribute1 to Group2. -> No
 > Immagini: q152_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Custom security attributes can be assigned to users and to enterprise applications (service principals), not to groups, so Attribute1 can never be assigned to Group1 or Group2, whatever the role. Assigning attributes requires the Attribute Assignment Administrator role: Admin1 is a Global Administrator, but that role does not include custom security attribute permissions by default, and Admin2's Attribute Definition Administrator only defines attributes, it cannot assign them. Reference: https://learn.microsoft.com/en-us/entra/fundamentals/custom-security-attributes-overview
 
 ---
 
@@ -2246,7 +2246,7 @@ You have a Microsoft Entra tenant configured as shown in the following exhibit. 
 **Risposta corretta:** A
 > Esibito: q153_pre0.png, q153_pre1.png
 
-**Spiegazione:**
+**Spiegazione:** The tenant runs Microsoft Entra ID Free, and group-based licensing requires a paid plan such as Microsoft Entra ID P1 (or a product that includes it). Without it, licenses can only be assigned directly to users, so the Microsoft Fabric license can be assigned to User1 but neither to Group1 nor to Group2. Reference: https://learn.microsoft.com/en-us/entra/fundamentals/concept-group-based-licensing
 
 ---
 
@@ -2262,7 +2262,7 @@ You have an Azure subscription that contains a storage account named storage. Th
 
 **Risposta corretta:** D
 
-**Spiegazione:**
+**Spiegazione:** A SAS expiration policy sets a recommended upper limit for the validity interval of shared access signatures on the storage account. Once it is enabled, generating a SAS whose interval exceeds the limit - here seven days - produces a warning (the request is still allowed, but it is logged), which is exactly what is required. Locks, alert rules and lifecycle management rules have nothing to do with SAS validity. Reference: https://learn.microsoft.com/en-us/azure/storage/common/sas-expiration-policy
 
 ---
 
@@ -2320,7 +2320,7 @@ You have an Azure Storage account named storage1. You have an Azure App Service 
 **Risposta corretta:** App1 -> Access control (IAM) | App2 -> Shared access signatures (SAS)
 > Immagini: q158_post0.png
 
-**Spiegazione:**
+**Spiegazione:** App1 runs with a managed identity, so in Access control (IAM) you grant that identity a data role such as Storage Blob Data Reader: no secret is involved at all. App2 must read for the next 30 days only: a shared access signature with read permission and an expiry 30 days out grants time-limited access that stops on its own. Access keys give full, permanent access to the account and are themselves secrets to protect. Reference: https://learn.microsoft.com/en-us/azure/storage/common/storage-sas-overview
 
 ---
 
@@ -2363,7 +2363,7 @@ You have an Azure subscription that contains the resources shown in the followin
 **Risposta corretta:** An administrator can move VNET1 to RG2 -> Yes | The state of VM1 changed to deallocated -> No | An administrator can modify the address space of VNET2 -> No
 > Immagini: q161_post0.png
 
-**Spiegazione:**
+**Spiegazione:** The Not allowed resource types policy is assigned to RG2 and blocks virtual networks (classic and ARM) and virtual machines. Moving VNET1 from RG1 to RG2 is a move operation, which this policy does not evaluate, so the administrator can move it. A policy never stops or deallocates existing resources: VM1 is merely reported as non-compliant and keeps running. Updating a non-compliant resource, such as changing the address space of VNET2, is a write request that the deny effect blocks. Reference: https://learn.microsoft.com/en-us/azure/governance/policy/concepts/effect-deny
 
 ---
 
@@ -2387,7 +2387,7 @@ You have Azure subscription that includes following Azure file shares: You have 
 **Risposta corretta:** share2 can be added as a cloud endpoint for Group1 -> No | E:\Folder2 on Server1 can be added as a server endpoint for Group1 -> No | D:\Data on Server2 can be added as a server endpoint for Group1 -> Yes
 > Immagini: q163_post0.png
 
-**Spiegazione:**
+**Spiegazione:** A sync group has exactly one cloud endpoint: Group1 already uses share1, so share2 cannot be added to it. A registered server can contribute only one server endpoint to a given sync group: Server1 already provides D:\Folder1, so E:\Folder2 cannot be added to Group1 (it could go into another sync group). Server2 is registered in Sync1 and has no endpoint in Group1 yet, so D:\Data can be added. Reference: https://learn.microsoft.com/en-us/azure/storage/file-sync/file-sync-planning
 
 ---
 
@@ -2413,7 +2413,7 @@ You have an Azure subscription that contains an Azure Storage account. You plan 
 > Nota: Comando: azcopy make 'https://mystorageaccount.blob.core.windows.net/vmimages'
 > Immagini: q165_post0.png
 
-**Spiegazione:**
+**Spiegazione:** azcopy make creates a container (or a file share) at the URL you pass; sync and copy move data instead. A container for blobs - a VM image is stored as a page blob - lives on the Blob service endpoint, so the URL is https://mystorageaccount.blob.core.windows.net/vmimages: azcopy make 'https://mystorageaccount.blob.core.windows.net/vmimages'. Reference: https://learn.microsoft.com/en-us/azure/storage/common/storage-ref-azcopy-make
 
 ---
 
@@ -2425,7 +2425,7 @@ You have an Azure File sync group that has the endpoints shown in the following 
 **Risposta corretta:** File1 -> Endpoint1 only | File2 -> Endpoint1, Endpoint2, and Endpoint3
 > Immagini: q166_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Endpoint1 is the cloud endpoint. Azure File Sync does not see changes made directly in the Azure file share right away: a change detection job scans the share only once every 24 hours, so within that window File1 stays on Endpoint1 only. File2 is added to a server endpoint, whose changes are picked up immediately and synced to the cloud endpoint and from there to Endpoint3 (cloud tiering only affects how files are cached locally, not whether they appear). Reference: https://learn.microsoft.com/en-us/azure/storage/file-sync/file-sync-troubleshoot-sync-errors
 
 ---
 
@@ -2449,7 +2449,7 @@ You have a sync group named Sync1 that has a cloud endpoint. The cloud endpoint 
 **Risposta corretta:** On the cloud endpoint, File1.txt is overwritten by File1.txt from Share1. -> No | On Server1, File1.txt is overwritten by File1.txt from the cloud endpoint. -> No | File1.txt from Share1 replicates to Share2. -> Yes
 > Immagini: q168_post0.png
 
-**Spiegazione:**
+**Spiegazione:** When Share1 joins the sync group, File1.txt exists both on the cloud endpoint and on Server1. Azure File Sync never overwrites in a conflict: it keeps both versions and renames one of them by appending the server or cloud name (for example File1-Server1.txt), so neither copy is overwritten. When Share2 is added an hour later, it receives all the files in the namespace, File1.txt from Share1 included. Reference: https://learn.microsoft.com/en-us/azure/storage/file-sync/file-sync-troubleshoot-sync-errors
 
 ---
 
@@ -2669,7 +2669,7 @@ You have an Azure subscription that contains an Azure file share. You have an on
 **Risposta corretta:** 1. Create a Storage Sync Service -> 2. Create a sync group
 > Immagini: q183_post0.png
 
-**Spiegazione:**
+**Spiegazione:** In the Azure subscription you prepare two objects: a Storage Sync Service, the top-level resource that servers register to, and a sync group inside it, which holds the cloud endpoint (the Azure file share) and later the server endpoints. Installing the Azure File Sync agent and running Server Registration are done on Server1 itself, not in the subscription. Reference: https://learn.microsoft.com/en-us/azure/storage/file-sync/file-sync-deployment-guide
 
 ---
 
@@ -2690,10 +2690,10 @@ You have an Azure subscription that contains the file shares shown in the follow
 
 You have an Azure subscription named Subscription1 that contains the resources shown in the following table: You plan to configure Azure Backup reports for Vault1. You are configuring the Diagnostics settings for the AzureBackupReports log. Which storage accounts and which Log Analytics workspaces can you use for the Azure Backup reports of Vault1? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
 
-**Risposta corretta:** Storage accounts -> storage1, storage2, and storage3 | Log Analytics workspaces -> Analytics3 only
-> Immagini: q185_post0.png
+**Risposta corretta:** Storage accounts -> storage3 only | Log Analytics workspaces -> Analytics1, Analytics2, and Analytics3
+> Esibito: q185_pre0.png, q185_pre1.png
 
-**Spiegazione:** Box 1: storage1, storage2, and storage3 The location and subscription where this Log Analytics workspace can be created is independent of the location and subscription where your vaults exist. Box 2: Analytics3 - Vault1 and Analytics3 are both in West Europe. Reference: https://docs.microsoft.com/en-us/azure/backup/backup-azure-configure-reports
+**Spiegazione:** Box 1: storage3 only - Diagnostic settings of a Recovery Services vault can archive to a storage account only in the same region as the vault: Vault1 is in West Europe, and storage3 is the only account there. Box 2: Analytics1, Analytics2, and Analytics3 - The Log Analytics workspace that receives the backup reports data can be in any region and subscription, independent of the vault. Reference: https://learn.microsoft.com/en-us/azure/backup/backup-azure-diagnostic-events
 
 ---
 
@@ -2705,7 +2705,7 @@ You have an Azure subscription that contains the storage accounts shown in the f
 **Risposta corretta:** You can create a premium file share in -> contoso104 only | You can use the Archive access tier in -> contoso101 or contoso103 only
 > Immagini: q186_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Premium file shares exist only in FileStorage accounts, so contoso104 is the only option. The Archive access tier is available in general-purpose v2 (StorageV2) and legacy Blob storage accounts - contoso101 and contoso103 - but not in general-purpose v1 (Storage) accounts like contoso102, nor in FileStorage accounts, which hold no blobs. Reference: https://learn.microsoft.com/en-us/azure/storage/common/storage-account-overview
 
 ---
 
@@ -2717,7 +2717,7 @@ You have an Azure subscription named Subscription1. In Subscription1, you create
 **Risposta corretta:** If on September 2, 2018, you run Microsoft Azure Storage Explorer on a computer that has an IP address of 193.77.134.1, and you use SAS1 to connect to the storage account, you [answer choice]. -> will have no access | If on September 10, 2018, you run the net use command on a computer that has an IP address of 193.77.134.50, and you use SAS1 as the password to connect to share1, you [answer choice]. -> will have no access
 > Immagini: q187_post0.png
 
-**Spiegazione:**
+**Spiegazione:** SAS1 is limited to the File service, valid from September 1 to September 14, 2018, and only for IP addresses 193.77.134.10-193.77.134.50. A computer at 193.77.134.1 is outside the allowed range, so Storage Explorer gets no access even within the validity period. net use mounts the share over SMB, which does not accept a SAS token as the password - it needs the storage account key or an identity-based login - so the connection fails and there is no access. Reference: https://learn.microsoft.com/en-us/azure/storage/common/storage-sas-overview
 
 ---
 
@@ -2811,7 +2811,7 @@ You have an Azure subscription that contains an Azure Storage account named stor
 **Risposta corretta:** A server that has a public IP address of 131.107.103.10 can access storageaccount1 -> Yes | Individual blobs in storageaccount1 can be set to use the archive tier -> Yes | Global administrations in Azure Active Directory (Azure AD) can access a file share hosted in storageaccount1 by using their Azure AD credentials -> No
 > Immagini: q193_post0.png
 
-**Spiegazione:** Reference: https://docs.microsoft.com/en-us/azure/templates/microsoft.storage/storageaccounts?tabs=json
+**Spiegazione:** networkAcls has defaultAction set to Allow with no IP or virtual network rules, so the account accepts connections from any network, including the server at 131.107.103.10. The account is StorageV2 (general-purpose v2), which supports per-blob tiering: individual blobs can be set to Archive even though the account default tier is Hot. Identity-based authentication for Azure Files is not configured in the template (no azureFilesIdentityBasedAuthentication), so Azure AD credentials cannot be used to access its file shares, whatever the user's role. Reference: https://learn.microsoft.com/en-us/azure/templates/microsoft.storage/storageaccounts
 
 ---
 
@@ -2856,7 +2856,7 @@ You have an Azure Storage account named storage1 that contains a blob container.
 **Risposta corretta:** On October 10, you can read Dep1File1.docx. -> No | On October 10, you can read File2.docx. -> Yes | On October 10, you can read File3.docx. -> Yes
 > Immagini: q196_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Dep1File1.docx matches Rule1 (prefix container1/Dep1): last modified on October 2, it moves to the archive tier two days later, so on October 10 it is archived and cannot be read until it is rehydrated. File2.docx, edited on October 5, follows Rule2 and is moved to cool on October 8 - still readable. File3.docx, edited on October 2, moves to cool on October 5 and would go to archive only after nine days, on October 11, so on October 10 it can still be read. Reference: https://learn.microsoft.com/en-us/azure/storage/blobs/lifecycle-management-overview
 
 ---
 
@@ -2882,10 +2882,10 @@ You are configuring Azure Active Directory (Azure AD) authentication for an Azur
 
 You have an Azure Storage account named storage1 that stores images. You need to create a new storage account and replicate the images in storage1 to the new account by using object replication. How should you configure the new account? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
 
-**Risposta corretta:** Account type -> StorageV2 or BlobStorage only | Object type to create in the new account -> Container
-> Immagini: q198_post0.png
+**Risposta corretta:** Account type -> StorageV2 only | Object type to create in the new account -> Container
+> Esibito: q198_pre0.png
 
-**Spiegazione:** Reference: https://docs.microsoft.com/en-us/azure/storage/blobs/object-replication-overview
+**Spiegazione:** Object replication copies block blobs asynchronously between containers, and both the source and the destination account must be general-purpose v2 (StorageV2) or premium block blob accounts: legacy BlobStorage and FileStorage accounts are not supported. In the new account you create a container, which the replication policy uses as the destination for the source container's blobs. Reference: https://learn.microsoft.com/en-us/azure/storage/blobs/object-replication-overview
 
 ---
 
@@ -2957,7 +2957,7 @@ You have an Azure subscription. The subscription contains a storage account name
 **Risposta corretta:** On June 6, File1 will be stored in the Cool access tier. -> No | On June 1, File2 will be stored in the Cool access tier. -> No | On June 16, File2 will be stored in the Archive access tier. -> No
 > Immagini: q203_post0.png
 
-**Spiegazione:**
+**Spiegazione:** File1 is in container1, so Rule1 moves it to archive after 3 days, on June 4; on June 6 it is in Archive, not Cool (when several rules apply, the cheaper action - archive - wins over cool). File2 is uploaded to the Hot tier and on June 1 it is still Hot. On June 6 Rule2 moves File2 to Cool, and on June 11 Rule3 deletes it (10 days in container2), so by June 16 there is nothing left for Rule4 to archive. Reference: https://learn.microsoft.com/en-us/azure/storage/blobs/lifecycle-management-overview
 
 ---
 
@@ -2969,7 +2969,7 @@ You have an Azure subscription. You plan to deploy a storage account named stora
 **Risposta corretta:** Changes made to the data in storage1 can be rolled back after seven days. -> No | Only users located in the East US Azure region can connect to storage1. -> No | Three copies of storage1 will be maintained in the East US Azure region. -> Yes
 > Immagini: q204_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Point-in-time restore is enabled with a 6-day window (restorePolicy days: 6), so changes can be rolled back for up to six days, not after seven. networkAcls has defaultAction Allow, so storage1 accepts connections from any location, not only from East US. The SKU is Standard_LRS: locally redundant storage keeps three copies of the data within a single datacenter in East US. Reference: https://learn.microsoft.com/en-us/azure/storage/blobs/point-in-time-restore-overview
 
 ---
 
@@ -2997,7 +2997,7 @@ You have an Azure subscription that contains a storage account named storage1. T
 **Risposta corretta:** "baseBlob" (box 1) -> "tierToArchive":{ | "filters" (box 2) -> "prefixMatch":[
 > Immagini: q206_post0.png
 
-**Spiegazione:**
+**Spiegazione:** The lowest-cost tier is Archive, so the baseBlob action is tierToArchive (with daysAfterModificationGreaterThan: 90). To restrict the rule to container1, the filters section uses prefixMatch with the container name ("container1/"); blobTypes is also required but only states the blob type (blockBlob), and blobIndexMatch filters on index tags, not on containers. Reference: https://learn.microsoft.com/en-us/azure/storage/blobs/lifecycle-management-overview
 
 ---
 
@@ -3009,7 +3009,7 @@ You have an Azure subscription that contains a virtual machine named VM1. You ne
 **Risposta corretta:** 1. Create a Recovery Services vault. -> 2. Set Replication to Zone-redundant storage (ZRS). -> 3. For VM1, create a backup policy and configure the backup.
 > Immagini: q207_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Backups of an Azure VM are stored in a Recovery Services vault, so you create the vault first. Storing them across three availability zones of the primary region requires the vault's storage replication type to be zone-redundant (ZRS), and it must be set before any item is protected, because it cannot be changed afterwards. Finally you create a backup policy for VM1 and enable the backup. Reference: https://learn.microsoft.com/en-us/azure/backup/backup-create-recovery-services-vault
 
 ---
 
@@ -3055,7 +3055,7 @@ You have an Azure AD user named User1 and a read-access geo-redundant storage (R
 **Risposta corretta:** Setting 1 -> Access Control (IAM) | Setting 2 -> Geo-replication
 > Immagini: q210_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Writing blob data with an Azure AD identity requires a data-plane role, so you use Access Control (IAM) to assign User1 a role such as Storage Blob Data Contributor. A customer-managed failover of an RA-GRS account to its secondary region is started from the Geo-replication (Redundancy) blade of the account. Reference: https://learn.microsoft.com/en-us/azure/storage/common/storage-initiate-account-failover
 
 ---
 
@@ -3084,7 +3084,7 @@ You have an Azure subscription that contains a user named User1 and a storage ac
 **Risposta corretta:** key1 -> Table1, folder1, and container1 | SAS1 -> Table1 only
 > Immagini: q212_post0.png
 
-**Spiegazione:**
+**Spiegazione:** key1 is a storage account access key: whoever uses it has full access to every service in the account, regardless of RBAC roles, so User1 can write to Table1, folder1 and container1. SAS1 is signed with key1 but allows only the Table service, so with SAS1 User1 can write to Table1 only - the File and Blob services are not included. Reference: https://learn.microsoft.com/en-us/azure/storage/common/storage-sas-overview
 
 ---
 
@@ -3096,7 +3096,7 @@ You have an Azure subscription that contains the storage account shown in the fo
 **Risposta corretta:** The maximum number of additional stored access policies that you can create for container1 is [answer choice]. -> 3 | The maximum number of additional immutable blob storage policies that you can create for container1 is [answer choice]. -> 1
 > Immagini: q213_post0.png
 
-**Spiegazione:**
+**Spiegazione:** A container can have at most five stored access policies: Policy1 and Policy2 already exist, so three more can be created. For immutable storage a container can have one time-based retention policy and one legal hold: the time-based retention policy already exists, so the only policy you can still add is a legal hold. Reference: https://learn.microsoft.com/en-us/azure/storage/blobs/immutable-storage-overview
 
 ---
 
@@ -3141,7 +3141,7 @@ You have an Azure subscription that contains the storage accounts shown in the f
 **Risposta corretta:** Lifecycle management -> storage1, storage2, and storage3 | The Archive access tier -> storage2 only
 > Immagini: q216_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Lifecycle management is available for general-purpose v2, Blob storage and premium block blob (BlockBlobStorage) accounts, so all three accounts support it. The Archive tier is supported only in standard GPv2 and Blob storage accounts that use LRS, GRS or RA-GRS: storage1 uses GZRS and storage3 is a premium account, so only storage2 (Blob storage with RA-GRS) can move data to Archive. Reference: https://learn.microsoft.com/en-us/azure/storage/blobs/access-tiers-overview
 
 ---
 
@@ -3169,7 +3169,7 @@ You have an Azure subscription that contains a storage account named storage1. T
 **Risposta corretta:** "tierToCool" (box 1) -> "daysAfterModificationGreaterThan" | "blobTypes" (box 2) -> "Blockblob"
 > Immagini: q218_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Blobs NOT updated for 45 days are selected by daysAfterModificationGreaterThan: 45 inside the tierToCool action (daysAfterCreationGreaterThan counts from creation, daysAfterLastAccessTimeGreaterThan requires access tracking and counts reads too). Lifecycle tiering applies to block blobs, so the blobTypes filter is blockBlob. Reference: https://learn.microsoft.com/en-us/azure/storage/blobs/lifecycle-management-overview
 
 ---
 
@@ -3247,7 +3247,7 @@ You have an Azure subscription that contains the resource groups shown in the fo
 **Risposta corretta:** You can deploy AKS1 to VNet2. -> No | You can deploy AKS2 to VNet1. -> Yes | You can deploy AKS3 to VNet3. -> Yes
 > Immagini: q223_post0.png
 
-**Spiegazione:**
+**Spiegazione:** An AKS cluster must be deployed to a virtual network in the same region. AKS1 is in West US while VNet2 is in Central US, so it cannot use VNet2. AKS2 (West US, Azure CNI, 100 nodes) fits VNet1 in West US: with Azure CNI every node and pod gets a subnet IP - about 100 x 31 addresses with the default 30 pods per node - and the /16 subnet is large enough. AKS3 uses kubenet, where only the nodes take subnet addresses (pods use a separate address space), so 50 nodes fit in the /24 Subnet3 of VNet3, also in East US. Reference: https://learn.microsoft.com/en-us/azure/aks/concepts-network
 
 ---
 
@@ -3261,7 +3261,7 @@ Note: This question is part of a series of questions that present the same scena
 
 **Risposta corretta:** B
 
-**Spiegazione:**
+**Spiegazione:** Listing and regenerating access keys requires the Microsoft.Storage/storageAccounts/listkeys/action and regeneratekey/action permissions. Storage Account Encryption Scope Contributor only lets a user manage encryption scopes (and read the account properties), so it does not meet the goal. Reference: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/storage
 
 ---
 
@@ -3273,7 +3273,7 @@ You have an Azure subscription that has offices in the East US and West US Azure
 **Risposta corretta:** To minimize the network costs of accessing adatum22, modify the [answer choice] setting. -> Default routing tier | After adatum22 is created, you can modify the [answer choice] setting. -> Encryption type
 > Immagini: q225_post0.png
 
-**Spiegazione:**
+**Spiegazione:** adatum22 uses Microsoft network routing, the default routing tier that carries traffic over the Microsoft global network; switching the routing preference to Internet routing sends traffic over the public internet earlier and costs less, so the setting to change is Default routing tier. After creation you can still switch the Encryption type between Microsoft-managed and customer-managed keys, while infrastructure encryption, customer-managed key support for tables and queues, and the premium account type can only be chosen when the account is created. Reference: https://learn.microsoft.com/en-us/azure/storage/common/network-routing-preference
 
 ---
 
@@ -3285,7 +3285,7 @@ You have an Azure subscription. You plan to deploy a new storage account. You ne
 **Risposta corretta:** Key -> RSA | Bit length -> 4096
 > Immagini: q226_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Customer-managed keys for Azure Storage encryption must be RSA or RSA-HSM keys stored in Azure Key Vault or Managed HSM, with a size of 2048, 3072 or 4096 bits; AES and 3DES are not key types you can bring for this purpose. The maximum supported bit length is therefore 4096. Reference: https://learn.microsoft.com/en-us/azure/storage/common/customer-managed-keys-overview
 
 ---
 
@@ -3311,15 +3311,15 @@ You have an Azure Storage account that contains 5,000 blobs accessed by multiple
 You have an Azure Storage account named storage1. For storage1, you create an encryption scope named Scope1. Which storage types can you encrypt by using Scope?
 
 - **A.** file shares only
-- **B.** containers only
+- **B.** containers only **← CORRETTA**
 - **C.** file shares and containers only
 - **D.** containers and tables only
 - **E.** file shares, containers, and tables only
-- **F.** file shares, containers, tables, and queues **← CORRETTA**
+- **F.** file shares, containers, tables, and queues
 
-**Risposta corretta:** F
+**Risposta corretta:** B
 
-**Spiegazione:** Encryption scopes in Azure Storage are used to manage the encryption of data at rest within the storage account. They apply to file shares, containers, tables, and queues. This allows granular control over how data is encrypted across these different types of storage, providing flexibility and enhanced security measures for various data storage scenarios within Azure. Therefore, the correct answer is that encryption scopes can be used for file shares, containers, tables, and queues.
+**Spiegazione:** Encryption scopes are a Blob storage feature: an encryption scope can be set as the default for a container or applied to an individual blob, so the blobs in it are encrypted with that scope's key. File shares, tables and queues cannot use encryption scopes - they are always encrypted with the account-level key (tables and queues can use a customer-managed key only if the account was created with that support). Reference: https://learn.microsoft.com/en-us/azure/storage/blobs/encryption-scope-overview
 
 ---
 
@@ -3331,7 +3331,7 @@ You have an Azure subscription. You plan to create a role definition to meet the
 **Risposta corretta:** Perform all actions on a virtual network -> "Microsoft.Network/virtualNetworks/*" | View the configuration data of a storage account -> "Microsoft.Storage/StorageAccounts/read"
 > Immagini: q229_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Performing all actions on a virtual network needs the wildcard Microsoft.Network/virtualNetworks/*, which covers read, write, delete and every sub-operation; write or delete alone would cover just one action. Viewing the configuration of a storage account is a management-plane read, Microsoft.Storage/storageAccounts/read: Microsoft.Storage/storageAccounts/* would also allow changes, and the blob read permission is a data action that reads blob contents, not the configuration. Reference: https://learn.microsoft.com/en-us/azure/role-based-access-control/resource-provider-operations
 
 ---
 
@@ -3359,7 +3359,7 @@ You have an Azure subscription that contains a virtual machine named VM1. To VM1
 **Risposta corretta:** Storage type -> Premium SSD that uses zone-redundant storage (ZRS) | Host caching -> Read-only
 > Immagini: q231_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Premium SSD gives the lowest latency and the highest performance among the options, and zone-redundant storage (ZRS) replicates the disk synchronously across three availability zones, so the data survives a datacenter outage. Read-only host caching speeds up reads while every write goes straight to the durable disk; Read/Write caching keeps writes in the host cache, where they could be lost if the host fails. Reference: https://learn.microsoft.com/en-us/azure/virtual-machines/disks-redundancy
 
 ---
 
@@ -3405,7 +3405,7 @@ You have an Azure subscription that contains a storage account named storage1. Y
 > Nota: Allowed services: Blob risulta gia' selezionato nell'esibito
 > Immagini: q234_post0.png
 
-**Spiegazione:**
+**Spiegazione:** To download blobs by name, the SAS has to reach individual blobs - the Object resource type - and grant only the Read permission. Service and Container resource types would allow service- or container-level operations, and List would let users enumerate blob names instead of using names they already know. Reference: https://learn.microsoft.com/en-us/rest/api/storageservices/create-account-sas
 
 ---
 
@@ -3447,10 +3447,10 @@ You need to create an Azure Storage account named storage1. The solution must me
 
 You have an Azure Storage account named storage1 that contains two containers named container1 and container2. Blob versioning is enabled for both containers. You periodically take blob snapshots of critical blobs. You create the following lifecycle management policy. For each of the following statements, select Yes if the statement is true. Otherwise, select No. NOTE: Each correct selection is worth one point.
 
-**Risposta corretta:** A blob snapshot automatically moves to the Cool access tier after 15 days. -> Yes | A blob version in container2 automatically moves to the Archive access tier after 30 days. -> No | A rehydrated version automatically moves to the Archive access tier after 30 days. -> No
-> Immagini: q237_post0.png
+**Risposta corretta:** A blob snapshot automatically moves to the Cool access tier after 15 days. -> No | A blob version in container2 automatically moves to the Archive access tier after 30 days. -> No | A rehydrated version automatically moves to the Archive access tier after 30 days. -> No
+> Esibito: q237_pre0.png, q237_pre1.png
 
-**Spiegazione:**
+**Spiegazione:** The rule defines actions only in the version block and filters on container1/ for block blobs. Snapshots are managed by a separate snapshot block, which this policy does not contain, so a blob snapshot never moves to Cool by itself. Blob versions in container2 do not match the prefix container1/, so nothing happens to them. A rehydrated version is moved back to Archive only once daysAfterLastTierChangeGreaterThan (7 days) is also satisfied, so it does not simply go back to Archive after 30 days. Reference: https://learn.microsoft.com/en-us/azure/storage/blobs/lifecycle-management-overview
 
 ---
 
@@ -3499,7 +3499,7 @@ Note: This question is part of a series of questions that present the same scena
 
 **Risposta corretta:** A
 
-**Spiegazione:**
+**Spiegazione:** The Storage Account Key Operator Service Role allows exactly the two operations required - listing (listkeys) and regenerating (regeneratekey) the storage account access keys - and nothing else, so it meets the goal with least privilege. Reference: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/storage
 
 ---
 
@@ -3511,7 +3511,7 @@ You have an Azure Storage account named storage1 that contains a container named
 **Risposta corretta:** "blobTypes" -> blockBlob | "prefixMatch" -> container1/finance
 > Immagini: q241_post0.png
 
-**Spiegazione:**
+**Spiegazione:** A blob inventory rule filters with blobTypes and prefixMatch. The image files are block blobs, so blobTypes is blockBlob. prefixMatch values start with the container name, so container1/finance selects only the blobs in container1 whose names begin with finance; finance alone would look for a container called finance, and container1/* would include every blob. The daily schedule and the CSV format are set in the rule's schedule and format properties. Reference: https://learn.microsoft.com/en-us/azure/storage/blobs/blob-inventory
 
 ---
 
@@ -3523,7 +3523,7 @@ You have an Azure subscription that contains a storage account named storage1. T
 **Risposta corretta:** Allowed services -> Blob | Allowed resource types -> Container | Allowed permissions -> Read, List
 > Immagini: q242_post0.png
 
-**Spiegazione:**
+**Spiegazione:** The SAS must work only on blobs, so the allowed service is Blob. Enumerating the blobs of a container is a container-level operation, which needs the Container resource type, and the two permissions needed are List (enumerate) and Read (download) - nothing else, for least privilege. Note that the third setting requires both Read and List, and that, strictly, downloading a blob with an account SAS also involves the Object resource type; the official answer highlights Container. Reference: https://learn.microsoft.com/en-us/rest/api/storageservices/create-account-sas
 
 ---
 
@@ -3535,7 +3535,7 @@ You have an Azure subscription. The subscription contains a storage account name
 **Risposta corretta:** On June 6, File1 will be stored in the Cool access tier. -> No | On June 7, File2 will be stored in the Cool access tier. -> Yes | On June 16, File2 will be stored in the Archive access tier. -> No
 > Immagini: q243_post0.png
 
-**Spiegazione:**
+**Spiegazione:** File1 is in container1: Rule1 moves it to archive after 3 days (June 4), so on June 6 it is in Archive - when rules overlap, the cheaper archive action wins over Rule2's cool. File2 is in container2: Rule2 moves it to Cool after 5 days, so on June 7 it is in Cool. On June 11, 10 days after the upload, Rule3 deletes File2, so on June 16 it cannot be in Archive. Reference: https://learn.microsoft.com/en-us/azure/storage/blobs/lifecycle-management-overview
 
 ---
 
@@ -3547,7 +3547,7 @@ You have an Azure Storage account named contoso2024 that contains the resources 
 **Risposta corretta:** User1 can read File1. -> No | User2 can read File2. -> No | User3 can read File1 and File2. -> No
 > Immagini: q244_post0.png
 
-**Spiegazione:**
+**Spiegazione:** contoso2024 has Allow storage account key access disabled, so neither access keys nor SAS tokens signed with them work: only Microsoft Entra authorization with data roles is accepted. User1's Reader role covers the management plane only, not blob data. User2's Storage Account Contributor role manages the account (and could list keys, which are now useless) but grants no data access to the file share. User3 has only an access key, which the account rejects. Nobody can read File1 or File2. Reference: https://learn.microsoft.com/en-us/azure/storage/common/shared-key-authorization-prevent
 
 ---
 
@@ -3559,7 +3559,7 @@ You have an Azure subscription linked to a hybrid Microsoft Entra tenant. The te
 **Risposta corretta:** User1 can access the content in share1. -> No | User2 can access the content in share2. -> Yes | User2 can access the content in share3. -> No
 > Immagini: q245_post0.png
 
-**Spiegazione:**
+**Spiegazione:** contoso2024 uses on-premises AD DS as its identity source, with a default share-level permission (Storage File Data SMB Share Contributor) for all authenticated identities. User1 is cloud-only, not synced from AD DS, so it cannot obtain a Kerberos ticket for the share: no access. User2 is a hybrid identity and share2 is in contoso2024, so it can access share2. share3 is in contoso2025, which has no identity-based access configured here, so User2 cannot access it with its identity. Reference: https://learn.microsoft.com/en-us/azure/storage/files/storage-files-identity-ad-ds-assign-permissions
 
 ---
 
@@ -3571,7 +3571,7 @@ Your network contains an on-premises Active Directory Domain Services (AD DS) do
 **Risposta corretta:** User1 can access content in share1. -> Yes | User2 can access content in share1. -> Yes | User3 can access content in share1. -> No
 > Immagini: q246_post0.png
 
-**Spiegazione:**
+**Spiegazione:** The default share-level permission applies to every identity that authenticates against AD DS, synced or not, and User1 is also a member of Group1, which holds Storage File Data SMB Share Contributor: User1 can access share1. User2 is in OU1, synced, and has Storage File Data SMB Share Reader: it can access share1. User3 is a cloud-only Microsoft Entra user with no AD DS account, so it cannot authenticate with the AD DS identity source of storage1. Reference: https://learn.microsoft.com/en-us/azure/storage/files/storage-files-identity-ad-ds-assign-permissions
 
 ---
 
@@ -3589,7 +3589,7 @@ You have an Azure subscription that contains the storage accounts shown in the f
 **Risposta corretta:** A
 > Esibito: q247_pre0.png
 
-**Spiegazione:**
+**Spiegazione:** Conversion to zone-redundant storage is supported for standard general-purpose v2 accounts that use LRS: storage1 qualifies. storage2 uses RA-GRS, a geo-redundant option, which cannot be converted straight to ZRS (it would have to become LRS first, or move to GZRS/RA-GZRS instead). storage3 is a legacy BlobStorage account, which does not support ZRS at all. Reference: https://learn.microsoft.com/en-us/azure/storage/common/redundancy-migration
 
 ---
 
@@ -3603,7 +3603,7 @@ Note: This question is part of a series of questions that present the same scena
 
 **Risposta corretta:** B
 
-**Spiegazione:**
+**Spiegazione:** Reader and Data Access lets a user view the storage account and list its access keys (Microsoft.Storage/storageAccounts/listkeys/action), but it does not include regeneratekey/action, so User1 could not regenerate the keys. The role meant for this task is Storage Account Key Operator Service Role. Reference: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/storage
 
 ---
 
@@ -3620,7 +3620,7 @@ You have an Azure subscription that contains a Standard SKU Azure container regi
 
 **Risposta corretta:** E
 
-**Spiegazione:**
+**Spiegazione:** Geo-replication of an Azure container registry is available only in the Premium service tier. ContReg1 is Standard, so the first step is to upgrade its SKU to Premium; after that you can add replicas in other regions. The admin user, scope maps, automation tasks and cache rules are unrelated to geo-replication. Reference: https://learn.microsoft.com/en-us/azure/container-registry/container-registry-geo-replication
 
 ---
 
@@ -3632,7 +3632,7 @@ Case study - This is a case study. Case studies are not timed separately. You ca
 **Risposta corretta:** Stored access policies -> 2 | Immutable blob storage policies -> 1
 > Immagini: q250_post0.png
 
-**Spiegazione:**
+**Spiegazione:** A container supports at most five stored access policies: cont2 will have Stored1, Stored2 and Stored3, so two more can be added. For immutable blob storage a container can have one legal hold and one time-based retention policy: the legal hold is already planned, so the only additional immutability policy is a single time-based retention policy. Reference: https://learn.microsoft.com/en-us/azure/storage/blobs/immutable-storage-overview
 
 ---
 
@@ -3649,7 +3649,7 @@ Case study - This is a case study. Case studies are not timed separately. You ca
 **Risposta corretta:** C
 > Esibito: q251_pre0.png, q251_pre1.png, q251_pre2.png, q251_pre3.png, q251_pre4.png, q251_pre5.png, q251_pre6.png, q251_pre7.png
 
-**Spiegazione:**
+**Spiegazione:** Azure Disk Encryption with a KEK has several limitations. It is not available on A-series VMs and does not support ephemeral OS disks (VM1), it does not support VMs that use Write Accelerator disks (VM4, an M-series VM), and on Windows it does not support dynamic volumes (VM5). VM2 (Windows with a basic volume) and VM3 (RHEL on standard SSDs) meet the requirements, so they are the VMs that can be encrypted. Reference: https://learn.microsoft.com/en-us/azure/virtual-machines/windows/disk-encryption-overview
 
 ---
 
@@ -3667,7 +3667,7 @@ Case study - This is a case study. Case studies are not timed separately. You ca
 **Risposta corretta:** D
 > Esibito: q252_pre0.png, q252_pre1.png, q252_pre2.png, q252_pre3.png, q252_pre4.png, q252_pre5.png, q252_pre6.png, q252_pre7.png
 
-**Spiegazione:**
+**Spiegazione:** Directories are always available in Azure file shares, so share1 and share2 can be organized with them. Blob containers support real directories only when the account has a hierarchical namespace (Data Lake Storage): storage1 has it enabled, so cont1 can use directories, while storage2 does not, so cont2 has only a flat namespace with virtual folders. Reference: https://learn.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-namespace
 
 ---
 
@@ -3805,7 +3805,7 @@ You have an Azure Kubernetes Service (AKS) cluster named AKS1 and a computer nam
 > Nota: Comando: az aks install-cli
 > Immagini: q262_post0.png
 
-**Spiegazione:** To install kubectl locally, use the az aks install-cli command: az aks install-cli Reference: https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough
+**Spiegazione:** The Azure CLI includes a command that downloads and installs the Kubernetes command-line client: az aks install-cli. Once kubectl is installed, az aks get-credentials merges the credentials of AKS1 into the local kubeconfig so kubectl can manage the cluster. docker, msiexec.exe and Install-Module are not the way to install kubectl. Reference: https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough
 
 ---
 
@@ -3817,7 +3817,7 @@ You onboard 10 Azure virtual machines to Azure Automation State Configuration. Y
 **Risposta corretta:** 1. Upload a configuration to Azure Automation State Configuration -> 2. Compile a configuration into a node configuration -> 3. Check the compliance status of the node
 > Immagini: q263_post0.png
 
-**Spiegazione:**
+**Spiegazione:** With Azure Automation State Configuration you first upload (import) a DSC configuration script to the Automation account, then compile it into a node configuration (a MOF document) that can be assigned to the onboarded VMs. Once the nodes apply it, their pull server reports let you check each node's compliance status and keep the configuration consistent over time. Tags and management groups play no part in DSC. Reference: https://learn.microsoft.com/en-us/azure/automation/automation-dsc-getting-started
 
 ---
 
@@ -4052,7 +4052,7 @@ You plan to deploy an Azure container instance by using the following Azure Reso
 **Risposta corretta:** Internet users [answer choice]. -> can connect to the container from any device | If Internet Information Services (IIS) in the container fail, [answer choice]. -> the container will restart automatically
 > Immagini: q279_post0.png
 
-**Spiegazione:**
+**Spiegazione:** The container group has a Public IP address exposing TCP port 80, so internet users can reach the IIS site from any device with a browser - the Windows osType concerns the container, not the clients. restartPolicy is OnFailure, so if IIS fails and the container process exits with an error, Azure Container Instances restarts the container automatically. Reference: https://learn.microsoft.com/en-us/azure/container-instances/container-instances-restart-policy
 
 ---
 
@@ -4097,14 +4097,14 @@ You have an Azure subscription named Subscription1 that has the following provid
 
 - **A.** Enable Azure Network Watcher in the East US Azure region. **← CORRETTA**
 - **B.** Add an Azure Network Watcher connection monitor.
-- **C.** Register the MicrosoftLogAnalytics provider. **← CORRETTA**
+- **C.** Register the MicrosoftLogAnalytics provider.
 - **D.** Create an Azure Storage account.
-- **E.** Register the Microsoft.Insights resource provider.
+- **E.** Register the Microsoft.Insights resource provider. **← CORRETTA**
 - **F.** Enable Azure Network Watcher flow logs. **← CORRETTA**
 
-**Risposta corretta:** A, C, F
+**Risposta corretta:** A, E, F
 
-**Spiegazione:** To record all successful and failed connection attempts to VM1, you need to perform several actions. Enabling Azure Network Watcher in the East US Azure region is essential for monitoring and logging network activities. Adding an Azure Network Watcher connection monitor will help track the connections to the VM. Registering the MicrosoftLogAnalytics provider is necessary for collecting and analyzing log data. Additionally, enabling Azure Network Watcher flow logs will allow you to capture the network traffic flowing through the NSG associated with the VM. Although creating an Azure Storage account is useful for storing logs, the subscription already includes a storage provider, so this step is not necessary.
+**Spiegazione:** Recording every allowed and denied connection to VM1 is the job of NSG flow logs on NSG1. They need Azure Network Watcher enabled in the region of the VM (East US) and the Microsoft.Insights resource provider registered in the subscription - it is not in the list of registered providers. Flow logs are written to a storage account, and the subscription already has one: VM1 uses unmanaged disks, which live in a storage account. A connection monitor tests connectivity rather than logging every attempt, and there is no MicrosoftLogAnalytics provider. Reference: https://learn.microsoft.com/en-us/azure/network-watcher/nsg-flow-logs-manage
 
 ---
 
@@ -4205,10 +4205,10 @@ You have an Azure Active Directory (Azure AD) tenant named adatum.com that conta
 
 You have Azure subscriptions named Subscription1 and Subscription2. Subscription1 has following resource groups: RG1 includes a web app named App1 in the West Europe location. Subscription2 contains the following resource groups: For each of the following statements, select Yes if the statement is true. Otherwise, select No. NOTE: Each correct selection is worth one point.
 
-**Risposta corretta:** App1 can be moved to RG2 -> Yes | App1 can be moved to RG3 -> Yes | App1 can be moved to RG4 -> Yes
-> Immagini: q289_post0.png
+**Risposta corretta:** App1 can be moved to RG2 -> No | App1 can be moved to RG3 -> Yes | App1 can be moved to RG4 -> Yes
+> Esibito: q289_pre0.png, q289_pre1.png, q289_pre2.png
 
-**Spiegazione:**
+**Spiegazione:** Moving a resource changes only its resource group (and possibly subscription), never its region, so the region of the target resource group does not matter. Locks do: Azure resources cannot be moved if a read-only lock exists on the source or destination resource group or subscription, so App1 cannot be moved to RG2. RG3 has only a Delete lock, which does not prevent adding resources, and RG4 has no lock, so App1 can be moved to either of them (to another subscription in the same tenant, together with its App Service plan). Reference: https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/move-resource-group-and-subscription
 
 ---
 
@@ -4505,7 +4505,7 @@ You have an Azure subscription that contains a virtual machine scale set. The sc
 **Risposta corretta:** When an administrator changes the virtual machine size, the size will be changed on up to [answer choice] virtual machines simultaneously. -> 4 | When a new build of the Windows Server 2016 image is released, the new build will be deployed to up to [answer choice] virtual machines simultaneously. -> 1
 > Immagini: q309_post0.png
 
-**Spiegazione:**
+**Spiegazione:** The scale set's upgrade policy mode is Automatic: when the model changes, for example the VM size, all instances are updated at the same time, so the size changes on up to 4 VMs simultaneously. A new OS image build is rolled out by automatic OS image upgrade, which upgrades instances in batches of at most 20% of the scale set (and at least one VM): with four instances that is one VM at a time. Reference: https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-automatic-upgrade
 
 ---
 
@@ -4551,7 +4551,7 @@ You have an Azure subscription named Subscription1. Subscription1 contains two A
 **Risposta corretta:** You can perform a file recovery of VM1 to -> Any Windows computer that has Internet connectivity | You can restore VM1 to -> VM1 or a new Azure virtual machine only
 > Immagini: q312_post0.png
 
-**Spiegazione:**
+**Spiegazione:** File recovery mounts the recovery point through a script that you download from the vault and run on any machine with internet connectivity and a compatible operating system, so the files of VM1 can be recovered to any Windows computer that has internet access. A full VM restore can either create a new Azure virtual machine or replace the disks of the existing VM1 (restore to the original VM); it cannot restore onto another existing VM such as VM2. Reference: https://learn.microsoft.com/en-us/azure/backup/backup-azure-restore-files-from-vm
 
 ---
 
@@ -4593,7 +4593,7 @@ You have an Azure subscription. You plan to use Azure Resource Manager templates
 **Risposta corretta:** "platformFaultDomainCount" -> 3 | "platformUpdateDomainCount" -> 20
 > Immagini: q315_post0.png
 
-**Spiegazione:**
+**Spiegazione:** In an availability set, VMs are spread across fault domains (shared power and network) and update domains (rebooted together during servicing). Most regions support up to 3 fault domains and an availability set supports up to 20 update domains, so platformFaultDomainCount 3 and platformUpdateDomainCount 20 keep as many of the 50 VMs as possible running during a fabric failure or planned maintenance. Reference: https://learn.microsoft.com/en-us/azure/virtual-machines/availability-set-overview
 
 ---
 
@@ -4619,7 +4619,7 @@ You have an Azure subscription. You deploy a virtual machine scale set that is c
 **Risposta corretta:** At 9:00 AM, the scale set starts and CPU utilization is 90 percent for 15 minutes. How many virtual machine instances will be running at 9:15 AM? -> 3 | At 10:00 AM, the scale set has five virtual machine instances running and CPU utilization falls to less than 15 percent for 60 minutes. How many virtual machine instances will be running at 11:00 AM? -> 1
 > Immagini: q317_post0.png
 
-**Spiegazione:** Reference: https://docs.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets- autoscale-portal
+**Spiegazione:** The scale set starts with 2 instances and scales out by 1 when CPU stays above 75% for 10 minutes: at 9:10 one instance is added, and the cooldown that follows prevents another action before 9:15, so 3 instances are running. From 10:00 CPU is below the 25% scale-in threshold for an hour: the scale set removes one instance at a time, after each evaluation window and cooldown, until it reaches the minimum of 1 VM, so 1 instance is running at 11:00. Reference: https://docs.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-autoscale-portal
 
 ---
 
@@ -4664,7 +4664,7 @@ You have an Azure subscription that contains the resources shown in the followin
 **Risposta corretta:** Cmdlet -> New-AzResourceGroupDeployment | Parametro -> -ResourceGroupName RG1 `
 > Immagini: q320_post0.png
 
-**Spiegazione:** Reference: https://docs.microsoft.com/en-us/powershell/module/az.resources/new- azresourcegroupdeployment?view=azps-6.6.0
+**Spiegazione:** Deploying an ARM template to a resource group from PowerShell is done with New-AzResourceGroupDeployment, which needs -ResourceGroupName to name the target group (here RG1) together with -TemplateFile or -TemplateUri. New-AzVm creates a VM without a template, New-AzResource creates a single generic resource, and New-AzTemplateSpec only stores a template as a template spec. Reference: https://docs.microsoft.com/en-us/powershell/module/az.resources/new-azresourcegroupdeployment
 
 ---
 
@@ -4735,7 +4735,7 @@ You have an Azure subscription. You need to use an Azure Resource Manager (ARM) 
 **Risposta corretta:** Box 1 (storageProfile) -> "copy":[ | Box 2 ("lun") -> "[copyIndex
 > Immagini: q325_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Multiple data disks are generated with property iteration: inside storageProfile, a copy element (name dataDisks, count = number of disks) builds the dataDisks array, and each disk's lun is set to [copyIndex('dataDisks')], which returns the current iteration (0, 1, 2...) so every disk gets a unique LUN. dependsOn only orders resources and cannot create array items. Reference: https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/copy-properties
 
 ---
 
@@ -4853,7 +4853,7 @@ You have an Azure subscription that contains three virtual machines named VM1, V
 
 **Risposta corretta:** B
 
-**Spiegazione:**
+**Spiegazione:** When the size you want is not offered, the VM's current hardware cluster does not support it. Deallocating VM1 releases it from that cluster, so the complete list of sizes available in the region becomes visible and VM1 can be resized and started on suitable hardware. (In an availability set, if the size still cannot be allocated, every VM in the set must be deallocated so they can all move together.) A shutdown from inside the guest OS does not deallocate a VM. Reference: https://learn.microsoft.com/en-us/azure/virtual-machines/resize-vm
 
 ---
 
@@ -4862,10 +4862,10 @@ You have an Azure subscription that contains three virtual machines named VM1, V
 
 You are creating an Azure Kubernetes Services (AKS) cluster as shown in the following exhibit. Use the drop-down menus to select the answer choice that completes each statement based on the information presented in the graphic. NOTE: Each correct selection is worth one point.
 
-**Risposta corretta:** To ensure that you can create Windows containers in AKS1, you must [answer choice]. -> modify the Network configuration setting | To ensure that you can integrate AKS1 with an Azure container registry, you must modify the [answer choice] setting. -> AKS-managed Azure Active Directory
-> Immagini: q334_post0.png
+**Risposta corretta:** To ensure that you can create Windows containers in AKS1, you must [answer choice]. -> modify the Network configuration setting | To ensure that you can integrate AKS1 with an Azure container registry, you must modify the [answer choice] setting. -> Authentication method
+> Esibito: q334_pre0.png, q334_pre1.png
 
-**Spiegazione:**
+**Spiegazione:** Windows Server node pools require the Azure CNI network plugin, while AKS1 is configured with kubenet, so you must modify the Network configuration setting. The AKS-ACR integration (attach-acr) assigns the AcrPull role to the managed identity of the cluster's agent pool: AKS1 uses a service principal as its Authentication method, so that setting must change to a managed identity. AKS-managed Azure Active Directory only controls how users sign in to the cluster. Reference: https://learn.microsoft.com/en-us/azure/aks/cluster-container-registry-integration
 
 ---
 
@@ -4878,7 +4878,7 @@ You have an Azure subscription that contains an Azure Kubernetes Service (AKS) c
 > Nota: Comando completo: az aks nodepool updates -n pool1 -g RG1 --cluster-name cluster1 --max-surge 2
 > Immagini: q335_post0.png
 
-**Spiegazione:**
+**Spiegazione:** A coordinated node pool upgrade can add temporary surge nodes, so workloads move to new nodes before the old ones are drained. az aks nodepool update ... --max-surge 2 sets the surge to exactly two extra nodes during the upgrade, the number required; a higher surge would cost more, and --node-count or --max-count change the permanent size or the autoscaler limit instead. Reference: https://learn.microsoft.com/en-us/azure/aks/upgrade-aks-cluster
 
 ---
 
@@ -4890,7 +4890,7 @@ You have an Azure subscription. You create the following file named Deploy.json.
 **Risposta corretta:** The commands will create four new resources. -> Yes | The commands will create storage accounts in the West US Azure region. -> No | The first storage account that is created will have a prefix of 0. -> Yes
 > Immagini: q336_post0.png
 
-**Spiegazione:**
+**Spiegazione:** New-AzResourceGroup creates RG1 in Central US, and the template's copy loop with count 3 creates three storage accounts, so the commands create four new resources. Each account's location is [resourceGroup().location], so they are created in Central US - the unused location parameter defaults to westus but is never referenced. copyIndex() starts at 0, so the first account name begins with 0. Reference: https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/copy-resources
 
 ---
 
@@ -4904,7 +4904,7 @@ Note: This question is part of a series of questions that present the same scena
 
 **Risposta corretta:** A
 
-**Spiegazione:**
+**Spiegazione:** Azure Container Instances needs credentials to pull an image from a private Azure container registry. Enabling the Admin user on Registry1 provides a username and password that can be supplied when the container instance is created, so the image can be pulled and the deployment succeeds (a service principal or managed identity are the recommended alternatives for production). Reference: https://learn.microsoft.com/en-us/azure/container-registry/container-registry-authentication
 
 ---
 
@@ -4916,7 +4916,7 @@ You have an Azure subscription that contains a resource group named RG1. You pla
 **Risposta corretta:** params.json [box 1] -> -ResourceGroupName | RG1 -Mode [box 2] -> Complete
 > Immagini: q338_post0.png
 
-**Spiegazione:**
+**Spiegazione:** New-AzResourceGroupDeployment targets a resource group through -ResourceGroupName RG1. Deployment mode Complete makes Resource Manager delete every resource in RG1 that is not defined in the template, so the existing resources are removed and the template's resources deployed; the default Incremental mode leaves existing resources untouched. Reference: https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/deployment-modes
 
 ---
 
@@ -4928,7 +4928,7 @@ You have an Azure App Service web app named app1. You configure autoscaling as s
 **Risposta corretta:** After CPU usage has reached 80 percent for 15 minutes, [answer choice] will be running. -> 2 instances | Once the first scale-out instance is created, the minimum time before an additional instance is created will be [answer choice]. -> 15 minutes
 > Immagini: q339_post0.png
 
-**Spiegazione:**
+**Spiegazione:** The scale-out rule adds one instance when average CPU stays above 70% over a 10-minute window, and is followed by a 5-minute cooldown. With CPU at 80%, the first scale action happens after 10 minutes, so after 15 minutes 2 instances are running. After that action autoscale waits out the 5-minute cooldown and then needs another full 10-minute window over the threshold, so the earliest the next instance can be added is 15 minutes after the first. Reference: https://learn.microsoft.com/en-us/azure/azure-monitor/autoscale/autoscale-understanding-settings
 
 ---
 
@@ -4957,7 +4957,7 @@ You have an Azure container registry named contoso2023 as shown in the following
 **Risposta corretta:** Impostazione 1 -> Networking | Impostazione 2 -> Connected registries (Preview)
 > Immagini: q341_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Dedicated data endpoints are a Premium feature, and contoso2023 uses the Standard plan, so the registry has to be upgraded to Premium first. The data endpoints are then enabled from the Networking blade (Public access, Dedicated data endpoint). The official answer also highlights Connected registries: a connected registry requires the parent registry to have dedicated data endpoints enabled, but the setting itself lives under Networking. Reference: https://learn.microsoft.com/en-us/azure/container-registry/container-registry-dedicated-data-endpoints
 
 ---
 
@@ -4986,7 +4986,7 @@ You have an Azure subscription. You need to deploy a virtual machine by using an
 **Risposta corretta:** "dependsOn" -> resourceId | "storageProfile" -> ImageReference
 > Immagini: q343_post0.png
 
-**Spiegazione:**
+**Spiegazione:** dependsOn lists the resource IDs of the resources that must be deployed first, so it uses the resourceId() function (for example resourceId('Microsoft.Network/networkInterfaces', 'nic1')); reference() reads the runtime state of a resource and union() merges objects or arrays. Inside storageProfile, the imageReference object (publisher, offer, sku, version) selects the image the VM is created from. Reference: https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/resource-dependency
 
 ---
 
@@ -4998,7 +4998,7 @@ You need to configure a new Azure App Service app named WebApp1. The solution mu
 **Risposta corretta:** Pricing plan -> Standard | Record type -> TXT
 > Immagini: q344_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Autoscale in App Service starts with the Standard tier, which scales out to up to 10 instances, while Free, Shared and Basic offer no autoscale (Basic can only be scaled manually to 3 instances): Standard is the cheapest tier that can scale to eight instances automatically. Ownership of a custom domain is verified with a TXT record (asuid.app.contoso.com) containing the app's domain verification ID, alongside the CNAME or A record that maps the name. Reference: https://learn.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-domain
 
 ---
 
@@ -5007,10 +5007,10 @@ You need to configure a new Azure App Service app named WebApp1. The solution mu
 
 You have an Azure subscription that contains the virtual machines shown in the following table. You create an Azure Compute Gallery named ComputeGallery1 as shown in the Azure Compute Gallery exhibit. (Click the Azure Compute Gallery tab.) In ComputeGallery1, you create a virtual machine image definition named Image1 as shown in the image definition exhibit. (Click the Image Definition tab.) For each of the following statements, select Yes if the statement is true. Otherwise, select No, NOTE: Each correct selection is worth one point.
 
-**Risposta corretta:** The operating system disk of VM1 can be used as a source for a version of Image1. -> Yes | The operating system disk of VM2 can be used as a source for a version of Image1. -> Yes | The operating system disk of VM3 can be used as a source for a version of Image1. -> Yes
-> Immagini: q345_post0.png
+**Risposta corretta:** The operating system disk of VM1 can be used as a source for a version of Image1. -> No | The operating system disk of VM2 can be used as a source for a version of Image1. -> Yes | The operating system disk of VM3 can be used as a source for a version of Image1. -> Yes
+> Esibito: q345_pre0.png, q345_pre1.png, q345_pre2.png, q345_pre3.png
 
-**Spiegazione:**
+**Spiegazione:** An image version must match its image definition in OS type, OS state and Hyper-V generation. Image1 is a Windows, specialized, Generation 1 (V1) definition, and VM1 is a Generation 2 VM, so its OS disk cannot be used as a source for a version of Image1. VM2 and VM3 are Generation 1 VMs: the gallery's region, the definition's region and the recommended vCPU range do not prevent using them, since recommendations are not enforced and the version can be created and replicated across regions. Reference: https://learn.microsoft.com/en-us/azure/virtual-machines/troubleshooting-shared-images
 
 ---
 
@@ -5039,7 +5039,7 @@ You have an Azure subscription that contains the resource groups shown in the fo
 **Risposta corretta:** The template creates a resource group named RG0 in the East US Azure region. -> Yes | The template creates four new resource groups. -> No | The template creates a resource group named RG3 in the West US Azure region. -> No
 > Immagini: q347_post0.png
 
-**Spiegazione:**
+**Spiegazione:** The subscription-level deployment loops four times (copyIndex 0-3) over resource groups named RG0 to RG3, all with location eastus, so RG0 is created in East US. RG1 already exists in East US, so it is not new, and RG2 already exists in West US, where its location cannot be changed, so the template does not create four new resource groups. RG3, when created, is placed in East US, not West US - the -Location westus parameter only sets where the deployment metadata is stored. Reference: https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/deploy-to-subscription
 
 ---
 
@@ -5068,7 +5068,7 @@ You have an Azure subscription that contains the container images shown in the f
 **Risposta corretta:** Image1 -> Azure Container Instances and App Services only | Image2 -> Azure Container Instances, Azure Container Apps, and App Services
 > Immagini: q349_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Image1 is a Windows Server container image: Azure Container Instances and Azure App Service (Windows containers) can run it, while Azure Container Apps supports Linux containers only. Image2 is a Linux image, which all three services - Container Instances, Container Apps and App Service - can run. Reference: https://learn.microsoft.com/en-us/azure/container-apps/containers
 
 ---
 
@@ -5077,14 +5077,14 @@ You have an Azure subscription that contains the container images shown in the f
 
 You have an Azure AD tenant named contoso.com. You have an Azure subscription that contains an Azure App Service web app named App1 and an Azure key vault named KV1. KV1 contains a wildcard certificate for contoso.com. You have a user named user1@contoso.com that is assigned the Owner role for App1 and KV1. You need to configure App1 to use the wildcard certificate of KV1. What should you do first?
 
-- **A.** Create an access policy for KV1 and assign the Microsoft Azure App Service principal to the policy.
-- **B.** Assign a managed user identity to App1. **← CORRETTA**
+- **A.** Create an access policy for KV1 and assign the Microsoft Azure App Service principal to the policy. **← CORRETTA**
+- **B.** Assign a managed user identity to App1.
 - **C.** Configure KV1 to use the role-based access control (RBAC) authorization system.
 - **D.** Create an access policy for KV1 and assign the policy to User1.
 
-**Risposta corretta:** B
+**Risposta corretta:** A
 
-**Spiegazione:** To configure an Azure App Service web app to use a certificate from an Azure Key Vault, the first step is to ensure that the App Service has a managed identity. A managed identity allows the app to securely access resources, including Key Vault, without the need for client secrets. Once the managed identity is assigned, this identity can be granted the necessary permissions to access the certificate in the Key Vault. Therefore, assigning a managed user identity to App1 is essential and must be done first.
+**Spiegazione:** By default the App Service resource provider has no access to a key vault. To import a Key Vault certificate into an App Service app, you first authorize the Microsoft Azure App Service service principal to read it, through an access policy (Get on secrets and certificates) or the Key Vault Certificate User role. The app's own managed identity is not used for this import, and User1 already has the permissions to perform the operation as Owner. Reference: https://learn.microsoft.com/en-us/azure/app-service/configure-ssl-certificate#import-a-certificate-from-key-vault
 
 ---
 
@@ -5146,7 +5146,7 @@ Your company purchases a new Azure subscription. You create a file named Deploy.
 **Risposta corretta:** You can deploy a virtual machine to RG1. -> Yes | You can deploy a virtual machine to RG2. -> No | You can manually create a resource group named RG3. -> Yes
 > Immagini: q354_post0.png
 
-**Spiegazione:**
+**Spiegazione:** The deployment creates RG0, RG1 and RG2 in East US and then, through nested deployments, places a CanNotDelete lock on RG1 and a ReadOnly lock on RG2. A CanNotDelete lock still allows creating and modifying resources, so a virtual machine can be deployed to RG1. A ReadOnly lock blocks every write operation, so no virtual machine can be deployed to RG2. The locks apply only to those groups, so RG3 can be created manually. Reference: https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/lock-resources
 
 ---
 
@@ -5172,10 +5172,10 @@ You have an Azure subscription that contains the resources shown in the followin
 
 You have an Azure subscription that contains the virtual networks shown in the following table. The subscription contains the virtual machines shown in the following table. The subscription contains the Azure App Service web apps shown in the following table. For each of the following statements, select Yes if the statement is true. Otherwise, select No. NOTE: Each correct selection is worth one point.
 
-**Risposta corretta:** WebApp1 can communicate with VM2. -> Yes | NSG1 controls inbound traffic to WebApp1. -> No | WebApp2 can communicate with VM1. -> No
-> Immagini: q356_post0.png
+**Risposta corretta:** WebApp1 can communicate with VM2. -> Yes | NSG1 controls inbound traffic to WebApp1. -> No | WebApp2 can communicate with VM1. -> Yes
+> Esibito: q356_pre0.png, q356_pre1.png, q356_pre2.png, q356_pre3.png
 
-**Spiegazione:**
+**Spiegazione:** WebApp1 uses virtual network integration with VNet1, which routes its outbound traffic into VNet1 and on through the peering to VNet2, so it can reach VM2. Virtual network integration is outbound only, so NSG1 on Subnet1 does not control inbound traffic to WebApp1. WebApp2 runs in an App Service Environment deployed into Subnet2: apps in an ASE can reach resources in networks connected to the ASE's virtual network, so through the VNet2-VNet1 peering WebApp2 can communicate with VM1. Reference: https://learn.microsoft.com/en-us/azure/app-service/environment/overview#virtual-network-support
 
 ---
 
@@ -5225,7 +5225,7 @@ You have an Azure subscription. You plan to create an Azure container registry n
 
 **Risposta corretta:** D
 
-**Spiegazione:**
+**Spiegazione:** Pushing and pulling signed images relies on content trust (Docker Content Trust / Notary v1), a Premium-tier feature that you enable on the registry, after which publishers sign the images they push and consumers can verify them when pulling. Customer-managed keys encrypt the registry storage, connected registries replicate content to on-premises, and tokens only scope repository permissions. Reference: https://learn.microsoft.com/en-us/azure/container-registry/container-registry-content-trust
 
 ---
 
@@ -5237,7 +5237,7 @@ You have an Azure subscription that has the Azure container registries shown in 
 **Risposta corretta:** ACR Tasks -> ContReg1, ContReg2, and ContReg3 | Private endpoints -> ContReg1 only
 > Immagini: q360_post0.png
 
-**Spiegazione:**
+**Spiegazione:** ACR Tasks is available in every service tier, so ContReg1 (Premium), ContReg2 (Standard) and ContReg3 (Basic) all support it. Private endpoints (Private Link) are a Premium-only feature, so only ContReg1 supports them. Reference: https://learn.microsoft.com/en-us/azure/container-registry/container-registry-skus
 
 ---
 
@@ -5254,7 +5254,7 @@ You plan to deploy several Azure virtual machines that will run Windows Server 2
 **Risposta corretta:** A
 > Nota: Tolta q361_pre0.png da images_question: e' un duplicato esatto di q360_post0.png (stesso md5), cioe' la soluzione gia' cerchiata della domanda 360 sulle ACR Tasks, finita qui per errore in fase di estrazione dal PDF. Questa domanda non ha esibiti, come le altre tre varianti della stessa (304, 319, 331).
 
-**Spiegazione:**
+**Spiegazione:** The Custom Script Extension downloads and runs a script on each VM after it is provisioned; added to the scale set model in the ARM template (extensionProfile), it runs on every instance, including those added later by scaling, so a script that installs NGINX makes it available everywhere. Deployment Center publishes code to App Service apps, Microsoft Entra Application Proxy publishes on-premises web apps, and Publish-AzVMDscConfiguration only uploads a DSC configuration to storage. Reference: https://learn.microsoft.com/en-us/azure/virtual-machines/extensions/custom-script-windows
 
 ---
 
@@ -5271,7 +5271,7 @@ You have an Azure subscription that contains a container group named Group1. Gro
 **Risposta corretta:** C
 > Esibito: q362_pre0.png
 
-**Spiegazione:**
+**Spiegazione:** In a container group, the resource request is what each container is guaranteed, and the resource limit is how far it may burst. container2 requests 3 CPUs but may burst to 4, taking capacity that container1 (2 CPUs) relies on. Without explicit limits each container's maximum usage equals its request, so container2 can use its own 3 CPUs and never encroach on container1. A limit cannot be lower than the request, and raising the limits only increases contention. Reference: https://learn.microsoft.com/en-us/azure/container-instances/container-instances-container-groups#resource-allocation
 
 ---
 
@@ -5288,7 +5288,7 @@ You have an Azure subscription. You plan to deploy a container. You need to reco
 
 **Risposta corretta:** C
 
-**Spiegazione:**
+**Spiegazione:** Azure Container Apps scales containers automatically through KEDA-based scale rules (HTTP traffic, CPU, events), and Azure App Service can autoscale the plan that runs a containerized app. Azure Container Instances runs container groups with fixed resources and has no built-in autoscaling: scaling it requires creating or deleting groups yourself. Reference: https://learn.microsoft.com/en-us/azure/container-apps/compare-options
 
 ---
 
@@ -5300,7 +5300,7 @@ You have an Azure subscription that uses Azure Container Instances. You have a c
 **Risposta corretta:** Provision a new container registry -> az acr create | Add image1 to the registry -> docker push
 > Immagini: q364_post0.png
 
-**Spiegazione:**
+**Spiegazione:** az acr create provisions a new Azure container registry. To add an image built locally with Docker, you tag it with the registry's login server name (for example contoso.azurecr.io/image1), sign in with az acr login and upload it with docker push. az acr build would build the image in Azure from source, and docker pull downloads images instead of uploading them. Reference: https://learn.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli
 
 ---
 
@@ -5314,7 +5314,7 @@ Note: This question is part of a series of questions that present the same scena
 
 **Risposta corretta:** B
 
-**Spiegazione:**
+**Spiegazione:** ACR-Tasks-Network is not the identity Azure Container Instances uses to pull an image, so giving it AcrPull on Registry1 does not fix the deployment. ACI needs registry credentials of its own: the admin user, a service principal or a managed identity with pull rights. Reference: https://learn.microsoft.com/en-us/azure/container-instances/container-instances-using-azure-container-registry
 
 ---
 
@@ -5328,7 +5328,7 @@ Note: This question is part of a series of questions that present the same scena
 
 **Risposta corretta:** B
 
-**Spiegazione:**
+**Spiegazione:** Dedicated data endpoints only change the FQDNs used to download image layers, to make firewall rules easier to write; they do not provide credentials, so the container instance still cannot authenticate to the private registry and the deployment keeps failing. Reference: https://learn.microsoft.com/en-us/azure/container-registry/container-registry-dedicated-data-endpoints
 
 ---
 
@@ -5342,7 +5342,7 @@ Note: This question is part of a series of questions that present the same scena
 
 **Risposta corretta:** B
 
-**Spiegazione:**
+**Spiegazione:** A private endpoint gives Registry1 a private IP address in a virtual network, which restricts or changes the network path but provides no credentials. The deployment fails because Azure Container Instances cannot authenticate to the registry, so a private endpoint does not solve it - and ACI can reach a registry behind a private endpoint only in specific configurations. Reference: https://learn.microsoft.com/en-us/azure/container-instances/container-instances-using-azure-container-registry
 
 ---
 
@@ -5359,7 +5359,7 @@ You have a Standard Azure App Service plan named Plan1. You need to ensure that 
 
 **Risposta corretta:** B
 
-**Spiegazione:**
+**Spiegazione:** Scaling a Standard plan automatically on a metric such as CPU percentage is done with autoscale rules: in Scale out you choose the Rules Based method and add a rule that adds instances when CPU exceeds 80%. Automatic scaling is a Premium v2/v3 feature driven by HTTP traffic rather than CPU rules, Manual keeps a fixed instance count, and scaling up changes the instance size, not the number of instances. Reference: https://learn.microsoft.com/en-us/azure/app-service/manage-scale-up
 
 ---
 
@@ -5377,7 +5377,7 @@ Case study - This is a case study. Case studies are not timed separately. You ca
 **Risposta corretta:** B
 > Esibito: q369_pre0.png, q369_pre1.png, q369_pre2.png, q369_pre3.png, q369_pre4.png, q369_pre5.png, q369_pre6.png, q369_pre7.png
 
-**Spiegazione:**
+**Spiegazione:** App Service can import from Key Vault only certificates stored in PKCS#12 (.pfx) format with an RSA key of at least 2048 bits. Cert1 and Cert2 are PKCS#12 RSA certificates (2048 and 4096 bits), so either can secure WebApp1 with TLS; Cert3 and Cert4 use the PEM content type, which App Service cannot import from Key Vault. Reference: https://learn.microsoft.com/en-us/azure/app-service/configure-ssl-certificate
 
 ---
 
@@ -5391,7 +5391,7 @@ Note: This question is part of a series of questions that present the same scena
 
 **Risposta corretta:** B
 
-**Spiegazione:**
+**Spiegazione:** Moving VM1 to another subscription only changes its resource ID and billing scope: the VM keeps running on the same physical host, so it is not moved away from the maintenance. Redeploy is the operation that moves a VM to a new host. Reference: https://learn.microsoft.com/en-us/azure/virtual-machines/redeploy-to-new-node-windows
 
 ---
 
@@ -5405,7 +5405,7 @@ Note: This question is part of a series of questions that present the same scena
 
 **Risposta corretta:** A
 
-**Spiegazione:**
+**Spiegazione:** Redeploy shuts VM1 down, moves it to a new node in the Azure infrastructure and powers it back on, keeping all its configuration and resources, so the VM leaves the host affected by maintenance right away. Only data on the temporary disk is lost and dynamic IPs may change. Reference: https://learn.microsoft.com/en-us/azure/virtual-machines/redeploy-to-new-node-windows
 
 ---
 
@@ -5419,7 +5419,7 @@ Note: This question is part of a series of questions that present the same scena
 
 **Risposta corretta:** B
 
-**Spiegazione:**
+**Spiegazione:** A one-time update installs operating system updates inside VM1 through Azure Update Manager; it does not move the VM to different hardware, so it does not protect VM1 from the host maintenance. Redeploy is the operation that moves the VM to a new host. Reference: https://learn.microsoft.com/en-us/azure/virtual-machines/redeploy-to-new-node-windows
 
 ---
 
@@ -5436,7 +5436,7 @@ Case study - This is a case study. Case studies are not timed separately. You ca
 **Risposta corretta:** D
 > Esibito: q373_pre0.png, q373_pre1.png, q373_pre2.png, q373_pre3.png, q373_pre4.png, q373_pre5.png, q373_pre6.png, q373_pre7.png
 
-**Spiegazione:**
+**Spiegazione:** Azure Disk Encryption is enabled on a VM with Set-AzVMDiskEncryptionExtension, passing the key vault and, for a key encryption key, the -KeyEncryptionKeyUrl. ADE supports only RSA keys as KEKs (RSA 2048, 3072 or 4096): Key1 is an RSA 4096 key, while Key2 is an elliptic-curve key and cannot be used. Set-AzDiskEncryptionKey and similar cmdlets configure encryption keys on disk objects, not ADE on a VM. Reference: https://learn.microsoft.com/en-us/azure/virtual-machines/windows/disk-encryption-key-vault
 
 ---
 
@@ -5517,7 +5517,7 @@ You have an Azure virtual network named VNet1 that connects to your on-premises 
 **Risposta corretta:** Resource to create -> An Azure Log Analytics workspace | Resource on which to enable diagnostics -> NSG1
 > Immagini: q379_post0.png
 
-**Spiegazione:**
+**Spiegazione:** A basic internal load balancer produces no diagnostic logs of the client IP addresses, but the NSG on Subnet1 sees every flow to the backend VMs. Sending NSG1's data (flow logs with traffic analytics, or diagnostic settings) to a Log Analytics workspace makes it available to interactive KQL queries in the Azure portal; a storage account or Event Grid would not support interactive queries. Reference: https://learn.microsoft.com/en-us/azure/network-watcher/nsg-flow-logs-overview
 
 ---
 
@@ -5561,14 +5561,14 @@ You have an Azure subscription that contains a virtual network named VNet1. VNet
 
 You have an Azure subscription named Subscription1 that contains two Azure virtual networks named VNet1 and VNet2. VNet1 contains a VPN gateway named VPNGW1 that uses static routing. There is a site-to-site VPN connection between your on-premises network and VNet1. On a computer named Client1 that runs Windows 10, you configure a point-to-site VPN connection to VNet1. You configure virtual network peering between VNet1 and VNet2. You verify that you can connect to VNet2 from the on-premises network. Client1 is unable to connect to VNet2. You need to ensure that you can connect Client1 to VNet2. What should you do?
 
-- **A.** Download and re-install the VPN client configuration package on Client1.
-- **B.** Select Allow gateway transit on VNet1. **← CORRETTA**
+- **A.** Download and re-install the VPN client configuration package on Client1. **← CORRETTA**
+- **B.** Select Allow gateway transit on VNet1.
 - **C.** Select Allow gateway transit on VNet2.
 - **D.** Enable BGP on VPNGW1
 
-**Risposta corretta:** B
+**Risposta corretta:** A
 
-**Spiegazione:** Client1 is unable to connect to VNet2 because VNet2 does not have a gateway of its own, and the VPN gateway in VNet1 is not being utilized to route the traffic to VNet2. To ensure Client1 can connect to VNet2, you need to enable gateway transit on VNet1. This allows VNet1 to use its VPN gateway to send and receive traffic from VNet2.
+**Spiegazione:** The on-premises network can already reach VNet2 through VPNGW1, which means the peering is already configured with gateway transit on VNet1 and use remote gateways on VNet2 - enabling it again changes nothing. A point-to-site client receives its routes from the VPN client configuration package, which is generated for the topology that existed when it was downloaded: after the peering was added, Client1 must download and reinstall the package to learn the route to VNet2. Reference: https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-about-point-to-site-routing
 
 ---
 
@@ -5580,7 +5580,7 @@ You have an Azure subscription. The subscription contains virtual machines that 
 **Risposta corretta:** When VM1 starts, a record for VM1 is added to the contoso.com DNS zone. -> Yes | When VM2 starts, a record for VM2 is added to the contoso.com DNS zone. -> Yes | When VM3 starts, a record for VM3 is added to the adatum.com DNS zone. -> No
 > Immagini: q383_post0.png
 
-**Spiegazione:** Reference: https://docs.microsoft.com/en-us/azure/virtual-network/virtual-networks-name-resolution-for-vms- and-role-instances https://docs.microsoft.com/en-us/azure/dns/private-dns-autoregistration
+**Spiegazione:** The virtual network link connects contoso.com to VNET2 with auto registration enabled, so every VM in VNET2 - VM1, VM2 and VM3 - gets an A record in contoso.com when it starts. The DNS suffix configured inside Windows Server plays no part in auto registration. adatum.com is a public zone, and auto registration works only with private zones, so no record for VM3 is added there. Reference: https://learn.microsoft.com/en-us/azure/dns/private-dns-autoregistration
 
 ---
 
@@ -5610,7 +5610,7 @@ You have an Azure subscription that contains two virtual networks named VNet1 an
 **Risposta corretta:** 1. Remove peering between VNet1 and VNet2. -> 2. Add the 10.33.0.0/16 address space to VNet1. -> 3. Recreate peering between VNet1 and VNet2.
 > Immagini: q385_post0.png
 
-**Spiegazione:** Step 1: Remove peering between Vnet1 and VNet2. You can't add address ranges to, or delete address ranges from a virtual network's address space once a virtual network is peered with another virtual network. To add or remove address ranges, delete the peering, add or remove the address ranges, then re- create the peering. Step 2: Add the 10.44.0.0/16 address space to VNet1. Step 3: Recreate peering between VNet1 and VNet2 Reference: https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-manage-peering
+**Spiegazione:** Step 1: Remove peering between VNet1 and VNet2. You can't add address ranges to, or delete address ranges from a virtual network's address space once a virtual network is peered with another virtual network. To add or remove address ranges, delete the peering, add or remove the address ranges, then re-create the peering. Step 2: Add the 10.33.0.0/16 address space to VNet1. Step 3: Recreate peering between VNet1 and VNet2. Reference: https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-manage-peering
 
 ---
 
@@ -5622,7 +5622,7 @@ You have an Azure subscription that contains the resource groups shown in the fo
 **Risposta corretta:** You can move storage1 to RG2. -> Yes | You can move NIC1 to RG2. -> Yes | If you move IP2 to RG1, the location of IP2 will change. -> No
 > Immagini: q386_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Within the same subscription, resources can be moved between resource groups independently of their dependencies, and the region of a resource group doesn't constrain the regions of its resources: storage1 and NIC1 (even while attached to the running VM1) can be moved to RG2. Moving a resource changes only its resource group, never its location, so IP2 stays in East US if it is moved to RG1. Reference: https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/move-resource-group-and-subscription
 
 ---
 
@@ -5709,12 +5709,12 @@ Note: This question is part of a series of questions that present the same scena
 
 Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution. After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen. You have an Azure subscription that contains the following resources: A virtual network that has a subnet named Subnet1 Two network security groups (NSGs) named NSG-VM1 and NSG-Subnet1 A virtual machine named VM1 that has the required Windows Server configurations to allow Remote Desktop connections NSG-Subnet1 has the default inbound security rules only. NSG-VM1 has the default inbound security rules and the following custom inbound security rule: Priority: 100 Source: Any Source port range: * Destination: * Destination port range: 3389 Protocol: UDP Action: Allow VM1 has a public IP address and is connected to Subnet1. NSG-VM1 is associated to the network interface of VM1. NSG-Subnet1 is associated to Subnet1. You need to be able to establish Remote Desktop connections from the internet to VM1. Solution: You add an inbound security rule to NSG-Subnet1 and NSG-VM1 that allows connections from the internet source to the VirtualNetwork destination for port range 3389 and uses the TCP protocol. Does this meet the goal?
 
-- **A.** Yes
-- **B.** No **← CORRETTA**
+- **A.** Yes **← CORRETTA**
+- **B.** No
 
-**Risposta corretta:** B
+**Risposta corretta:** A
 
-**Spiegazione:** The goal is to establish Remote Desktop connections from the internet to VM1, which uses TCP port 3389. The existing inbound security rule in NSG-VM1 allows only UDP traffic on port 3389. Therefore, adding an additional inbound rule for TCP on port 3389 is necessary. However, the solution proposes adding these rules to both NSG-VM1 and NSG-Subnet1, but since NSG-VM1 already has an inbound rule for UDP, it will not affect the TCP traffic. The correct approach should be to simply add an inbound rule for TCP on port 3389 in NSG-VM1 without the necessity of altering NSG-Subnet1. Thus, the proposed solution does not meet the goal.
+**Spiegazione:** Yes. RDP uses TCP port 3389, and inbound traffic from the internet must be allowed by both NSGs: NSG-Subnet1 on the subnet and NSG-VM1 on the network interface. Adding to both a rule that allows TCP 3389 from the Internet service tag to the VirtualNetwork service tag works, because after the public IP is translated the destination is VM1's private address, which is part of VirtualNetwork. The existing UDP rule in NSG-VM1 neither helps nor interferes. Reference: https://learn.microsoft.com/en-us/azure/virtual-network/network-security-group-how-it-works
 
 ---
 
@@ -5726,7 +5726,7 @@ You have a virtual network named VNet1 that has the configuration shown in the f
 **Risposta corretta:** Before a virtual machine on VNet1 can receive an IP address from 192.168.1.0/24, you must first -> add an address space | Before a virtual machine on VNet1 can receive an IP address from 10.2.1.0/24, you must first -> add a subnet
 > Immagini: q393_post0.png
 
-**Spiegazione:**
+**Spiegazione:** VNet1's address space is 10.2.0.0/16 and its only subnet, default, uses 10.2.0.0/24. 192.168.1.0/24 is outside the address space, so you must first add it as an address space (and then a subnet in it) before a VM can get an address from that range. 10.2.1.0/24 is already inside the address space but not in any subnet, so you just add a subnet with that prefix. Reference: https://learn.microsoft.com/en-us/azure/virtual-network/manage-virtual-network
 
 ---
 
@@ -5804,7 +5804,7 @@ You have an Azure subscription named Subscription1 that contains the virtual net
 **Risposta corretta:** LB1 can balance the traffic between VM1 and VM2. -> Yes | LB1 can balance the traffic between VM3 and VM4. -> No | LB1 can balance the traffic between VM5 and VM6. -> No
 > Immagini: q398_post0.png
 
-**Spiegazione:** Reference: https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-standard-overview
+**Spiegazione:** A Basic load balancer can only use, as its backend pool, VMs in a single availability set (or a single scale set) within the same virtual network - standalone VMs cannot be combined. VM1 and VM2 are both in AS1 in VNet1, so LB1 can balance traffic between them. VM3 and VM4, and VM5 and VM6, are standalone VMs that belong to no availability set, so a Basic SKU load balancer cannot balance them (a Standard load balancer could). Reference: https://learn.microsoft.com/en-us/azure/load-balancer/skus
 
 ---
 
@@ -5816,7 +5816,7 @@ You have an Azure virtual machine that runs Windows Server 2019 and has the foll
 **Risposta corretta:** DNS zones that you can link to VNET1 -> The private zones only | DNS zones to which VM1 can automatically register -> The private zones only
 > Immagini: q399_post0.png
 
-**Spiegazione:** Reference: https://docs.microsoft.com/en-us/azure/dns/private-dns-overview
+**Spiegazione:** Virtual network links exist only for private DNS zones, and a private zone can be linked to virtual networks in any region, so Adatum.pri and Contoso.pri can both be linked to VNET1, while public zones are resolved from the internet and are never linked. Auto registration is likewise a feature of private zones only: VM1's records can be registered automatically in a private zone linked with auto registration enabled, never in Adatum.com or Contoso.com. Reference: https://learn.microsoft.com/en-us/azure/dns/private-dns-overview
 
 ---
 
@@ -5828,7 +5828,7 @@ You have an on-premises network that you plan to connect to Azure by using a sit
 **Risposta corretta:** 1. Create a gateway subnet. -> 2. Create a VPN gateway. -> 3. Create a local gateway. -> 4. Create a VPN connection.
 > Immagini: q400_post0.png
 
-**Spiegazione:**
+**Spiegazione:** A site-to-site VPN needs a gateway subnet in VNet1 (named GatewaySubnet), then a virtual network gateway of type VPN deployed into it, then a local network gateway that represents the on-premises VPN device and its address ranges, and finally a connection that links the two gateways with a shared key. A custom DNS server and a CDN profile are not part of it. Reference: https://learn.microsoft.com/en-us/azure/vpn-gateway/tutorial-site-to-site-portal
 
 ---
 
@@ -5903,7 +5903,7 @@ You have an Azure subscription that contains three virtual networks named VNET1,
 **Risposta corretta:** Packets from VNET1 can be routed to -> VNET2 and VNET3 | Packets from VNET2 can be routed to -> VNET1 only
 > Immagini: q405_post0.png
 
-**Spiegazione:** Box 1. VNET2 and VNET3 - Box 2: VNET1 - Gateway transit is disabled. Reference: https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview
+**Spiegazione:** VNET1 is peered with both VNET2 and VNET3, and all the peerings are Connected, so packets from VNET1 can be routed to VNET2 and to VNET3. VNET2 is peered only with VNET1, and peering is not transitive: without a direct VNET2-VNET3 peering, or a gateway or network virtual appliance in VNET1 forwarding the traffic (gateway transit is Disabled), packets from VNET2 reach VNET1 only. Reference: https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview
 
 ---
 
@@ -5991,7 +5991,7 @@ You have an Azure subscription that contains the Azure virtual machines shown in
 **Risposta corretta:** NSG1 limits VM1 traffic -> No | NSG1 applies to VM2 -> Yes | VM1 and VM2 connect to the same virtual network -> Yes
 > Immagini: q411_post0.png
 
-**Spiegazione:**
+**Spiegazione:** NSG1 allows TCP from 172.16.1.0/24 (VM1's subnet) to 172.16.2.0/24 and denies any other TCP traffic to 172.16.2.0/24, so its rules protect VM2's subnet: NSG1 applies to VM2 and does not restrict VM1's traffic - the TCP 8080 test fails because nothing answers on that port, not because of a deny rule. The ICMP test reaches VM2 in a single hop with VM2's private address as the next hop, which only happens when both VMs are on the same virtual network. Reference: https://learn.microsoft.com/en-us/azure/network-watcher/connection-troubleshoot-overview
 
 ---
 
@@ -6076,7 +6076,7 @@ You have an Azure virtual machine named VM1 that connects to a virtual network n
 **Risposta corretta:** Before you create a backend pool on slb1, you must -> Remove the public IP address from VM1 | Before you can connect to VM1 from slb1, you must -> Create and configure an NSG
 > Immagini: q417_post0.png
 
-**Spiegazione:** Change the private IP address of VM1 to static Box 1: Remove the public IP address from VM1 Note: A public load balancer can provide outbound connections for virtual machines (VMs) inside your virtual network. These connections are accomplished by translating their private IP addresses to public IP addresses. Public Load Balancers are used to load balance internet traffic to your VMs. Box 2: Create and configure an NSG NSGs are used to explicitly permit allowed traffic. If you do not have an NSG on a subnet or NIC of your virtual machine resource, traffic is not allowed to reach this resource. Reference: https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-overview
+**Spiegazione:** Box 1: Remove the public IP address from VM1 - VM1 has a dynamic public IP address, which is a Basic SKU address, and a Standard load balancer cannot have in its backend pool VMs whose NICs use Basic public IP addresses: remove it (or replace it with a Standard one) before adding VM1 to the backend pool of slb1. Box 2: Create and configure an NSG - A Standard load balancer is secure by default: inbound flows are blocked unless a network security group on the subnet or NIC explicitly allows them, and VM1 has no NSG. Reference: https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-overview
 
 ---
 
@@ -6146,7 +6146,7 @@ You have an Azure subscription that contains the resource groups shown in the fo
 **Risposta corretta:** Resources that you can move from RG1 to RG2 -> IP1, VNET2, and storage1 | Resources that you can move from RG2 to RG1 -> IP2, VNET2, and storage2
 > Immagini: q422_post0.png
 
-**Spiegazione:**
+**Spiegazione:** A Delete (CanNotDelete) lock prevents deleting a resource or resource group but still allows changes, so it does not block moving resources. The expected answer therefore treats IP1, VNET2 and storage1 (RG1 to RG2) and IP2, VNET2 and storage2 (RG2 to RG1) as movable. Note that the resource names in the exhibit do not match those in the question, and that Microsoft documents that a Read-only lock on the source or destination resource group or subscription blocks moves, so the Read-only lock on VNET2 makes this answer debatable. Reference: https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/move-resource-group-and-subscription
 
 ---
 
@@ -6185,13 +6185,13 @@ Note: This question is part of a series of questions that present the same scena
 
 Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution. After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen. You have an Azure subscription that contains the virtual machines shown in the following table. You deploy a load balancer that has the following configurations: Name: LB1 Type: Internal SKU: Standard Virtual network: VNET1 You need to ensure that you can add VM1 and VM2 to the backend pool of LB1. Solution: You create two Standard SKU public IP addresses and associate a Standard SKU public IP address to the network interface of each virtual machine. Does this meet the goal?
 
-- **A.** Yes
-- **B.** No **← CORRETTA**
+- **A.** Yes **← CORRETTA**
+- **B.** No
 
-**Risposta corretta:** B
+**Risposta corretta:** A
 > Esibito: q425_pre0.png
 
-**Spiegazione:** The given solution of creating two Standard SKU public IP addresses and associating them with the network interfaces of each virtual machine does not meet the goal. Since LB1 is configured as an internal load balancer, public IP addresses for the VMs are not required. Internal load balancers are used for traffic inside a virtual network, and the VMs only need to be in the same virtual network and subnet for the load balancer to work. Hence, associating standard SKU public IP addresses to VM1 and VM2 is unnecessary.
+**Spiegazione:** Yes. A Standard load balancer cannot have in its backend pool VMs whose network interfaces use Basic SKU public IP addresses; VMs with no public IP or with Standard SKU public IPs are fine. VM1 has no public IP, and VM2 has a Basic one: associating a Standard SKU public IP to each network interface replaces VM2's Basic address, so both VMs end up with Standard public IPs and can be added to LB1. The public IPs are not needed by an internal load balancer, but they do not prevent it. Reference: https://learn.microsoft.com/en-us/azure/load-balancer/skus
 
 ---
 
@@ -6248,7 +6248,7 @@ You manage two Azure subscriptions named Subscription1 and Subscription2. Subscr
 **Risposta corretta:** A Site-to-Site connection can be established between VNET1 and VNET2. -> No | VNET1 and VNET2 can be peered. -> Yes | VNET1 and VNETA can be peered. -> Yes
 > Immagini: q429_post0.png
 
-**Spiegazione:**
+**Spiegazione:** VNET1 (10.10.10.0/24) has a single subnet that uses its whole address space, so there is no room for the GatewaySubnet a VPN gateway needs: a site-to-site (or VNet-to-VNet) connection cannot be set up for VNET1 without first changing its address space. Peering only requires non-overlapping address spaces, and works across regions and subscriptions: VNET1 does not overlap with VNET2 (172.16.0.0/16) nor with VNETA (10.10.128.0/17), so it can be peered with both. Reference: https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview
 
 ---
 
@@ -6390,10 +6390,10 @@ You have an Azure subscription that contains the public load balancers shown in 
 
 You have an on-premises data center and an Azure subscription. The data center contains two VPN devices. The subscription contains an Azure virtual network named VNet1. VNet1 contains a gateway subnet. You need to create a site-to-site VPN. The solution must ensure that if a single instance of an Azure VPN gateway fails, or a single on-premises VPN device fails, the failure will not cause an interruption that is longer than two minutes. What is the minimum number of public IP addresses, virtual network gateways, and local network gateways required in Azure? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
 
-**Risposta corretta:** Public IP addresses -> 2 | Virtual network gateways -> 1 | Local network gateways -> 1
-> Immagini: q439_post0.png
+**Risposta corretta:** Public IP addresses -> 2 | Virtual network gateways -> 1 | Local network gateways -> 2
+> Esibito: q439_pre0.png
 
-**Spiegazione:**
+**Spiegazione:** To survive the failure of one Azure gateway instance within two minutes, the VPN gateway must run in active-active mode: still a single virtual network gateway, but with two instances and one public IP address each, so 2 public IP addresses. To survive the failure of one on-premises device, each of the two VPN devices must be represented by its own local network gateway with its own connection (with BGP), giving a full mesh of four tunnels: 2 local network gateways. Reference: https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-highlyavailable
 
 ---
 
@@ -6419,13 +6419,13 @@ You have an Azure subscription that contains two virtual machines as shown in th
 
 Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution. After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen. You have an app named App1 that is installed on two Azure virtual machines named VM1 and VM2. Connections to App1 are managed by using an Azure Load Balancer. The effective network security configurations for VM2 are shown in the following exhibit. You discover that connections to App1 from 131.107.100.50 over TCP port 443 fail. You verify that the Load Balancer rules are configured correctly. You need to ensure that connections to App1 can be established successfully from 131.107.100.50 over TCP port 443. Solution: You create an inbound security rule that allows any traffic from the AzureLoadBalancer source and has a cost of 150. Does this meet the goal?
 
-- **A.** Yes
-- **B.** No **← CORRETTA**
+- **A.** Yes **← CORRETTA**
+- **B.** No
 
-**Risposta corretta:** B
+**Risposta corretta:** A
 > Esibito: q441_pre0.png
 
-**Spiegazione:** The solution provided does not meet the goal. The suggested action is to create an inbound security rule that allows any traffic from the AzureLoadBalancer source with a priority of 150. However, the primary issue is with the existing rule with priority 200, which blocks all inbound traffic on TCP port 443, including traffic from the Load Balancer health probe. This rule prevents the Load Balancer from correctly assessing the VM's health and routing traffic to it. Adding a rule with priority 150 to allow traffic from the AzureLoadBalancer would indeed allow health probes, but it doesn't directly address the problem of the blocked traffic from 131.107.100.50 over TCP 443 due to the existing deny rule at priority 200. Therefore, removing or adjusting the block rule with priority 200 would be necessary to resolve the connectivity issue.
+**Spiegazione:** Yes. Traffic from 131.107.100.50 on TCP 443 is already allowed by the Allow_131.107.100.50 rule (priority 100). The connections fail because BlockAllOther443 (priority 200) denies port 443 from every other source, including the Azure Load Balancer health probe: the probe fails, VM2 is marked unhealthy and the load balancer stops sending it traffic. A rule that allows the AzureLoadBalancer source with priority 150 is evaluated before BlockAllOther443, so the probe succeeds again and App1 becomes reachable. Reference: https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-custom-probe-overview
 
 ---
 
@@ -6455,7 +6455,7 @@ You have an Azure subscription that contains the resources in the following tabl
 **Risposta corretta:** The A record for VM5 will be registered automatically in the adatum.com zone. -> No | VM5 can resolve VM9.adatum.com. -> No | VM6 can resolve VM9.adatum.com. -> Yes
 > Immagini: q443_post0.png
 
-**Spiegazione:** Box 1: No - Azure DNS provides automatic registration of virtual machines from a single virtual network that's linked to a private zone as a registration virtual network. VM5 does not belong to the registration virtual network though. Box 2: No - Forward DNS resolution is supported across virtual networks that are linked to the private zone as resolution virtual networks. VM5 does belong to a resolution virtual network. Box 3: Yes - VM6 belongs to registration virtual network, and an A (Host) record exists for VM9 in the DNS zone. By default, registration virtual networks also act as resolution virtual networks, in the sense that DNS resolution against the zone works from any of the virtual machines within the registration virtual network. Reference: https://docs.microsoft.com/en-us/azure/dns/private-dns-overview
+**Spiegazione:** Box 1: No - Automatic registration works only for VMs in the virtual network linked to the zone as the registration network: VNet2. VM5 is in VNet1, so no record is added for it. Box 2: No - Name resolution in a private zone works only from virtual networks linked to it; VNet1 is not linked to adatum.com at all, so VM5 cannot resolve VM9.adatum.com. Box 3: Yes - VM6 is in VNet2, the registration network, which can also resolve the zone, and the zone contains an A record for vm9. Reference: https://docs.microsoft.com/en-us/azure/dns/private-dns-overview
 
 ---
 
@@ -6467,7 +6467,7 @@ You have an Azure subscription that contains the virtual networks shown in the f
 **Risposta corretta:** You can enable auto registration for Link2. -> Yes | You can add a virtual network link for VNET1 to Zone3.com. -> Yes | You can add a virtual network link for VNET2 to Zone1.com and enable auto registration. -> Yes
 > Immagini: q444_post0.png
 
-**Spiegazione:**
+**Spiegazione:** A virtual network can be linked to many private DNS zones but can have auto registration enabled on only one of them. VNET2 has only Link2 (to Zone2.com, auto registration off), so auto registration can be turned on for Link2, or alternatively a new link from VNET2 to Zone1.com can be created with auto registration enabled. Private DNS zones are global resources, so the region shown for Zone3.com does not prevent linking it to VNET1 in West US. Reference: https://learn.microsoft.com/en-us/azure/dns/private-dns-virtual-network-links
 
 ---
 
@@ -6479,7 +6479,7 @@ You have an Azure subscription. You plan to use an Azure Resource Manager templa
 **Risposta corretta:** "name" (subnet) -> AzureBastionSubnet | "addressPrefix" -> 10.10.10.0/27
 > Immagini: q445_post0.png
 
-**Spiegazione:** Reference: https://medium.com/charot/deploy-azure-bastion-preview-using-an-arm-template-15e3010767d6
+**Spiegazione:** Azure Bastion must be deployed into a subnet named exactly AzureBastionSubnet. The subnet needs enough addresses for the Bastion instances: among the options only 10.10.10.0/27 qualifies, since /29 and /30 are far too small (current documentation asks for a /26 or larger for new deployments, so that Bastion can scale). Reference: https://learn.microsoft.com/en-us/azure/bastion/configuration-settings#subnet
 
 ---
 
@@ -6533,7 +6533,7 @@ You have an Azure subscription that contains the resources shown in the followin
 **Risposta corretta:** 1. Remove the public IP addresses from vm1 and vm2. -> 2. Create a health probe and backend pool on lb1. -> 3. Create a load balancing rule on lb1.
 > Immagini: q449_post0.png
 
-**Spiegazione:** Reference: https://docs.microsoft.com/en-us/azure/load-balancer/tutorial-load-balancer-standard-public-zone- redundant-portal
+**Spiegazione:** lb1 is a Standard load balancer, which cannot have VMs with Basic SKU public IP addresses in its backend pool, so first remove the Basic public IPs from vm1 and vm2. Then create a health probe and a backend pool containing the two VMs, and finally a load balancing rule for TCP 443 that ties the frontend, backend pool and probe together. nsg1 already allows incoming HTTPS - and a Standard load balancer needs an NSG to allow traffic - so it must stay; an availability set is not required. Reference: https://learn.microsoft.com/en-us/azure/load-balancer/quickstart-load-balancer-standard-public-portal
 
 ---
 
@@ -6574,7 +6574,7 @@ You have an Azure subscription that contains two on-premises locations named sit
 **Risposta corretta:** 1. Create a Virtual WAN resource. -> 2. Create a virtual hub. -> 3. Create VPN sites. -> 4. Connect the VPN sites to the hub.
 > Immagini: q452_post0.png
 
-**Spiegazione:** Reference: https://docs.microsoft.com/en-us/azure/virtual-wan/virtual-wan-site-to-site-portal
+**Spiegazione:** A site-to-site Virtual WAN deployment starts with the Virtual WAN resource, then a virtual hub inside it (with a VPN gateway). Next you create a VPN site for each on-premises location, describing its device and address ranges, and finally connect the VPN sites to the hub. Once site1 and site2 are connected to the same hub, the hub routes traffic between them; connecting virtual networks to the hub is not needed for branch-to-branch traffic. Reference: https://docs.microsoft.com/en-us/azure/virtual-wan/virtual-wan-site-to-site-portal
 
 ---
 
@@ -6586,7 +6586,7 @@ You have an Azure subscription that contains the virtual networks shown in the f
 **Risposta corretta:** Server2 resolves host2.contoso.com to 131.107.50.50. -> No | Server2 resolves host1.contoso.com to 131.107.10.15. -> Yes | Server3 resolves host2.contoso.com to 131.107.50.50. -> No
 > Immagini: q453_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Server2's NIC uses 10.10.0.4 (Server1) as its DNS server, and Server3 inherits the same server from VNET2's settings. Server1 hosts its own contoso.com zone, where host1 is 131.107.10.15 and host2 does not exist: Server2 resolves host1.contoso.com to 131.107.10.15 but cannot resolve host2. The Azure private zone (where host2 is 131.107.50.50) is used only by clients that query Azure-provided DNS, so neither Server2 nor Server3, both pointing to Server1, gets 131.107.50.50. Reference: https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-name-resolution-for-vms-and-role-instances
 
 ---
 
@@ -6633,7 +6633,7 @@ You have a network security group (NSG) named NSG1 that has the rules defined in
 **Risposta corretta:** Direction -> Outbound | Source -> 10.1.0.10 | Destination -> 10.1.0.11 | Priority -> 110
 > Immagini: q456_post0.png
 
-**Spiegazione:**
+**Spiegazione:** NSG1 contains an outbound DENY_PING rule (priority 111) that blocks ICMP from the VirtualNetwork tag to anywhere, so VM1's echo requests never leave the subnet. With least privilege, add an outbound rule that allows ICMP from VM1 (10.1.0.10) to VM2 (10.1.0.11) with priority 110, so it is evaluated before 111. The inbound side needs nothing: the default AllowVnetInBound rule already admits the traffic, and NSGs are stateful, so the replies are allowed too. Reference: https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview
 
 ---
 
@@ -6708,7 +6708,7 @@ You have an Azure subscription that contains a virtual network named VNet1. VNet
 **Risposta corretta:** Address prefix -> 10.0.0.0/16 | Next hop type -> Virtual appliance | Assigned to -> GatewaySubnet
 > Immagini: q461_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Traffic arriving from the VPN gateway is routed by the routes of the GatewaySubnet, so RT1 must be associated to GatewaySubnet. The route covers the whole virtual network, 10.0.0.0/16, with next hop type Virtual appliance and VM1's private IP address as the next hop, so every packet from on-premises to VNet1 is sent through VM1 first. Associating it to Subnet0 or to Subnet1 and Subnet2 would affect traffic leaving those subnets, not traffic coming in from the gateway. Reference: https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-about-forced-tunneling
 
 ---
 
@@ -6736,7 +6736,7 @@ You have an Azure subscription that contains the virtual machines shown in the f
 **Risposta corretta:** From the Internet, you can connect to VM1 by using Remote Desktop. -> No | From the Internet, you can connect to VM2 by using Remote Desktop. -> Yes | From VM1, you can connect to VM2 by using Remote Desktop -> Yes
 > Immagini: q463_post0.png
 
-**Spiegazione:**
+**Spiegazione:** VM1 is in Subnet1, protected by NSG1, which has only the default rules: inbound traffic from the internet is denied (DenyAllInBound), so Remote Desktop to VM1 from the internet fails. VM2's NIC has NSG2, whose Rule1 allows TCP 3389 from any source, and Subnet2 has no NSG, so RDP from the internet to VM2 works. From VM1 to VM2 the traffic stays inside VNET1: NSG1 allows outbound traffic by default and NSG2 allows it inbound (Rule1, and the default AllowVnetInBound rule). Reference: https://learn.microsoft.com/en-us/azure/virtual-network/network-security-group-how-it-works
 
 ---
 
@@ -6780,7 +6780,7 @@ You have an Azure subscription that contains the virtual machines shown in the f
 **Risposta corretta:** VM1 can connect to contoso2024 by using 131.107.10.10. -> Yes | VM2 can connect to contoso2024 by using 150.120.10.10. -> Yes | VM3 must use its private IP address to connect to contoso2024. -> No
 > Immagini: q466_post0.png
 
-**Spiegazione:**
+**Spiegazione:** contoso2024 accepts traffic only from selected networks: Subnet1 of VNet1 through a service endpoint, and the IP ranges 131.107.10.10, 150.120.10.10 and 170.20.10.10. VM2 sits in Subnet2, which has no service endpoint, so it reaches the account from its public IP 150.120.10.10, which is allowed. VM1 and VM3 are in Subnet1: with the service endpoint enabled their requests reach the storage account over the Azure backbone from their private addresses, which the virtual network rule allows, so VM3 is not forced to use one address or the other. Note that the expected answer also treats VM1 as connecting with its public IP. Reference: https://learn.microsoft.com/en-us/azure/storage/common/storage-network-security
 
 ---
 
@@ -6792,7 +6792,7 @@ You have two Azure virtual machines as shown in the following table. You create 
 **Risposta corretta:** The DNS A record for vm1 is added to contoso.com and has the IP address of 131.107.50.20. -> No | The DNS A record for vm1 is added to fabrikam.com and has the IP address of 10.0.1.4. -> Yes | The DNS A record for vm2 is added to fabrikam.com and has the IP address of 10.0.1.5. -> Yes
 > Immagini: q467_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Auto registration works only with private DNS zones linked to the VM's virtual network: fabrikam.com is private and linked to vnet1 with auto registration enabled, so vm1 and vm2 are registered there with their private addresses, 10.0.1.4 and 10.0.1.5. contoso.com is a public zone: assigning the VMs the Owner role does not register anything, and public IPs are never auto-registered. The DNS suffix configured inside the operating system does not matter. Reference: https://learn.microsoft.com/en-us/azure/dns/private-dns-autoregistration
 
 ---
 
@@ -6820,7 +6820,7 @@ You have a virtual network named VNET1 that contains the subnets shown in the fo
 **Risposta corretta:** VM2 can connect to the TCP port 1433 services on VM1. -> No | VM1 can connect to the TCP port 1433 services on VM2. -> Yes | VM2 can connect to the TCP port 1433 services on VM3. -> Yes
 > Immagini: q469_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Traffic to VM1 must pass both NSG1 (on Subnet1) and NSG2 (on VM1's NIC). NSG1 allows TCP 1433 from Subnet2, but NSG2 blocks TCP 1433 from VM2 (10.10.2.5) to VM1, so VM2 cannot reach VM1's port 1433. Subnet2 and the NICs of VM2 and VM3 have no NSG, so nothing filters traffic into them: VM1 can reach port 1433 on VM2 (NSG1 and NSG2 allow outbound traffic by default), and VM2 can reach VM3 on the same subnet. Reference: https://learn.microsoft.com/en-us/azure/virtual-network/network-security-group-how-it-works
 
 ---
 
@@ -6865,7 +6865,7 @@ You have an Azure subscription that contains the resources shown in the followin
 **Risposta corretta:** B, C
 > Esibito: q472_pre0.png
 
-**Spiegazione:**
+**Spiegazione:** A public IP address can be associated with the IP configuration of a network interface (NIC1), and with the frontend IP configuration of a load balancer (LB1). A VM never gets a public IP directly - only through its NIC - and a virtual network has no public IP. A VPN gateway's public IP is chosen when the gateway is created, so an existing gateway like VPN1 cannot simply be associated with IP1. Reference: https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/public-ip-addresses
 
 ---
 
@@ -6881,7 +6881,7 @@ You have an Azure subscription that contains a storage account named storage1. Y
 
 **Risposta corretta:** B
 
-**Spiegazione:**
+**Spiegazione:** Allowing access only from selected networks and your home office is done in the storage account's networking settings: set Public network access to Enabled from selected virtual networks and IP addresses, then add the virtual networks and the home office's public IP. A private endpoint would require a network path into Azure from home, Internet routing only changes how traffic is routed, and IAM controls permissions, not network access. Reference: https://learn.microsoft.com/en-us/azure/storage/common/storage-network-security
 
 ---
 
@@ -6942,7 +6942,7 @@ You have an Azure subscription that contains the virtual networks shown in the f
 **Risposta corretta:** Peering 1-2 is a possible configuration. -> No | Peering 1-3 is a possible configuration. -> No | Peering 3-2 is a possible configuration. -> No
 > Immagini: q477_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Virtual network peering, including global peering, works only between virtual networks in the same Azure cloud. VNet1 is in Azure Government, VNet2 in the public Azure cloud and VNet3 in Azure China (operated by 21Vianet): they are separate clouds with separate identities and networks, so none of the three peerings is possible. Reference: https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview
 
 ---
 
@@ -6983,10 +6983,10 @@ You have an Azure subscription that contains 20 virtual machines, a network secu
 
 Your network contains an on-premises Active Directory Domain Services (AD DS) domain named contoso.com. The domain contains the servers shown in the following table. You plan to migrate contoso.com to Azure. You create an Azure virtual network named VNET1 that has the following settings: Address space: 10.0.0.0/16 Subnet: Name: Subnet1 IPv4: 10.0.1.0/24 You need to move DC1 to VNET1. The solution must ensure that the member servers in contoso.com can resolve AD DS DNS names. How should you configure DC1? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
 
-**Risposta corretta:** IP address -> Use 10.0.1.3 | Name resolution -> Create an Azure Private DNS zone named contoso.com
-> Immagini: q480_post0.png
+**Risposta corretta:** IP address -> Use 10.0.1.3 | Name resolution -> Configure VNET1 to use a custom DNS server
+> Esibito: q480_pre0.png, q480_pre1.png
 
-**Spiegazione:**
+**Spiegazione:** IP address: once DC1 is in Subnet1 (10.0.1.0/24) it needs an address from that range that does not change, such as 10.0.1.3, set as a static private IP on its network interface in Azure. Name resolution: AD DS relies on DNS records (SRV and others) that domain controllers register dynamically, and an Azure Private DNS zone does not accept dynamic updates from domain controllers. The member servers must therefore use DC1 itself as their DNS server, which you do by configuring VNET1 with a custom DNS server pointing to DC1's IP address. Reference: https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-name-resolution-for-vms-and-role-instances
 
 ---
 
@@ -7049,7 +7049,7 @@ You plan to deploy the following Azure Resource Manager (ARM) template. For each
 **Risposta corretta:** LB1 will be connected to a subnet named VNET1/netname -> No | LB1 can be deployed only to the resource group that contains VNET1 -> No | The value of the sku variable can be provided as a parameter when the template is deployed from a command prompt -> No
 > Immagini: q484_post0.png
 
-**Spiegazione:**
+**Spiegazione:** The frontend subnet ID is built from variables('vnetId') plus /subnets/ and variables('netname'), which is APP1, so LB1 connects to the subnet APP1 of VNET1 - not to a subnet literally named VNET1/netname. A load balancer does not have to be in the same resource group as its virtual network; note, though, that this template builds VNET1's ID with resourceId() without a resource group, which resolves to the deployment's own resource group. sku is defined in the variables section, and variables cannot be supplied at deployment time - only parameters can. Reference: https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/template-functions-resource#resourceid
 
 ---
 
@@ -7193,7 +7193,7 @@ You have a Windows 11 device named Device and an Azure subscription that contain
 **Risposta corretta:** 1. Upgrade Bastion1 to the Standard SKU. -> 2. From Bastion1, select Native Client Support. -> 3. From Azure CLI on Device1, run az network bastion rdp.
 > Immagini: q493_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Connecting to VM1 through Bastion with the native Remote Desktop client of Device1 requires the native client support feature, which is available only in the Standard (or Premium) SKU. So you upgrade Bastion1 to Standard, enable Native Client Support in its configuration, and then run az network bastion rdp from Azure CLI on Device1, which opens the tunnel and launches mstsc for you. Running mstsc.exe directly would try to reach VM1 without going through Bastion. Reference: https://learn.microsoft.com/en-us/azure/bastion/connect-vm-native-client-windows
 
 ---
 
@@ -7340,7 +7340,7 @@ You have an Azure subscription. You create a routing table named RT1. You need t
 
 **Risposta corretta:** D
 
-**Spiegazione:**
+**Spiegazione:** A user-defined route uses a next hop IP address only with the Virtual appliance next hop type, where it is the private IP of the appliance (for example a firewall or router VM) that should receive the traffic. Internet, Virtual network and Virtual network gateway are next hop types that don't take an IP address. Reference: https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-udr-overview
 
 ---
 
@@ -7358,7 +7358,7 @@ You have two Azure subscriptions named Sub1 and Sub2 that are linked to separate
 **Risposta corretta:** E
 > Esibito: q503_pre0.png
 
-**Spiegazione:**
+**Spiegazione:** Virtual network peering works between virtual networks in the same region or in different regions (global peering), and between different subscriptions, even when they are linked to different Microsoft Entra tenants, as long as the address spaces don't overlap. So VNet1 can be peered with VNet2 and VNet3 in Sub1 and with VNet4 and VNet5 in Sub2. Reference: https://learn.microsoft.com/en-us/azure/virtual-network/create-peering-different-subscriptions
 
 ---
 
@@ -7383,13 +7383,13 @@ You have an Azure subscription that contains a Recovery Services vault named Vau
 
 Note: This question is part of a series of questions that present the same scenario. Each question in the series contains a unique solution that might meet the stated goals. Some question sets might have more than one correct solution, while others might not have a correct solution. After you answer a question in this section, you will NOT be able to return to it. As a result, these questions will not appear in the review screen. You have an app named App1 that is installed on two Azure virtual machines named VM1 and VM2. Connections to App1 are managed by using an Azure Load Balancer. The effective network security configurations for VM2 are shown in the following exhibit. You discover that connections to App1 from 131.107.100.50 over TCP port 443 fail. You verify that the Load Balancer rules are configured correctly. You need to ensure that connections to App1 can be established successfully from 131.107.100.50 over TCP port 443. Solution: You create an inbound security rule that allows any traffic from the AzureLoadBalancer source and has a priority of 150. Does this meet the goal?
 
-- **A.** Yes
-- **B.** No **← CORRETTA**
+- **A.** Yes **← CORRETTA**
+- **B.** No
 
-**Risposta corretta:** B
+**Risposta corretta:** A
 > Esibito: q505_pre0.png
 
-**Spiegazione:** The existing rules include a rule with priority 100 that allows traffic from 131.107.100.50 over TCP port 443 and a rule with priority 200 that blocks any other traffic on port 443. Adding a new rule with a priority of 150 to allow traffic from AzureLoadBalancer will not change the fact that traffic from 131.107.100.50 is already allowed by the higher priority rule at 100. Therefore, this solution does not meet the goal. The connection issue might be due to another reason such as the virtual machine being powered off or another misconfiguration outside of the network security group rules shown.
+**Spiegazione:** Yes. Traffic from 131.107.100.50 on TCP 443 is already allowed by the Allow_131.107.100.50 rule (priority 100). The connections fail because BlockAllOther443 (priority 200) also blocks the Azure Load Balancer health probe on port 443: the probe fails, VM2 is marked unhealthy and receives no traffic. A rule that allows the AzureLoadBalancer source with priority 150 is evaluated before BlockAllOther443, so the probe succeeds and App1 becomes reachable. Reference: https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-custom-probe-overview
 
 ---
 
@@ -7407,7 +7407,7 @@ You have an Azure subscription that contains the resources shown in the followin
 **Risposta corretta:** B
 > Esibito: q506_pre0.png
 
-**Spiegazione:**
+**Spiegazione:** A route table is associated with subnets, and only with subnets in virtual networks of the same region and subscription: RT1 in East US can be associated with Subnet1. A route table cannot be associated with a virtual network as a whole, nor with an individual network interface. Reference: https://learn.microsoft.com/en-us/azure/virtual-network/manage-route-table
 
 ---
 
@@ -7436,7 +7436,7 @@ You have an Azure subscription that contains the virtual networks shown in the f
 **Risposta corretta:** Virtual network -> VNet3 only | Subnet mask -> /23
 > Immagini: q508_post0.png
 
-**Spiegazione:**
+**Spiegazione:** A Container Apps environment with its own virtual network needs a dedicated, empty subnet in a VNet of the same region; with the consumption-only environment assumed here the smallest allowed subnet is /23. VNet1 (10.1.128.0/23) already uses half of its space for Subnet1, and VNet2's address space is fully taken by Subnet21 and Subnet22, so only VNet3 (172.16.0.0/16) has room for a new /23 subnet. Note that workload-profiles environments, now the default, accept subnets as small as /27. Reference: https://learn.microsoft.com/en-us/azure/container-apps/networking
 
 ---
 
@@ -7465,7 +7465,7 @@ You have an Azure subscription that contains the virtual networks shown in the f
 **Risposta corretta:** The Remote Desktop Connection client (mstsc.exe) can be used to connect to VM1 through Bastion1. -> No | The Azure portal can use SSH to connect to VM2 through Bastion1. -> Yes | The Azure portal can be used to connect to VM3 through Bastion1. -> No
 > Immagini: q510_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Bastion1 uses the Basic tier, which supports connections only from the Azure portal; native clients such as mstsc.exe require the Standard tier or higher. Bastion can reach VMs in directly peered virtual networks: VNet2 is peered with VNet1, so the portal can open an SSH session to VM2 (Linux). VNet3 is peered only with VNet2, and peering is not transitive, so VM3 cannot be reached through Bastion1. Reference: https://learn.microsoft.com/en-us/azure/bastion/vnet-peering
 
 ---
 
@@ -7477,7 +7477,7 @@ You have an Azure subscription that contains the virtual networks shown in the f
 **Risposta corretta:** Policy1 can be applied to Subnet3. -> Yes | Only storage1 and storage2 can be accessed from VNet2. -> No | Only storage2 can be accessed from VNet3. -> No
 > Immagini: q511_post0.png
 
-**Spiegazione:**
+**Spiegazione:** A service endpoint policy can be applied only to subnets in the same region that have the Microsoft.Storage service endpoint: Policy1 is in South Central US, so it can be applied to Subnet3 in VNet3. Policy1 is not applied to VNet2, so its storage service endpoint reaches every storage account, not only storage1 and storage2. Even on VNet3, Policy1 allows all the storage accounts of the subscription, so access is not limited to storage2. Reference: https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-service-endpoint-policies-overview
 
 ---
 
@@ -7494,7 +7494,7 @@ You have an Azure virtual network named VNet1 that contains the following settin
 
 **Risposta corretta:** C
 
-**Spiegazione:**
+**Spiegazione:** Subnet1 is a /25, which has 128 addresses. Azure reserves five addresses in every subnet: the network address, the first three host addresses (default gateway and two for Azure DNS) and the broadcast address. That leaves 128 - 5 = 123 addresses for virtual machines. Reference: https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-faq#are-there-any-restrictions-on-using-ip-addresses-within-these-subnets
 
 ---
 
@@ -7522,7 +7522,7 @@ You have the Azure virtual machines shown in the following table. VNET1, VNET2, 
 **Risposta corretta:** From VM1, server1.contoso.com resolves to 131.107.3.3. -> No | From VM2, server1.contoso.com resolves to 131.107.3.3. -> Yes | From VM3, server2.contoso.com resolves to 131.107.2.4. -> No
 > Immagini: q514_post0.png
 
-**Spiegazione:**
+**Spiegazione:** VNET1 uses Azure-provided DNS, which knows nothing about the contoso.com zone hosted on VM4, so VM1 cannot resolve server1.contoso.com. VNET2 and VNET3 use VM4 (192.168.0.5) as their custom DNS server, and the peering lets VM2 reach it, so VM2 resolves server1.contoso.com to 131.107.3.3. From VM3, server2.contoso.com resolves to 131.107.3.4, not 131.107.2.4. Reference: https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-name-resolution-for-vms-and-role-instances
 
 ---
 
@@ -7534,7 +7534,7 @@ You have an Azure subscription that contains a resource group named RG1. You pla
 **Risposta corretta:** 1. virtual network -> 2. network interface -> 3. virtual machine -> 4. Azure Monitor extension
 > Immagini: q515_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Resources are deployed in dependency order: the virtual network first, then the network interface that connects to its subnet, then the virtual machine that uses the network interface, and finally the Azure Monitor extension, which is installed on the running VM to collect performance data. Each resource lists the previous one in its dependsOn section. Reference: https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/resource-dependency
 
 ---
 
@@ -7613,7 +7613,7 @@ You have an Azure subscription that contains the virtual networks shown in the f
 **Risposta corretta:** Subnet size -> /26 | Public IP -> Standard SKU with a static allocation
 > Immagini: q520_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Host scaling and file upload and download are Standard (or Premium) tier features of Azure Bastion, and a single Bastion in VNet1 can reach the VMs of the peered VNet2. A Bastion that supports host scaling needs an AzureBastionSubnet of at least /26, the smallest of the valid options, and Azure Bastion always requires a Standard SKU public IP address with static allocation. Reference: https://learn.microsoft.com/en-us/azure/bastion/configuration-settings
 
 ---
 
@@ -7646,7 +7646,7 @@ You have an Azure subscription that contains two peered virtual networks named V
 
 **Risposta corretta:** B
 
-**Spiegazione:**
+**Spiegazione:** VNet2 has no gateway of its own, so on-premises traffic must use VNet1's VPN gateway through the peering. Service chaining lets user-defined routes in a peered network point to a gateway or appliance in the other network: with gateway transit on the peering (VNet1 allows it, VNet2 uses the remote gateway) and the appropriate UDRs, on-premises users reach the VM in VNet2 without paying for a second gateway, an ExpressRoute circuit, an Azure Firewall or an Application Gateway. Reference: https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview#service-chaining
 
 ---
 
@@ -7662,7 +7662,7 @@ You have an Azure subscription that contains two peered virtual networks named V
 
 **Risposta corretta:** B
 
-**Spiegazione:**
+**Spiegazione:** Peered virtual networks route traffic to each other directly through the system routes created by the peering. To force VNet1-to-VNet2 traffic through NetVA1 you create a route table with a custom route for VNet2's address space, next hop type Virtual appliance and NetVA1's IP address, and associate it with VNet1's subnets (IP forwarding must be enabled on the NVA's NIC). Reference: https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-udr-overview
 
 ---
 
@@ -7724,7 +7724,7 @@ You have an Azure subscription that contains an Azure Storage account named stor
 **Risposta corretta:** Alert rules -> 4 | Action groups -> 3
 > Immagini: q527_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Each signal needs its own alert rule: the two metric signals notify different users, and each activity log operation (deleting the account, restoring blob ranges) needs its own activity log alert, so 4 alert rules. Action groups can be shared by alert rules that notify the same people: User1 and User3 (Ingress and Restore blob ranges), User1 only (Egress), and User1, User2 and User3 (Delete storage account) give 3 action groups. Reference: https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/action-groups
 
 ---
 
@@ -7765,7 +7765,7 @@ You have the web apps shown in the following table. You need to monitor the perf
 **Risposta corretta:** App1 -> Install the Application Insights Agent | App2 -> Install the Application Insights Agent
 > Immagini: q530_post0.png
 
-**Spiegazione:** Reference: https://docs.microsoft.com/en-us/azure/azure-monitor/app/azure-web-apps
+**Spiegazione:** The Application Insights Agent (formerly Status Monitor v2) adds monitoring to .NET applications hosted on IIS without changing their code, both on on-premises servers and on Azure VMs. It covers App1, an ASP.NET app on an on-premises IIS server, and App2, an ASP.NET Core app on IIS in an Azure VM. The SDK would require code changes, while the Log Analytics and Azure Monitor agents collect machine logs and metrics, not application telemetry. Reference: https://learn.microsoft.com/en-us/azure/azure-monitor/app/application-insights-asp-net-agent
 
 ---
 
@@ -7793,7 +7793,7 @@ You have an Azure Active Directory (Azure AD) tenant named contoso.onmicrosoft.c
 **Risposta corretta:** After User2 answers three security questions correctly, he can reset his password immediately. -> No | If User1 forgets her password, she can reset the password by using the mobile phone app. -> No | User3 can add security questions to the password reset process -> No
 > Immagini: q532_post0.png
 
-**Spiegazione:**
+**Spiegazione:** SSPR is enabled only for Group2 and requires two methods (mobile phone and security questions). User2 is in Group2, but answering security questions is only one method, so a second method (the mobile phone) is still needed. User1 is only in Group1, which is not enabled for SSPR, and the mobile app is not even an allowed method. User3 holds an admin role (User administrator): administrators use the stronger administrator reset policy, which never uses security questions, whatever the user settings say. Reference: https://learn.microsoft.com/en-us/entra/identity/authentication/concept-sspr-policy#administrator-reset-policy-differences
 
 ---
 
@@ -7821,7 +7821,7 @@ You have two Azure App Service app named App1 and App2. Each app has a productio
 **Risposta corretta:** On January 15, 2021, App1 will have only one backup in storage. -> No | On February 6, 2021, you can access the backup of the App2 test slot from January 15, 2021. -> No | On January 15, 2021, you can restore the App2 production slot backup from January 6 to the App2 test slot. -> Yes
 > Immagini: q534_post0.png
 
-**Spiegazione:**
+**Spiegazione:** A retention of 0 days means App Service keeps backups indefinitely, so on January 15 App1 has a backup for every day since January 6, not only one. Backups are configured for the production slots only, so there is no backup of the App2 test slot to access on February 6. A backup of App2's production slot can be restored to another slot of the same app, so on January 15 the January 6 backup can be restored to the App2 test slot. Reference: https://learn.microsoft.com/en-us/azure/app-service/manage-backup
 
 ---
 
@@ -7833,7 +7833,7 @@ You have an Azure subscription that contains an Azure Active Directory (Azure AD
 **Risposta corretta:** SecAdmin1 must answer the following question during the self-service password reset: In what city was your first job? -> No | BillAdmin1 must answer the following question during the self-service password reset: What is your favorite food? -> No | User1 must answer the following question during the self-service password reset: What was the name of your first pet? -> Yes
 > Immagini: q535_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Administrators, SecAdmin1 and BillAdmin1 included, are always subject to the administrator reset policy, which requires two strong methods (email, phone, authenticator app) and never uses security questions, so neither of them answers a security question. User1 follows the configured policy: three questions are required to register and three to reset, and only three questions are selected in total, so User1 registers all three and must answer all of them, including the one about the first pet. Reference: https://learn.microsoft.com/en-us/entra/identity/authentication/concept-sspr-policy#administrator-reset-policy-differences
 
 ---
 
@@ -8018,7 +8018,7 @@ You have the role assignment file shown in the following exhibit. Use the drop-d
 **Risposta corretta:** [Answer choice] assigned the Owner role for VM1 -> User1 and User3 are | [Answer choice] can create a virtual machine in RG1 -> User1 and User4
 > Immagini: q548_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Role assignments are inherited by every child scope. User1 is Owner of the whole subscription, so it is Owner of VM1 too, and User3 is assigned Owner directly on VM1; User2 is Owner of RG2 only and User4 is a Contributor. Creating a VM in RG1 requires write access to RG1: User1 (Owner at the subscription) and User4 (Contributor on RG1) have it, while User2's role covers RG2 and User3's covers VM1 only. Reference: https://learn.microsoft.com/en-us/azure/role-based-access-control/scope-overview
 
 ---
 
@@ -8030,7 +8030,7 @@ You have the following custom role-based access control (RBAC) role. For each of
 **Risposta corretta:** Users that are assigned Role1 can assign Role1 to users. -> No | Users that are assigned Role1 can deploy new virtual machines. -> Yes | Users that are assigned Role1 can set a static IP address on a virtual machine. -> Yes
 > Immagini: q549_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Role1's NotActions exclude Microsoft.Authorization/*/Write (and Delete), so its users cannot create role assignments and cannot assign Role1 to anyone. Its Actions include Microsoft.Compute/virtualMachines/*, disks/*, availabilitySets/*, networkInterfaces/* and subnets/join/action, everything needed to deploy a new VM. A static private IP address is a property of the network interface, covered by Microsoft.Network/networkInterfaces/*, so Role1's users can set it. Reference: https://learn.microsoft.com/en-us/azure/role-based-access-control/role-definitions
 
 ---
 
@@ -8042,7 +8042,7 @@ You have an Azure subscription that contains the resources shown in the followin
 **Risposta corretta:** VM1 can access storage1. -> Yes | VM2 can access VM1 by using the HTTPS protocol. -> Yes | The security rules for NSG1 apply to any virtual machine on VNET1. -> No
 > Immagini: q550_post0.png
 
-**Spiegazione:**
+**Spiegazione:** NSG1 is associated to one subnet (the one containing vm1, 10.3.0.15) and to no network interfaces, so it does not apply to every VM on VNET1. Outbound, rule 145 allows TCP 443 to the Storage service tag before rule 150 blocks the Internet, so vm1 can reach storage1. Inbound, rule 110 denies HTTPS to vm1 only from the Internet; vm2 is in VNET1, so its traffic matches the default AllowVnetInBound rule and vm2 can reach vm1 over HTTPS. Reference: https://learn.microsoft.com/en-us/azure/virtual-network/network-security-group-how-it-works
 
 ---
 
@@ -8070,7 +8070,7 @@ You have two Azure subscriptions named Sub1 and Sub2. Sub1 is in a management gr
 **Risposta corretta:** User1 can sign in to VM1. -> No | User2 can manage disks and disk snapshots of VM1. -> No | User2 can manage disks and disk snapshots of VM3. -> No
 > Immagini: q552_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Signing in to a VM with Microsoft Entra credentials requires Virtual Machine User Login or Virtual Machine Administrator Login on the VM. User1 has Virtual Machine User Login only on Sub2, while VM1 is in Sub1, so User1 cannot sign in to it (Virtual Machine Contributor on MG1 doesn't grant sign-in). Virtual Machine Contributor manages VMs and their disks but includes no snapshot permissions, so User2 cannot manage disk snapshots of VM3 even though its role on MG2 covers Sub2; and User2 has no management role at all over VM1 in Sub1. Reference: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/compute#virtual-machine-contributor
 
 ---
 
@@ -8098,7 +8098,7 @@ You have an Azure subscription that contains a virtual machine name VM1. VM1 has
 **Risposta corretta:** 1. Create an Azure Backup vault -> 2. Create a backup policy and configure the backup -> 3. Configure a managed identity
 > Immagini: q554_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Backing up an individual managed disk (Azure Disk Backup) uses a Backup vault, not a Recovery Services vault. You create the Backup vault, then create a backup policy and configure the backup of Disk2. The vault performs the snapshots through its managed identity, which needs permissions on the disk (Disk Backup Reader) and on the snapshot resource group (Disk Snapshot Contributor). Reference: https://learn.microsoft.com/en-us/azure/backup/backup-managed-disks
 
 ---
 
@@ -8175,7 +8175,7 @@ You have an Azure subscription that is linked to an Azure AD tenant. The tenant 
 **Risposta corretta:** User1 -> Alert1 and Alert2 are triggered | User2 -> Alert1 and Alert2 are triggered
 > Immagini: q559_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Activity log alerts for All Administrative operations fire for any write, delete or action operation within their scope, and RG1's scope includes VM1. User1 creates a disk in RG1 (Alert1) and attaches it to VM1, an update of VM1 (Alert1 and Alert2). User2 assigns a tag to RG1 (Alert1) and to VM1 (Alert1 and Alert2). Both users therefore trigger Alert1 and Alert2. Reference: https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-types#activity-log-alerts
 
 ---
 
@@ -8209,7 +8209,7 @@ You have an Azure subscription that contains eight virtual machines and the reso
 **Risposta corretta:** B
 > Esibito: q561_pre0.png
 
-**Spiegazione:** To enable communication between VNET1 and VNET2 using the Microsoft backbone, you would typically use VNet peering, which doesn't require service endpoints. To enable VMs in VNET1 to access storage accounts over Microsoft's backbone, you would need a service endpoint for Microsoft.Storage. Azure Active Directory (Azure AD) does not support service endpoints natively. Therefore, only one service endpoint for Microsoft.Storage is necessary for the storage accounts. So, the minimum number of service endpoints required is 2: Microsoft.Storage for the storage accounts and Microsoft.KeyVault for the Key Vault.
+**Spiegazione:** VM-to-VM traffic between VNET1 and VNET2 stays on the Microsoft backbone through virtual network peering, which needs no service endpoint. Service endpoints are needed only for the platform services: one Microsoft.Storage endpoint covers both storage1 and storage2, and one Microsoft.AzureActiveDirectory endpoint covers Azure AD. That makes 2 service endpoints on VNET1. Reference: https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-service-endpoints-overview
 
 ---
 
@@ -8253,7 +8253,7 @@ You have an Azure subscription named Sub1 that contains the resources shown in t
 **Risposta corretta:** If you create a resource group in Sub1 on August 11, 2022, Alert1 is listed in the Azure portal. -> Yes | If you create a resource group in Sub1 on August 12, 2022, an email message is sent to admin1@contoso.com. -> No | If you add a tag to RG1 on August 15, 2022, an email message is sent to admin1@contoso.com. -> Yes
 > Immagini: q564_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Alert1 fires on every administrative operation in Sub1, and Rule1 suppresses only the notifications - not the alerts - from August 10 to August 13. Creating a resource group on August 11 therefore still fires Alert1, which is listed in the portal, but a resource group created on August 12 sends no email because Action1 is suppressed. On August 15 the processing rule has expired, so adding a tag to RG1 fires Alert1 and Action1 emails admin1@contoso.com. Reference: https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-processing-rules
 
 ---
 
@@ -8361,7 +8361,7 @@ You have an Azure subscription that contains the alerts shown in the following e
 **Risposta corretta:** For Alert1, User response [answer choice]. -> can be changed to New or Acknowledged | For Alert2, User response [answer choice]. -> can be changed to Acknowledged or Closed
 > Immagini: q571_post0.png
 
-**Spiegazione:**
+**Spiegazione:** The user response of an alert has three values - New, Acknowledged and Closed - and can be changed freely between them; it only records how people handle the alert and is independent of the alert condition (Fired). Alert1 is Closed, so it can be changed to New or Acknowledged; Alert2 is New, so it can be changed to Acknowledged or Closed. Reference: https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-overview#alerts-and-state
 
 ---
 
@@ -8385,7 +8385,7 @@ You have an Azure subscription that contains the vaults shown in the following t
 **Risposta corretta:** VM1 can be backed up by using Policy1. -> Yes | VM2 can be backed up by using Policy3. -> No | VM2 can be backed up by using Policy2. -> Yes
 > Immagini: q573_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Azure VMs are backed up with Recovery Services vault policies. VM1 uses Azure Disk Encryption, which the Standard policy supports, so Policy1 works. VM2 uses Trusted launch, which requires an Enhanced policy, so it can be backed up with Policy2. Policy3 belongs to a Backup vault, which protects workloads such as disks and blobs but not Azure VMs, so it can't back up VM2. Reference: https://learn.microsoft.com/en-us/azure/backup/backup-azure-vms-enhanced-policy
 
 ---
 
@@ -8413,7 +8413,7 @@ You have an Azure subscription that contains the vaults shown in the following t
 **Risposta corretta:** cont1 -> Backup1 only | share1 -> Recovery1 only
 > Immagini: q575_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Azure Blob backup (operational and vaulted) is managed from a Backup vault, so cont1 can be backed up only to Backup1. Azure Files backup uses a Recovery Services vault, so share1 can be backed up only to Recovery1. Reference: https://learn.microsoft.com/en-us/azure/backup/backup-center-support-matrix
 
 ---
 
@@ -8500,15 +8500,15 @@ You have an Azure subscription that has Traffic Analytics configured. You deploy
 
 You have an Azure subscription. The subscription contains 10 virtual machines that run Windows Server. Each virtual machine hosts a website in IIS and has the Azure Monitor Agent installed. You need to collect the IIS logs from each virtual machine and store them in a Log Analytics workspace. What should you configure first?
 
-- **A.** a data collection endpoint
+- **A.** a data collection endpoint **← CORRETTA**
 - **B.** an Azure Monitor Private Link Scope (AMPLS)
-- **C.** Diagnostic settings **← CORRETTA**
+- **C.** Diagnostic settings
 - **D.** VM insights
 - **E.** a private endpoint
 
-**Risposta corretta:** C
+**Risposta corretta:** A
 
-**Spiegazione:** To collect and forward IIS logs to a Log Analytics workspace, you need to configure Diagnostic settings on each virtual machine. Diagnostic settings allow you to specify the types of data to collect, including IIS logs, and to define the destination where this data will be sent, such as a Log Analytics workspace.
+**Spiegazione:** With the Azure Monitor Agent, IIS logs are collected by a data collection rule (DCR) that has an IIS Logs data source and a Log Analytics workspace destination, where the records land in the W3CIISLog table; the DCR for IIS (and text) logs is paired with a data collection endpoint, which is therefore the first thing to create. Diagnostic settings of a VM belong to the legacy Windows Azure Diagnostics extension, not to the Azure Monitor Agent, and VM insights, AMPLS and private endpoints don't collect IIS logs. Reference: https://learn.microsoft.com/en-us/azure/azure-monitor/vm/data-collection-iis
 
 ---
 
@@ -8520,7 +8520,7 @@ You have an Azure subscription that contains two storage accounts named contoso1
 **Risposta corretta:** VM1 can access contoso102. -> No | VM2 can access contoso101. -> No | VM2 uses a private IP address to access Azure AD. -> Yes
 > Immagini: q582_post0.png
 
-**Spiegazione:**
+**Spiegazione:** Subnet1 has the Microsoft.Storage service endpoint with Policy1, a service endpoint policy that allows only contoso101, so VM1 cannot reach contoso102 through the endpoint. Subnet2 has the Microsoft.AzureActiveDirectory service endpoint, so VM2 reaches Azure AD from its private IP address over the backbone. The expected answer also says VM2 cannot access contoso101, which holds only if the storage account's firewall admits just the Subnet1 endpoint - Subnet2 has no storage endpoint, so VM2 would otherwise reach the account over the internet. Reference: https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-service-endpoint-policies-overview
 
 ---
 
@@ -8532,7 +8532,7 @@ You have an Azure subscription that contains an Azure Backup vault named Backup1
 **Risposta corretta:** Backup1 -> Disk1 | Recovery1 -> VM1
 > Immagini: q583_post0.png
 
-**Spiegazione:**
+**Spiegazione:** A Backup vault protects newer workloads such as Azure managed disks (Azure Disk Backup), blobs and Azure Database for PostgreSQL, so Disk1 goes to Backup1. A Recovery Services vault protects Azure virtual machines (and Azure Files, SQL Server in VMs), so VM1 goes to Recovery1. App1 is backed up by App Service's own backup feature and DB1 by Azure SQL Database's built-in automated backups, not by either vault. Reference: https://learn.microsoft.com/en-us/azure/backup/backup-vault-overview
 
 ---
 
@@ -8544,6 +8544,6 @@ Case study - This is a case study. Case studies are not timed separately. You ca
 **Risposta corretta:** cont1 -> Daily | share1 -> Every 4 hours
 > Immagini: q584_post0.png
 
-**Spiegazione:**
+**Spiegazione:** cont1 is a blob container: vaulted backup for Azure Blobs runs on a daily schedule at most (operational backup is continuous, with no frequency to set), so the most frequent option is Daily. share1 is an Azure file share: its backup policy can take multiple snapshots per day, up to six, so every 4 hours is the most frequent option. Reference: https://learn.microsoft.com/en-us/azure/backup/azure-file-share-support-matrix
 
 ---
