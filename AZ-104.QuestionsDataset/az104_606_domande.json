@@ -7519,9 +7519,9 @@
   ],
   "correct_answers": [
    "B",
-   "D"
+   "C"
   ],
-  "answer_text": "B. Storage Blob Data Contributor | D. Contributor",
+  "answer_text": "B. Storage Blob Data Contributor | C. Reader",
   "images_question": [],
   "images_answer": [],
   "source": "text_layer",

@@ -2867,11 +2867,11 @@ You are configuring Azure Active Directory (Azure AD) authentication for an Azur
 
 - **A.** Storage Account Contributor
 - **B.** Storage Blob Data Contributor **← CORRETTA**
-- **C.** Reader
-- **D.** Contributor **← CORRETTA**
+- **C.** Reader **← CORRETTA**
+- **D.** Contributor
 - **E.** Storage Blob Data Reader
 
-**Risposta corretta:** B, D
+**Risposta corretta:** B, C
 
 **Spiegazione:** To ensure that the members of Group1 can upload files to a storage account using the Azure portal, while adhering to the principle of least privilege, two roles should be configured. First, the 'Storage Blob Data Contributor' role allows for essential operations on blob data such as read, write, and delete, which are necessary for uploading files. Second, the 'Reader' role gives the user read access to see the storage account and its properties but does not allow any modifications. This role is needed to navigate the portal and access the storage resources. Additionally, since the task requires uploading files and managing data actions, these roles together provide the required permissions without granting unnecessary access.
 
