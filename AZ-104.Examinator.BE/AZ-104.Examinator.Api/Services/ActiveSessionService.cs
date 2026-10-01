@@ -38,6 +38,7 @@ public sealed class ActiveSessionService : IActiveSessionService
             session.CurrentIndex,
             session.TimeLimitSeconds,
             session.AutoReveal,
+            session.OpenEnded,
             session.StartedAt,
             session.SavedAt);
     }
@@ -58,6 +59,7 @@ public sealed class ActiveSessionService : IActiveSessionService
             CurrentIndex = Math.Clamp(request.CurrentIndex, 0, Math.Max(0, request.QuestionNumbers.Count - 1)),
             TimeLimitSeconds = request.TimeLimitSeconds,
             AutoReveal = request.AutoReveal,
+            OpenEnded = request.OpenEnded,
             StartedAt = request.StartedAt,
             SavedAt = request.SavedAt,
         };

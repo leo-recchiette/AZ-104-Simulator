@@ -9,5 +9,6 @@ public sealed record SaveActiveSessionDto(
     int CurrentIndex,
     int? TimeLimitSeconds,
     bool AutoReveal,
+    bool OpenEnded,
     DateTimeOffset StartedAt,
     DateTimeOffset SavedAt);

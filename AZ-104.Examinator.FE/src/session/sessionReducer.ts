@@ -1,5 +1,6 @@
 import type { QuestionDto } from "../types/question";
 import type { AnswerCheckResultDto, ExamScoreDto } from "../types/answer";
+import { leadingUnitSize } from "../utils/groups";
 
 export type SessionMode = "practice" | "exam";
 
@@ -16,6 +17,10 @@ export interface SessionState {
   timeLimitSeconds: number | null;
   /** Sempre false in Simulation. */
   autoReveal: boolean;
+  /** Practice a oltranza: questions cresce di un'unita' alla volta, si valuta solo cio' che ha risposta. */
+  openEnded: boolean;
+  /** Le domande ancora da proporre a oltranza. null dopo un ripristino: non si salva, va ripescato. */
+  pool: QuestionDto[] | null;
   startedAt: number | null;
   status: "idle" | "in-progress" | "finished";
   score: ExamScoreDto | null;
@@ -26,16 +31,18 @@ export interface SessionState {
 }
 
 export type SessionAction =
-  | { type: "START_SESSION"; mode: SessionMode; questions: QuestionDto[]; timeLimitSeconds: number | null; autoReveal?: boolean }
+  | { type: "START_SESSION"; mode: SessionMode; questions: QuestionDto[]; timeLimitSeconds: number | null; autoReveal?: boolean; openEnded?: boolean }
   | { type: "RESTORE_SESSION"; state: SessionState }
   | { type: "SET_ANSWER"; questionNumber: number; answer: string[] }
   | { type: "GO_NEXT" }
   | { type: "GO_PREVIOUS" }
   | { type: "GO_TO"; index: number }
+  | { type: "SET_POOL"; questions: QuestionDto[] }
   | { type: "SET_CHECK_RESULT"; questionNumber: number; result: AnswerCheckResultDto }
   | { type: "SET_AUTO_REVEAL"; autoReveal: boolean }
   | { type: "TOGGLE_FLAG"; index: number }
-  | { type: "FINISH_SESSION"; score: ExamScoreDto; timeUsedSeconds: number }
+  /** questions: quelle valutate. A oltranza sono meno di quelle proposte. */
+  | { type: "FINISH_SESSION"; score: ExamScoreDto; timeUsedSeconds: number; questions: QuestionDto[] }
   | { type: "SET_HISTORY_OUTCOME"; outcome: "discarded" | "failed" }
   | { type: "RESET" };
 
@@ -48,6 +55,8 @@ export const initialSessionState: SessionState = {
   flags: {},
   timeLimitSeconds: null,
   autoReveal: false,
+  openEnded: false,
+  pool: null,
   startedAt: null,
   status: "idle",
   score: null,
@@ -57,16 +66,22 @@ export const initialSessionState: SessionState = {
 
 export function sessionReducer(state: SessionState, action: SessionAction): SessionState {
   switch (action.type) {
-    case "START_SESSION":
+    case "START_SESSION": {
+      const openEnded = action.mode === "practice" && !!action.openEnded;
+      // A oltranza arriva l'intero bank: si parte dalla prima unita', il resto aspetta nel pool.
+      const shown = openEnded ? leadingUnitSize(action.questions) : action.questions.length;
       return {
         ...initialSessionState,
         mode: action.mode,
-        questions: action.questions,
+        questions: action.questions.slice(0, shown),
         timeLimitSeconds: action.timeLimitSeconds,
         autoReveal: action.mode === "practice" && !!action.autoReveal,
+        openEnded,
+        pool: openEnded ? action.questions.slice(shown) : null,
         startedAt: Date.now(),
         status: "in-progress",
       };
+    }
 
     case "RESTORE_SESSION":
       return action.state;
@@ -82,14 +97,31 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
       };
     }
 
-    case "GO_NEXT":
+    case "GO_NEXT": {
+      const atEnd = state.currentIndex === state.questions.length - 1;
+      if (atEnd && state.openEnded && state.pool?.length) {
+        const size = leadingUnitSize(state.pool);
+        return {
+          ...state,
+          questions: [...state.questions, ...state.pool.slice(0, size)],
+          pool: state.pool.slice(size),
+          currentIndex: state.questions.length,
+        };
+      }
       return { ...state, currentIndex: Math.min(state.currentIndex + 1, state.questions.length - 1) };
+    }
 
     case "GO_PREVIOUS":
       return { ...state, currentIndex: Math.max(state.currentIndex - 1, 0) };
 
     case "GO_TO":
       return { ...state, currentIndex: Math.min(Math.max(action.index, 0), state.questions.length - 1) };
+
+    // Il bank ripescato contiene anche le domande gia' proposte: non devono tornare.
+    case "SET_POOL": {
+      const shown = new Set(state.questions.map((q) => q.number));
+      return { ...state, pool: action.questions.filter((q) => !shown.has(q.number)) };
+    }
 
     case "SET_AUTO_REVEAL":
       return { ...state, autoReveal: state.mode === "practice" && action.autoReveal };
@@ -107,7 +139,16 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
       };
 
     case "FINISH_SESSION":
-      return { ...state, status: "finished", score: action.score, timeUsedSeconds: action.timeUsedSeconds };
+      return {
+        ...state,
+        status: "finished",
+        questions: action.questions,
+        // Gli indici si riferivano alle domande proposte, non a quelle valutate.
+        currentIndex: 0,
+        flags: {},
+        score: action.score,
+        timeUsedSeconds: action.timeUsedSeconds,
+      };
 
     // Puo' arrivare a SessionPage gia' smontata: il context vive sopra le rotte.
     case "SET_HISTORY_OUTCOME":

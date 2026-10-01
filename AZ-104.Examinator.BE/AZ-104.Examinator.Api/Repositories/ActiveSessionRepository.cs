@@ -20,7 +20,7 @@ public sealed class ActiveSessionRepository : IActiveSessionRepository
             SELECT mode AS "Mode", question_numbers AS "QuestionNumbers", answers::text AS "Answers",
                    flagged_indexes AS "FlaggedIndexes", current_index AS "CurrentIndex",
                    time_limit_seconds AS "TimeLimitSeconds", auto_reveal AS "AutoReveal",
-                   started_at AS "StartedAt", saved_at AS "SavedAt"
+                   open_ended AS "OpenEnded", started_at AS "StartedAt", saved_at AS "SavedAt"
             FROM active_session
             WHERE id = 1
             """;
@@ -41,6 +41,7 @@ public sealed class ActiveSessionRepository : IActiveSessionRepository
             CurrentIndex = row.CurrentIndex,
             TimeLimitSeconds = row.TimeLimitSeconds,
             AutoReveal = row.AutoReveal,
+            OpenEnded = row.OpenEnded,
             StartedAt = row.StartedAt,
             SavedAt = row.SavedAt,
         };
@@ -51,10 +52,10 @@ public sealed class ActiveSessionRepository : IActiveSessionRepository
         const string sql = """
             INSERT INTO active_session (
                 id, mode, question_numbers, answers, flagged_indexes, current_index,
-                time_limit_seconds, auto_reveal, started_at, saved_at, updated_at)
+                time_limit_seconds, auto_reveal, open_ended, started_at, saved_at, updated_at)
             VALUES (
                 1, @Mode, @QuestionNumbers, @Answers::jsonb, @FlaggedIndexes, @CurrentIndex,
-                @TimeLimitSeconds, @AutoReveal, @StartedAt, @SavedAt, now())
+                @TimeLimitSeconds, @AutoReveal, @OpenEnded, @StartedAt, @SavedAt, now())
             ON CONFLICT (id) DO UPDATE SET
                 mode = EXCLUDED.mode,
                 question_numbers = EXCLUDED.question_numbers,
@@ -63,6 +64,7 @@ public sealed class ActiveSessionRepository : IActiveSessionRepository
                 current_index = EXCLUDED.current_index,
                 time_limit_seconds = EXCLUDED.time_limit_seconds,
                 auto_reveal = EXCLUDED.auto_reveal,
+                open_ended = EXCLUDED.open_ended,
                 started_at = EXCLUDED.started_at,
                 saved_at = EXCLUDED.saved_at,
                 updated_at = now()
@@ -77,6 +79,7 @@ public sealed class ActiveSessionRepository : IActiveSessionRepository
             session.CurrentIndex,
             session.TimeLimitSeconds,
             session.AutoReveal,
+            session.OpenEnded,
             session.StartedAt,
             session.SavedAt,
         };

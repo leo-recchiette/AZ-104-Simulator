@@ -7,9 +7,9 @@ services:
       POSTGRES_DB: examinator
     volumes:
       - pgdata:/var/lib/postgresql/data
-      # Eseguito solo alla prima creazione del volume. Per rigenerare lo schema:
-      # docker compose down -v && docker compose up
-      - ./AZ-104.Examinator.Database/db/init:/docker-entrypoint-initdb.d:ro
+      # Eseguito solo alla prima creazione del volume. Su un database esistente le modifiche allo
+      # schema vanno applicate a mano: ricreare il volume (down -v) cancellerebbe anche lo storico.
+      - ./AZ-104.Examinator.Database/db/01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
     ports:
       - "5432:5432"
     healthcheck:
