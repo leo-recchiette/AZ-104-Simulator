@@ -1,9 +1,8 @@
 # AZ-104 Simulator
 
 An exam simulator for the Microsoft AZ-104 (Azure Administrator Associate) certification, built around a question
-bank of 584 items. 
-.NET 10 Web API, PostgreSQL, React + TypeScript — the whole stack runs in Docker, so nothing
-has to be installed locally except Docker itself.
+bank of 584 items. .NET 10 Web API, PostgreSQL, React + TypeScript — the whole stack runs in Docker, so nothing has
+to be installed locally except Docker itself.
 
 ## Screenshots
 
@@ -12,7 +11,7 @@ Home screen: pick a mode and see how your scores are trending across the session
 ![Home screen](docs/screenshots/home.png)
 
 A question during a practice session, with its attached screenshot (*exhibit*) open and the solution available on
-demand.
+demand. This one belongs to a scenario series, so its linked questions are listed alongside.
 
 ![A question during a session](docs/screenshots/question.png)
 
@@ -22,8 +21,11 @@ History of submitted sessions: open any past attempt to go through its questions
 
 ## What it does
 
-- **Two modes.** *Practice* lets you choose how many questions you want, whether to run a clock, and whether the
-  solution should appear on its own as soon as you answer. *Simulation* is a fixed timed set under exam conditions.
+- **Two modes.** *Practice* lets you choose how many questions you want — or go open-ended and stop whenever you
+  like, scoring only what you answered — whether to run a clock, and whether the solution should appear on its own
+  as soon as you answer. *Simulation* is a fixed timed set under exam conditions.
+- **Linked questions stay together.** The "Solution: … Does this meet the goal?" series share one scenario, so they
+  are always drawn as a whole, and you can jump between them from a side panel.
 - **Every question type is clickable and scored** — multiple choice, drag & drop sequences, hotspot rows and
   yes/no statements — rather than self-assessed.
 - **Microsoft's own partial credit rule**: one point per correctly answered component, nothing deducted for wrong
@@ -41,7 +43,7 @@ History of submitted sessions: open any past attempt to go through its questions
 AZ-104.Simulator.BE/          .NET backend (API + test project)
 AZ-104.Simulator.FE/          React + TypeScript frontend
 AZ-104.Simulator.Database/    SQL schema and question bank importer
-AZ-104.QuestionsDataset/       Source data (JSON + a human-readable Markdown version)
+AZ-104.QuestionsDataset/       Source data (JSON, a human-readable Markdown version, the exhibit images)
 docker-compose.yml
 ```
 
@@ -100,9 +102,11 @@ docker compose --profile dev --profile setup down -v --rmi local --remove-orphan
 ```
 
 That removes containers, volumes (`pgdata` and `web_node_modules`) and locally built images (`api`, `web`,
-`importer`) in one go. Both profiles have to be named, or `importer` and `pgweb` are left out of the cleanup.
-Images pulled from external registries (`postgres`, `pgweb`, the .NET and Node base images) are left alone; to drop
-those as well use `--rmi all`, at the cost of downloading them again on the next start.
+`importer`) in one go. **Mind what `-v` takes with it**: besides the question bank, `pgdata` holds the history of
+your submitted sessions and the session in progress — the importer brings the questions back, not those. Both
+profiles have to be named, or `importer` and `pgweb` are left out of the cleanup. Images pulled from external
+registries (`postgres`, `pgweb`, the .NET and Node base images) are left alone; to drop those as well use
+`--rmi all`, at the cost of downloading them again on the next start.
 
 If a `docker rmi` refuses with something like `image is being used by stopped container`, a stopped container is
 still holding it — often one started by hand with `docker run`, and therefore invisible to `docker compose down`,
@@ -150,7 +154,7 @@ docker compose exec web npm run lint
 
 ```bash
 docker compose --profile dev up -d    # start every service, pgweb included (without --profile it stays down)
-docker compose down -v                # wipe everything, database volume included
+docker compose down -v                # wipe everything, database volume (and session history) included
 docker compose stop pgweb             # stop a service behind a profile (it has to be named explicitly)
 docker compose --profile dev down     # full cleanup, services behind profiles included
 ```
