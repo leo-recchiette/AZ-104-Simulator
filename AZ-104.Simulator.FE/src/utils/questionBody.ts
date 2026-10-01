@@ -3,10 +3,16 @@ export interface SpecPair {
   value: string;
 }
 
+export interface ListItem {
+  text: string;
+  children: string[];
+}
+
 export type QuestionSegment =
   | { kind: "text"; lead?: string; text: string }
+  | { kind: "heading"; text: string }
   | { kind: "spec"; pairs: SpecPair[] }
-  | { kind: "list"; items: string[] };
+  | { kind: "list"; items: ListItem[] };
 
 const SPEC_KEYS = [
   "Source port range", "Destination port range", "Virtual network",
@@ -107,7 +113,7 @@ function splitList(segment: QuestionSegment): QuestionSegment[] {
   if (items.length < MIN_ITEMS || items.some((item) => item.length > MAX_ITEM_LENGTH)) return [segment];
 
   const segments: QuestionSegment[] = [{ kind: "text", lead: segment.lead, text: head }];
-  segments.push({ kind: "list", items });
+  segments.push({ kind: "list", items: items.map((text) => ({ text, children: [] })) });
   if (tail) segments.push({ kind: "text", text: tail });
   return segments;
 }
@@ -126,8 +132,53 @@ function splitLead(text: string): QuestionSegment[] {
 
 const EXHIBIT_TAB_HINT = /\s*\(Click the [^()]+ tab\.\)/g;
 
+/** Dove il dataset conserva gli a capo dell'originale, una riga vuota separa i blocchi. */
+const BLOCK_BREAK = /\n\s*\n/;
+
+/** "Chiave: valore" su una riga sua; il valore vuoto fa da intestazione ("Subnet:"). */
+const PAIR_LINE = /^([^:]{1,45}):\s*(.*)$/;
+
+/** Titolo di sezione ("Planned Changes"): poche parole su una riga, senza punteggiatura finale. */
+const HEADING = /^[A-Z][\w-]*(?: [\w-]+){0,4}$/;
+
+function pairLine(line: string): SpecPair | null {
+  const match = PAIR_LINE.exec(line.trim());
+  if (!match) return null;
+  const value = match[2].trim();
+  if (value.length > MAX_VALUE_LENGTH || SENTENCE_END.test(value)) return null;
+  return { key: match[1].trim(), value };
+}
+
+/** Le righe rientrate sono sotto-voci della voce precedente. */
+function listItems(lines: string[]): ListItem[] {
+  const items: ListItem[] = [];
+  for (const line of lines) {
+    const parent = items[items.length - 1];
+    if (parent && /^\s/.test(line)) parent.children.push(line.trim());
+    else items.push({ text: line.trim(), children: [] });
+  }
+  return items;
+}
+
+/** Un blocco di più righe è una scheda se ogni riga è "Chiave: valore", altrimenti un elenco. */
+function splitBlock(block: string, isOnlyBlock: boolean): QuestionSegment[] {
+  const lines = block.split("\n").filter((line) => line.trim() !== "");
+  if (lines.length === 1) {
+    const line = lines[0].trim();
+    return !isOnlyBlock && HEADING.test(line) ? [{ kind: "heading", text: line }] : splitInline(line);
+  }
+  const pairs = lines.map(pairLine);
+  if (pairs.every((pair): pair is SpecPair => pair !== null)) return [{ kind: "spec", pairs }];
+  return [{ kind: "list", items: listItems(lines) }];
+}
+
 export function splitQuestionBody(rawText: string): QuestionSegment[] {
-  const text = rawText.replace(EXHIBIT_TAB_HINT, "").trim();
+  const blocks = rawText.replace(EXHIBIT_TAB_HINT, "").trim().split(BLOCK_BREAK);
+  return blocks.flatMap((block) => splitBlock(block, blocks.length === 1));
+}
+
+/** Testo su una riga sola, com'è quasi tutto il dataset: la struttura si ricostruisce qui. */
+function splitInline(text: string): QuestionSegment[] {
   const segments: QuestionSegment[] = [];
   let chain: { key: string; value: string; start: number; end: number }[] = [];
   let cursor = 0;

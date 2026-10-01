@@ -165,7 +165,13 @@ Note: The question is included in a number of questions that depicts the identic
 ## Domanda 12
 *Tipo: multiple_choice · fonte: text_layer*
 
-Your company has a Microsoft Azure subscription. The company has datacenters in Los Angeles and New York. You are configuring the two datacenters as geo-clustered sites for site resiliency. You need to recommend an Azure storage redundancy option. You have the following data storage requirements: Data must be stored on multiple nodes. Data must be stored on nodes in separate geographic locations. Data can be read from the secondary location as well as from the primary location. Which of the following Azure stored redundancy options should you recommend?
+Your company has a Microsoft Azure subscription. The company has datacenters in Los Angeles and New York. You are configuring the two datacenters as geo-clustered sites for site resiliency. You need to recommend an Azure storage redundancy option. You have the following data storage requirements:
+
+Data must be stored on multiple nodes.
+Data must be stored on nodes in separate geographic locations.
+Data can be read from the secondary location as well as from the primary location.
+
+Which of the following Azure stored redundancy options should you recommend?
 
 - **A.** Geo-redundant storage
 - **B.** Read-only geo-redundant storage **← CORRETTA**
@@ -823,7 +829,13 @@ You have an Azure subscription that contains a resource group named RG26. RG26 i
 ## Domanda 56
 *Tipo: multiple_choice · fonte: text_layer*
 
-You have an Azure subscription named Subscription1 that contains a virtual network named VNet1. VNet1 is in a resource group named RG1. Subscription1 has a user named User1. User1 has the following roles: Reader Security Admin Security Reader You need to ensure that User1 can assign the Reader role for VNet1 to other users. What should you do?
+You have an Azure subscription named Subscription1 that contains a virtual network named VNet1. VNet1 is in a resource group named RG1. Subscription1 has a user named User1. User1 has the following roles:
+
+Reader
+Security Admin
+Security Reader
+
+You need to ensure that User1 can assign the Reader role for VNet1 to other users. What should you do?
 
 - **A.** Remove User1 from the Security Reader and Reader roles for Subscription1.
 - **B.** Assign User1 the User Access Administrator role for VNet1. **← CORRETTA**
@@ -1353,7 +1365,13 @@ You have an Azure Load Balancer named LB1. You assign a user named User1 the rol
 ## Domanda 93
 *Tipo: multiple_choice · fonte: text_layer*
 
-You have an Azure subscription named Subscription1 that contains a virtual network named VNet1. VNet1 is in a resource group named RG1. Subscription1 has a user named User1. User1 has the following roles: Reader Security Admin Security Reader You need to ensure that User1 can assign the Reader role for VNet1 to other users. What should you do?
+You have an Azure subscription named Subscription1 that contains a virtual network named VNet1. VNet1 is in a resource group named RG1. Subscription1 has a user named User1. User1 has the following roles:
+
+Reader
+Security Admin
+Security Reader
+
+You need to ensure that User1 can assign the Reader role for VNet1 to other users. What should you do?
 
 - **A.** Remove User1 from the Security Reader role for Subscription1. Assign User1 the Contributor role for RG1.
 - **B.** Assign User1 the Owner role for VNet1. **← CORRETTA**
@@ -1562,7 +1580,12 @@ You have an Azure subscription that is linked to an Azure AD tenant. The tenant 
 ## Domanda 107
 *Tipo: drag_and_drop · fonte: manual_vision*
 
-You have an Azure subscription named Sub1 that contains two users named User1 and User2. You need to assign role-based access control (RBAC) roles to User1 and User2. The users must be able to perform the following tasks in Sub1: User1 must view the data in any storage account. User2 must assign users the Contributor role for storage accounts. The solution must use the principle of least privilege. Which RBAC role should you assign to each user? To answer, drag the appropriate roles to the correct users. Each role may be used once, more than once, or not at all. You may need to drag the split bar between panes or scroll to view content. NOTE: Each correct selection is worth one point.
+You have an Azure subscription named Sub1 that contains two users named User1 and User2. You need to assign role-based access control (RBAC) roles to User1 and User2. The users must be able to perform the following tasks in Sub1:
+
+User1 must view the data in any storage account.
+User2 must assign users the Contributor role for storage accounts.
+
+The solution must use the principle of least privilege. Which RBAC role should you assign to each user? To answer, drag the appropriate roles to the correct users. Each role may be used once, more than once, or not at all. You may need to drag the split bar between panes or scroll to view content. NOTE: Each correct selection is worth one point.
 
 **Risposta corretta:** User1 -> Reader and Data Access | User2 -> Owner
 > Immagini: q107_post0.png
@@ -1618,7 +1641,13 @@ You have an Azure AD tenant named contoso.com. You have two external partner org
 ## Domanda 111
 *Tipo: multiple_choice · fonte: text_layer*
 
-You have an Azure subscription named Subscription1 that contains a virtual network named VNet1. VNet1 is in a resource group named RG1. Subscription1 has a user named User1. User1 has the following roles: Reader Security Admin Security Reader You need to ensure that User1 can assign the Reader role for VNet1 to other users. What should you do?
+You have an Azure subscription named Subscription1 that contains a virtual network named VNet1. VNet1 is in a resource group named RG1. Subscription1 has a user named User1. User1 has the following roles:
+
+Reader
+Security Admin
+Security Reader
+
+You need to ensure that User1 can assign the Reader role for VNet1 to other users. What should you do?
 
 - **A.** Assign User1 the Network Contributor role for VNet1.
 - **B.** Remove User1 from the Security Reader role for Subscription1. Assign User1 the Contributor role for RG1.
@@ -1646,7 +1675,13 @@ You have an Azure subscription that contains the users shown in the following ta
 ## Domanda 113
 *Tipo: multiple_choice · fonte: text_layer*
 
-You have an Azure subscription named Subscription1 that contains a virtual network named VNet1. VNet1 is in a resource group named RG1. Subscription1 has a user named User1. User1 has the following roles: Reader Security Admin Security Reader You need to ensure that User1 can assign the Reader role for VNet1 to other users. What should you do?
+You have an Azure subscription named Subscription1 that contains a virtual network named VNet1. VNet1 is in a resource group named RG1. Subscription1 has a user named User1. User1 has the following roles:
+
+Reader
+Security Admin
+Security Reader
+
+You need to ensure that User1 can assign the Reader role for VNet1 to other users. What should you do?
 
 - **A.** Remove User1 from the Security Reader role for Subscript on 1. Assign User1 the Contributor role for RG1.
 - **B.** Assign User1 the Owner role for VNet1. **← CORRETTA**
@@ -1691,7 +1726,13 @@ You have an Azure subscription that contains a user named User1 and the resource
 ## Domanda 116
 *Tipo: multiple_choice · fonte: text_layer*
 
-You have an Azure subscription named Subscription1 that contains a virtual network named VNet1. VNet1 is in a resource group named RG1. Subscription1 has a user named User1. User1 has the following roles: Reader Security Admin Security Reader You need to ensure that User1 can assign the Reader role for VNet1 to other users. What should you do?
+You have an Azure subscription named Subscription1 that contains a virtual network named VNet1. VNet1 is in a resource group named RG1. Subscription1 has a user named User1. User1 has the following roles:
+
+Reader
+Security Admin
+Security Reader
+
+You need to ensure that User1 can assign the Reader role for VNet1 to other users. What should you do?
 
 - **A.** Remove User1 from the Security Reader role for Subscription1. Assign User1 the Contributor role for RG1.
 - **B.** Assign User1 the Access Administrator role for VNet1. **← CORRETTA**
@@ -1707,7 +1748,12 @@ You have an Azure subscription named Subscription1 that contains a virtual netwo
 ## Domanda 117
 *Tipo: hotspot_yes_no · fonte: manual_vision*
 
-You have three Azure subscriptions named Sub1, Sub2, and Sub3 that are linked to an Azure AD tenant. The tenant contains a user named User1, a security group named Group1, and a management group named MG1. User is a member of Group1. Sub1 and Sub2 are members of MG1. Sub1 contains a resource group named RG1. RG1 contains five Azure functions. You create the following role assignments for MG1: Group1: Reader User1: User Access Administrator You assign User the Virtual Machine Contributor role for Sub1 and Sub2.
+You have three Azure subscriptions named Sub1, Sub2, and Sub3 that are linked to an Azure AD tenant. The tenant contains a user named User1, a security group named Group1, and a management group named MG1. User1 is a member of Group1. Sub1 and Sub2 are members of MG1. Sub1 contains a resource group named RG1. RG1 contains five Azure functions. You create the following role assignments for MG1:
+
+Group1: Reader
+User1: User Access Administrator
+
+You assign User1 the Virtual Machine Contributor role for Sub1 and Sub2.
 
 **Risposta corretta:** The Group1 members can view the configurations of the Azure functions. -> Yes | User1 can assign the Owner role for RG1. -> Yes | User1 can create a new resource group and deploy a virtual machine to the new group. -> No
 > Immagini: q117_post0.png
@@ -1736,7 +1782,13 @@ You have an Azure subscription that contains the resources shown in the followin
 ## Domanda 119
 *Tipo: multiple_choice · fonte: text_layer*
 
-You have an Azure subscription named Subscription1 that contains a virtual network named VNet1. VNet1 is in a resource group named RG1. Subscription1 has a user named User1. User1 has the following roles: Reader Security Admin Security Reader You need to ensure that User1 can assign the Reader role for VNet1 to other users. What should you do?
+You have an Azure subscription named Subscription1 that contains a virtual network named VNet1. VNet1 is in a resource group named RG1. Subscription1 has a user named User1. User1 has the following roles:
+
+Reader
+Security Admin
+Security Reader
+
+You need to ensure that User1 can assign the Reader role for VNet1 to other users. What should you do?
 
 - **A.** Remove User1 from the Security Reader role for Subscription1. Assign User1 the Contributor role for RG1.
 - **B.** Assign User1 the User Access Administrator role for VNet1. **← CORRETTA**
@@ -1804,7 +1856,13 @@ Note: This question is part of a series of questions that present the same scena
 ## Domanda 124
 *Tipo: multiple_choice · fonte: text_layer*
 
-You have an Azure subscription named Subscription1 that contains virtual network named VNet1. VNet1 is in a resource group named RG1. A user named User1 has the following roles for Subscription1: Reader Security Admin Security Reader You need to ensure that User1 can assign the Reader role for VNet1 to other users. What should you do?
+You have an Azure subscription named Subscription1 that contains virtual network named VNet1. VNet1 is in a resource group named RG1. A user named User1 has the following roles for Subscription1:
+
+Reader
+Security Admin
+Security Reader
+
+You need to ensure that User1 can assign the Reader role for VNet1 to other users. What should you do?
 
 - **A.** Assign User1 the Contributor role for VNet1.
 - **B.** Assign User1 the Network Contributor role for VNet1.
@@ -1820,7 +1878,13 @@ You have an Azure subscription named Subscription1 that contains virtual network
 ## Domanda 125
 *Tipo: multiple_choice · fonte: text_layer*
 
-You have an Azure subscription named Subscription1 that contains virtual network named VNet1. VNet1 is in a resource group named RG1. User named User1 has the following roles for Subscription1: Reader Security Admin Security Reader You need to ensure that User1 can assign the Reader role for VNet1 to other users. What should you do?
+You have an Azure subscription named Subscription1 that contains virtual network named VNet1. VNet1 is in a resource group named RG1. User named User1 has the following roles for Subscription1:
+
+Reader
+Security Admin
+Security Reader
+
+You need to ensure that User1 can assign the Reader role for VNet1 to other users. What should you do?
 
 - **A.** Remove User1 from the Security Reader and Reader roles for Subscription1. Assign User1 the Contributor role for Subscription1.
 - **B.** Remove User1 from the Security Reader role for Subscription1. Assign User1 the Contributor role for RG1.
@@ -1877,7 +1941,13 @@ You have an Azure subscription that contains the resources shown in the followin
 ## Domanda 129
 *Tipo: multiple_choice · fonte: text_layer*
 
-You have an Azure subscription named Subscription1 that contains virtual network named VNet1. VNet1 is in a resource group named RG1. A user named User1 has the following roles for Subscription1: Reader Security Admin Security Reader You need to ensure that User1 can assign the Reader role for VNet1 to other users. What should you do?
+You have an Azure subscription named Subscription1 that contains virtual network named VNet1. VNet1 is in a resource group named RG1. A user named User1 has the following roles for Subscription1:
+
+Reader
+Security Admin
+Security Reader
+
+You need to ensure that User1 can assign the Reader role for VNet1 to other users. What should you do?
 
 - **A.** Remove User1 from the Security Reader and Reader roles for Subscription1. Assign User1 the Contributor role for Subscription1.
 - **B.** Assign User1 the Contributor role for VNet1.
@@ -1913,7 +1983,7 @@ You have an Azure AD tenant that contains the groups shown in the following tabl
 
 You have an Azure AD tenant. You need to create a Microsoft 365 group that contains only members of a marketing department in France. How should you complete the dynamic membership rule? To answer, select the appropriate options in the answer area. NOTE: Each correct answer is worth one point.
 
-**Risposta corretta:** Box 1 -> user.department | Box 2 -> and | Box 3 -> -eq
+**Risposta corretta:** ([box 1] -eq "Marketing") -> user.department | [box 2] (user.country -> and | [box 3] "France") -> -eq
 > Nota: Regola completa: (user.department -eq "Marketing") and (user.country -eq "France")
 > Immagini: q131_post0.png
 
@@ -2224,7 +2294,52 @@ You have an Azure subscription that contains a storage account named storage1. T
 ## Domanda 152
 *Tipo: hotspot_yes_no · fonte: manual_vision*
 
-Case study - This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided. To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study. At the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section. To start the case study - To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question. Overview - ADatum Corporation is consulting firm that has a main office in Montreal and branch offices in Seattle and New York. Existing Environment - Azure Environment - ADatum has an Azure subscription that contains three resource groups named RG1, RG2, and RG3. The subscription contains the storage accounts shown in the following table. The subscription contains the virtual machines shown in the following table. The subscription has an Azure container registry that contains the images shown in the following table. The subscription contains the resources shown in the following table. Azure Key Vault - The subscription contains an Azure key vault named Vault1. Vault1 contains the certificates shown in the following table. Vault1 contains the keys shown in the following table. Microsoft Entra Environment - ADatum has a Microsoft Entra tenant named adatum.com that is linked to the Azure subscription and contains the users shown in the following table. The tenant contains the groups shown in the following table. The adatum.com tenant has a custom security attribute named Attribute1. Planned Changes - ADatum plans to implement the following changes: Configure a data collection rule (DCR) named DCR1 to collect only system events that have an event ID of 4648 from VM2 and VM4. In storage1, create a new container named cont2 that has the following access policies: o Three stored access policies named Stored1, Stored2, and Stored3 o a legal hold for immutable blob storage Whenever possible, use directories to organize storage account content. Grant User1 the permissions required to link Zone1 to VNet1. Assign Attribute1 to supported adatum.com resources. In storage2, create an encryption scope named Scope1. Deploy new containers by using Image1 or Image2. Technical Requirements - ADatum must meet the following technical requirements: Use TLS for WebApp1. Follow the principle of LEAST privilege. Grant permissions at the required scope ONLY. Ensure that Scope1 is used to encrypt storage services. Use Azure Backup to back up cont1 and share1 as frequently as possible. Whenever possible, use Azure Disk Encryption and a key encryption key (KEK) to encrypt the virtual machines. You need to implement the planned change for Attribute1. For each of the following statements, select Yes if the statement is true. Otherwise, select No. NOTE: Each correct selection is worth one point.
+Case study - This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided. To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study. At the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section. To start the case study - To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question.
+
+Overview
+
+ADatum Corporation is consulting firm that has a main office in Montreal and branch offices in Seattle and New York.
+
+Existing Environment
+
+Azure Environment
+
+ADatum has an Azure subscription that contains three resource groups named RG1, RG2, and RG3. The subscription contains the storage accounts shown in the following table. The subscription contains the virtual machines shown in the following table. The subscription has an Azure container registry that contains the images shown in the following table. The subscription contains the resources shown in the following table.
+
+Azure Key Vault
+
+The subscription contains an Azure key vault named Vault1. Vault1 contains the certificates shown in the following table. Vault1 contains the keys shown in the following table.
+
+Microsoft Entra Environment
+
+ADatum has a Microsoft Entra tenant named adatum.com that is linked to the Azure subscription and contains the users shown in the following table. The tenant contains the groups shown in the following table. The adatum.com tenant has a custom security attribute named Attribute1.
+
+Planned Changes
+
+ADatum plans to implement the following changes:
+
+Configure a data collection rule (DCR) named DCR1 to collect only system events that have an event ID of 4648 from VM2 and VM4.
+In storage1, create a new container named cont2 that has the following access policies:
+  Three stored access policies named Stored1, Stored2, and Stored3
+  A legal hold for immutable blob storage
+Whenever possible, use directories to organize storage account content.
+Grant User1 the permissions required to link Zone1 to VNet1.
+Assign Attribute1 to supported adatum.com resources.
+In storage2, create an encryption scope named Scope1.
+Deploy new containers by using Image1 or Image2.
+
+Technical Requirements
+
+ADatum must meet the following technical requirements:
+
+Use TLS for WebApp1.
+Follow the principle of LEAST privilege.
+Grant permissions at the required scope ONLY.
+Ensure that Scope1 is used to encrypt storage services.
+Use Azure Backup to back up cont1 and share1 as frequently as possible.
+Whenever possible, use Azure Disk Encryption and a key encryption key (KEK) to encrypt the virtual machines.
+
+You need to implement the planned change for Attribute1. For each of the following statements, select Yes if the statement is true. Otherwise, select No. NOTE: Each correct selection is worth one point.
 
 **Risposta corretta:** Admin1 can assign Attribute1 to Group1. -> No | Admin2 can assign Attribute1 to User1. -> No | Admin3 can assign Attribute1 to Group2. -> No
 > Immagini: q152_post0.png
@@ -2327,7 +2442,13 @@ You have an Azure Storage account named storage1. You have an Azure App Service 
 ## Domanda 159
 *Tipo: hotspot · fonte: manual_vision*
 
-You need to create an Azure Storage account that meets the following requirements: Minimizes costs Supports hot, cool, and archive blob tiers Provides fault tolerance if a disaster affects the Azure region where the account resides How should you complete the command? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
+You need to create an Azure Storage account that meets the following requirements:
+
+Minimizes costs
+Supports hot, cool, and archive blob tiers
+Provides fault tolerance if a disaster affects the Azure region where the account resides
+
+How should you complete the command? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
 
 **Risposta corretta:** --kind -> StorageV2 | --sku -> Standard_GRS
 > Nota: Comando: az storage account create -g RG1 -n storageaccount1 --kind StorageV2 --sku Standard_GRS
@@ -2358,7 +2479,13 @@ You have an Azure subscription that contains the resources in the following tabl
 ## Domanda 161
 *Tipo: hotspot_yes_no · fonte: manual_vision*
 
-You have an Azure subscription that contains the resources shown in the following table. The status of VM1 is Running. You assign an Azure policy as shown in the exhibit. (Click the Exhibit tab.) You assign the policy by using the following parameters: Microsoft.ClassicNetwork/virtualNetworksMicrosoft.Network/virtualNetworksMicrosoft.Compute/virtualMach each of the following statements, select Yes if the statement is true. Otherwise, select No. NOTE: Each correct selection is worth one point.
+You have an Azure subscription that contains the resources shown in the following table. The status of VM1 is Running. You assign an Azure policy as shown in the exhibit. (Click the Exhibit tab.) You assign the policy by using the following parameters:
+
+Microsoft.ClassicNetwork/virtualNetworks
+Microsoft.Network/virtualNetworks
+Microsoft.Compute/virtualMachines
+
+For each of the following statements, select Yes if the statement is true. Otherwise, select No. NOTE: Each correct selection is worth one point.
 
 **Risposta corretta:** An administrator can move VNET1 to RG2 -> Yes | The state of VM1 changed to deallocated -> No | An administrator can modify the address space of VNET2 -> No
 > Immagini: q161_post0.png
@@ -2676,7 +2803,13 @@ You have an Azure subscription that contains an Azure file share. You have an on
 ## Domanda 184
 *Tipo: hotspot_yes_no · fonte: manual_vision*
 
-You have an Azure subscription that contains the file shares shown in the following table. You have the on-premises file shares shown in the following table. You create an Azure file sync group named Sync1 and perform the following actions: Add share1 as the cloud endpoint for Sync1. Add data1 as a server endpoint for Sync1. Register Server1 and Server2 to Sync1. For each of the following statements, select Yes if the statement is true. Otherwise, select No. NOTE: Each correct selection is worth one point.
+You have an Azure subscription that contains the file shares shown in the following table. You have the on-premises file shares shown in the following table. You create an Azure file sync group named Sync1 and perform the following actions:
+
+Add share1 as the cloud endpoint for Sync1.
+Add data1 as a server endpoint for Sync1.
+Register Server1 and Server2 to Sync1.
+
+For each of the following statements, select Yes if the statement is true. Otherwise, select No. NOTE: Each correct selection is worth one point.
 
 **Risposta corretta:** You can add share3 as an additional cloud endpoint for Sync1. -> No | You can add data2 as an additional server endpoint for Sync1. -> Yes | You can add data3 as an additional server endpoint for Sync1. -> No
 > Immagini: q184_post0.png
@@ -3079,7 +3212,13 @@ You have an Azure subscription that contains a storage account named storage1. Y
 ## Domanda 212
 *Tipo: hotspot · fonte: manual_vision*
 
-You have an Azure subscription that contains a user named User1 and a storage account named storage1. The storage1 account contains the resources shown in the following table. User1 is assigned the following roles for storage1: Storage Blob Data Reader Storage Table Data Contributor Storage File Data SMB Share Contributor For storage1, you create a shared access signature (SAS) named SAS1 that has the settings shown in the following exhibit. (Click the Exhibit tab.) To which resources can User1 write by using SAS1 and key1? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
+You have an Azure subscription that contains a user named User1 and a storage account named storage1. The storage1 account contains the resources shown in the following table. User1 is assigned the following roles for storage1:
+
+Storage Blob Data Reader
+Storage Table Data Contributor
+Storage File Data SMB Share Contributor
+
+For storage1, you create a shared access signature (SAS) named SAS1 that has the settings shown in the following exhibit. (Click the Exhibit tab.) To which resources can User1 write by using SAS1 and key1? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
 
 **Risposta corretta:** key1 -> Table1, folder1, and container1 | SAS1 -> Table1 only
 > Immagini: q212_post0.png
@@ -3627,7 +3766,52 @@ You have an Azure subscription that contains a Standard SKU Azure container regi
 ## Domanda 250
 *Tipo: hotspot · fonte: manual_vision*
 
-Case study - This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided. To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study. At the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section. To start the case study - To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question. Overview - ADatum Corporation is consulting firm that has a main office in Montreal and branch offices in Seattle and New York. Existing Environment - Azure Environment - ADatum has an Azure subscription that contains three resource groups named RG1, RG2, and RG3. The subscription contains the storage accounts shown in the following table. The subscription contains the virtual machines shown in the following table. The subscription has an Azure container registry that contains the images shown in the following table. The subscription contains the resources shown in the following table. Azure Key Vault - The subscription contains an Azure key vault named Vault1. Vault1 contains the certificates shown in the following table. Vault1 contains the keys shown in the following table. Microsoft Entra Environment - ADatum has a Microsoft Entra tenant named adatum.com that is linked to the Azure subscription and contains the users shown in the following table. The tenant contains the groups shown in the following table. The adatum.com tenant has a custom security attribute named Attribute1. Planned Changes - ADatum plans to implement the following changes: Configure a data collection rule (DCR) named DCR1 to collect only system events that have an event ID of 4648 from VM2 and VM4. In storage1, create a new container named cont2 that has the following access policies: o Three stored access policies named Stored1, Stored2, and Stored3 o A legal hold for immutable blob storage Whenever possible, use directories to organize storage account content. Grant User1 the permissions required to link Zone1 to VNet1. Assign Attribute1 to supported adatum.com resources. In storage2, create an encryption scope named Scope1. Deploy new containers by using Image1 or Image2. Technical Requirements - ADatum must meet the following technical requirements: Use TLS for WebApp1. Follow the principle of least privilege. Grant permissions at the required scope only. Ensure that Scope1 is used to encrypt storage services. Use Azure Backup to back up cont1 and share1 as frequently as possible. Whenever possible, use Azure Disk Encryption and a key encryption key (KEK) to encrypt the virtual machines. You implement the planned changes for cont2. What is the maximum number of additional access policies you can create for cont2? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
+Case study - This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided. To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study. At the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section. To start the case study - To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question.
+
+Overview
+
+ADatum Corporation is consulting firm that has a main office in Montreal and branch offices in Seattle and New York.
+
+Existing Environment
+
+Azure Environment
+
+ADatum has an Azure subscription that contains three resource groups named RG1, RG2, and RG3. The subscription contains the storage accounts shown in the following table. The subscription contains the virtual machines shown in the following table. The subscription has an Azure container registry that contains the images shown in the following table. The subscription contains the resources shown in the following table.
+
+Azure Key Vault
+
+The subscription contains an Azure key vault named Vault1. Vault1 contains the certificates shown in the following table. Vault1 contains the keys shown in the following table.
+
+Microsoft Entra Environment
+
+ADatum has a Microsoft Entra tenant named adatum.com that is linked to the Azure subscription and contains the users shown in the following table. The tenant contains the groups shown in the following table. The adatum.com tenant has a custom security attribute named Attribute1.
+
+Planned Changes
+
+ADatum plans to implement the following changes:
+
+Configure a data collection rule (DCR) named DCR1 to collect only system events that have an event ID of 4648 from VM2 and VM4.
+In storage1, create a new container named cont2 that has the following access policies:
+  Three stored access policies named Stored1, Stored2, and Stored3
+  A legal hold for immutable blob storage
+Whenever possible, use directories to organize storage account content.
+Grant User1 the permissions required to link Zone1 to VNet1.
+Assign Attribute1 to supported adatum.com resources.
+In storage2, create an encryption scope named Scope1.
+Deploy new containers by using Image1 or Image2.
+
+Technical Requirements
+
+ADatum must meet the following technical requirements:
+
+Use TLS for WebApp1.
+Follow the principle of least privilege.
+Grant permissions at the required scope only.
+Ensure that Scope1 is used to encrypt storage services.
+Use Azure Backup to back up cont1 and share1 as frequently as possible.
+Whenever possible, use Azure Disk Encryption and a key encryption key (KEK) to encrypt the virtual machines.
+
+You implement the planned changes for cont2. What is the maximum number of additional access policies you can create for cont2? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
 
 **Risposta corretta:** Stored access policies -> 2 | Immutable blob storage policies -> 1
 > Immagini: q250_post0.png
@@ -3639,7 +3823,52 @@ Case study - This is a case study. Case studies are not timed separately. You ca
 ## Domanda 251
 *Tipo: multiple_choice · fonte: text_layer*
 
-Case study - This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided. To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study. At the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section. To start the case study - To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question. Overview - ADatum Corporation is consulting firm that has a main office in Montreal and branch offices in Seattle and New York. Existing Environment - Azure Environment - ADatum has an Azure subscription that contains three resource groups named RG1, RG2, and RG3. The subscription contains the storage accounts shown in the following table. The subscription contains the virtual machines shown in the following table. The subscription has an Azure container registry that contains the images shown in the following table. The subscription contains the resources shown in the following table. Azure Key Vault - The subscription contains an Azure key vault named Vault1. Vault1 contains the certificates shown in the following table. Vault1 contains the keys shown in the following table. Microsoft Entra Environment - ADatum has a Microsoft Entra tenant named adatum.com that is linked to the Azure subscription and contains the users shown in the following table. The tenant contains the groups shown in the following table. The adatum.com tenant has a custom security attribute named Attribute1. Planned Changes - ADatum plans to implement the following changes: Configure a data collection rule (DCR) named DCR1 to collect only system events that have an event ID of 4648 from VM2 and VM4. In storage1, create a new container named cont2 that has the following access policies: o Three stored access policies named Stored1, Stored2, and Stored3 o A legal hold for immutable blob storage Whenever possible, use directories to organize storage account content. Grant User1 the permissions required to link Zone1 to VNet1. Assign Attribute1 to supported adatum.com resources. In storage2, create an encryption scope named Scope1. Deploy new containers by using Image1 or Image2. Technical Requirements - ADatum must meet the following technical requirements: Use TLS for WebApp1. Follow the principle of least privilege. Grant permissions at the required scope only. Ensure that Scope1 is used to encrypt storage services. Use Azure Backup to back up cont1 and share1 as frequently as possible. Whenever possible, use Azure Disk Encryption and a key encryption key (KEK) to encrypt the virtual machines. You need to configure encryption for the virtual machines. The solution must meet the technical requirements. Which virtual machines can you encrypt?
+Case study - This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided. To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study. At the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section. To start the case study - To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question.
+
+Overview
+
+ADatum Corporation is consulting firm that has a main office in Montreal and branch offices in Seattle and New York.
+
+Existing Environment
+
+Azure Environment
+
+ADatum has an Azure subscription that contains three resource groups named RG1, RG2, and RG3. The subscription contains the storage accounts shown in the following table. The subscription contains the virtual machines shown in the following table. The subscription has an Azure container registry that contains the images shown in the following table. The subscription contains the resources shown in the following table.
+
+Azure Key Vault
+
+The subscription contains an Azure key vault named Vault1. Vault1 contains the certificates shown in the following table. Vault1 contains the keys shown in the following table.
+
+Microsoft Entra Environment
+
+ADatum has a Microsoft Entra tenant named adatum.com that is linked to the Azure subscription and contains the users shown in the following table. The tenant contains the groups shown in the following table. The adatum.com tenant has a custom security attribute named Attribute1.
+
+Planned Changes
+
+ADatum plans to implement the following changes:
+
+Configure a data collection rule (DCR) named DCR1 to collect only system events that have an event ID of 4648 from VM2 and VM4.
+In storage1, create a new container named cont2 that has the following access policies:
+  Three stored access policies named Stored1, Stored2, and Stored3
+  A legal hold for immutable blob storage
+Whenever possible, use directories to organize storage account content.
+Grant User1 the permissions required to link Zone1 to VNet1.
+Assign Attribute1 to supported adatum.com resources.
+In storage2, create an encryption scope named Scope1.
+Deploy new containers by using Image1 or Image2.
+
+Technical Requirements
+
+ADatum must meet the following technical requirements:
+
+Use TLS for WebApp1.
+Follow the principle of least privilege.
+Grant permissions at the required scope only.
+Ensure that Scope1 is used to encrypt storage services.
+Use Azure Backup to back up cont1 and share1 as frequently as possible.
+Whenever possible, use Azure Disk Encryption and a key encryption key (KEK) to encrypt the virtual machines.
+
+You need to configure encryption for the virtual machines. The solution must meet the technical requirements. Which virtual machines can you encrypt?
 
 - **A.** VM1 and VM3
 - **B.** VM4 and VM5
@@ -3656,7 +3885,52 @@ Case study - This is a case study. Case studies are not timed separately. You ca
 ## Domanda 252
 *Tipo: multiple_choice · fonte: text_layer*
 
-Case study - This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided. To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study. At the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section. To start the case study - To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question. Overview - ADatum Corporation is consulting firm that has a main office in Montreal and branch offices in Seattle and New York. Existing Environment - Azure Environment - ADatum has an Azure subscription that contains three resource groups named RG1, RG2, and RG3. The subscription contains the storage accounts shown in the following table. The subscription contains the virtual machines shown in the following table. The subscription has an Azure container registry that contains the images shown in the following table. The subscription contains the resources shown in the following table. Azure Key Vault - The subscription contains an Azure key vault named Vault1. Vault1 contains the certificates shown in the following table. Vault1 contains the keys shown in the following table. Microsoft Entra Environment - ADatum has a Microsoft Entra tenant named adatum.com that is linked to the Azure subscription and contains the users shown in the following table. The tenant contains the groups shown in the following table. The adatum.com tenant has a custom security attribute named Attribute1. Planned Changes - ADatum plans to implement the following changes: Configure a data collection rule (DCR) named DCR1 to collect only system events that have an event ID of 4648 from VM2 and VM4. In storage1, create a new container named cont2 that has the following access policies: o Three stored access policies named Stored1, Stored2, and Stored3 o A legal hold for immutable blob storage Whenever possible, use directories to organize storage account content. Grant User1 the permissions required to link Zone1 to VNet1. Assign Attribute1 to supported adatum.com resources. In storage2, create an encryption scope named Scope1. Deploy new containers by using Image1 or Image2. Technical Requirements - ADatum must meet the following technical requirements: Use TLS for WebApp1. Follow the principle of least privilege. Grant permissions at the required scope only. Ensure that Scope1 is used to encrypt storage services. Use Azure Backup to back up cont1 and share1 as frequently as possible. Whenever possible, use Azure Disk Encryption and a key encryption key (KEK) to encrypt the virtual machines. You need to implement the planned changes for the storage account content. Which containers and file shares can you use to organize the content?
+Case study - This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided. To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study. At the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section. To start the case study - To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question.
+
+Overview
+
+ADatum Corporation is consulting firm that has a main office in Montreal and branch offices in Seattle and New York.
+
+Existing Environment
+
+Azure Environment
+
+ADatum has an Azure subscription that contains three resource groups named RG1, RG2, and RG3. The subscription contains the storage accounts shown in the following table. The subscription contains the virtual machines shown in the following table. The subscription has an Azure container registry that contains the images shown in the following table. The subscription contains the resources shown in the following table.
+
+Azure Key Vault
+
+The subscription contains an Azure key vault named Vault1. Vault1 contains the certificates shown in the following table. Vault1 contains the keys shown in the following table.
+
+Microsoft Entra Environment
+
+ADatum has a Microsoft Entra tenant named adatum.com that is linked to the Azure subscription and contains the users shown in the following table. The tenant contains the groups shown in the following table. The adatum.com tenant has a custom security attribute named Attribute1.
+
+Planned Changes
+
+ADatum plans to implement the following changes:
+
+Configure a data collection rule (DCR) named DCR1 to collect only system events that have an event ID of 4648 from VM2 and VM4.
+In storage1, create a new container named cont2 that has the following access policies:
+  Three stored access policies named Stored1, Stored2, and Stored3
+  A legal hold for immutable blob storage
+Whenever possible, use directories to organize storage account content.
+Grant User1 the permissions required to link Zone1 to VNet1.
+Assign Attribute1 to supported adatum.com resources.
+In storage2, create an encryption scope named Scope1.
+Deploy new containers by using Image1 or Image2.
+
+Technical Requirements
+
+ADatum must meet the following technical requirements:
+
+Use TLS for WebApp1.
+Follow the principle of least privilege.
+Grant permissions at the required scope only.
+Ensure that Scope1 is used to encrypt storage services.
+Use Azure Backup to back up cont1 and share1 as frequently as possible.
+Whenever possible, use Azure Disk Encryption and a key encryption key (KEK) to encrypt the virtual machines.
+
+You need to implement the planned changes for the storage account content. Which containers and file shares can you use to organize the content?
 
 - **A.** share1 only
 - **B.** cont1 and share1 only
@@ -3801,7 +4075,7 @@ You plan to automate the deployment of a virtual machine scale set that uses the
 
 You have an Azure Kubernetes Service (AKS) cluster named AKS1 and a computer named Computer1 that runs Windows 10. Computer1 that has the Azure CLI installed. You need to install the kubectl client on Computer1. Which command should you run? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
 
-**Risposta corretta:** Box 1 -> az | Box 2 -> aks
+**Risposta corretta:** [box 1] -> az | [box 2] Install-cli -> aks
 > Nota: Comando: az aks install-cli
 > Immagini: q262_post0.png
 
@@ -4059,7 +4333,14 @@ You plan to deploy an Azure container instance by using the following Azure Reso
 ## Domanda 280
 *Tipo: multiple_choice · fonte: text_layer*
 
-You have an Azure subscription that contains a virtual machine named VM1. VM1 hosts a line-of- business application that is available 24 hours a day. VM1 has one network interface and one managed disk. VM1 uses the D4s v3 size. You plan to make the following changes to VM1: Change the size to D8s v3. Add a 500-GB managed disk. Add the Puppet Agent extension. Enable Desired State Configuration Management. Which change will cause downtime for VM1?
+You have an Azure subscription that contains a virtual machine named VM1. VM1 hosts a line-of-business application that is available 24 hours a day. VM1 has one network interface and one managed disk. VM1 uses the D4s v3 size. You plan to make the following changes to VM1:
+
+Change the size to D8s v3.
+Add a 500-GB managed disk.
+Add the Puppet Agent extension.
+Enable Desired State Configuration Management.
+
+Which change will cause downtime for VM1?
 
 - **A.** Enable Desired State Configuration Management
 - **B.** Add a 500-GB managed disk
@@ -4093,7 +4374,29 @@ You have an app named App1 that runs on an Azure web app named webapp1. The deve
 ## Domanda 282
 *Tipo: multiple_choice · fonte: text_layer*
 
-You have an Azure subscription named Subscription1 that has the following providers registered: Authorization Automation Resources Compute KeyVault Network Storage Billing Web Subscription1 contains an Azure virtual machine named VM1 that has the following configurations: Private IP address: 10.0.0.4 (dynamic) Network security group (NSG): NSG1 Public IP address: None Availability set: AVSet Subnet: 10.0.0.0/24 Managed disks: No Location: East US You need to record all the successful and failed connection attempts to VM1. Which three actions should you perform? Each correct answer presents part of the solution. NOTE: Each correct selection is worth one point.
+You have an Azure subscription named Subscription1 that has the following providers registered:
+
+Authorization
+Automation
+Resources
+Compute
+KeyVault
+Network
+Storage
+Billing
+Web
+
+Subscription1 contains an Azure virtual machine named VM1 that has the following configurations:
+
+Private IP address: 10.0.0.4 (dynamic)
+Network security group (NSG): NSG1
+Public IP address: None
+Availability set: AVSet
+Subnet: 10.0.0.0/24
+Managed disks: No
+Location: East US
+
+You need to record all the successful and failed connection attempts to VM1. Which three actions should you perform? Each correct answer presents part of the solution. NOTE: Each correct selection is worth one point.
 
 - **A.** Enable Azure Network Watcher in the East US Azure region. **← CORRETTA**
 - **B.** Add an Azure Network Watcher connection monitor.
@@ -4185,7 +4488,12 @@ Note: This question is part of a series of questions that present the same scena
 ## Domanda 288
 *Tipo: multiple_choice · fonte: text_layer*
 
-You have an Azure Active Directory (Azure AD) tenant named adatum.com that contains the users shown in the following table. Adatum.com has the following configurations: Users may join devices to Azure AD is set to User1. Additional local administrators on Azure AD joined devices is set to None. You deploy Windows 10 to a computer named Computer1. User1 joins Computer1 to adatum.com. You need to identify the local Administrator group membership on Computer1.Which users are members of the local Administrators group?
+You have an Azure Active Directory (Azure AD) tenant named adatum.com that contains the users shown in the following table. Adatum.com has the following configurations:
+
+Users may join devices to Azure AD is set to User1.
+Additional local administrators on Azure AD joined devices is set to None.
+
+You deploy Windows 10 to a computer named Computer1. User1 joins Computer1 to adatum.com. You need to identify the local Administrator group membership on Computer1. Which users are members of the local Administrators group?
 
 - **A.** User1 only
 - **B.** User2 only
@@ -4274,7 +4582,12 @@ You have an Azure Kubernetes Service (AKS) cluster named AKS1. You need to confi
 ## Domanda 294
 *Tipo: multiple_choice · fonte: text_layer*
 
-You create the following resources in an Azure subscription: An Azure Container Registry instance named Registry1 An Azure Kubernetes Service (AKS) cluster named Cluster1 You create a container image named App1 on your administrative workstation. You need to deploy App1 to Cluster1. What should you do first?
+You create the following resources in an Azure subscription:
+
+An Azure Container Registry instance named Registry1
+An Azure Kubernetes Service (AKS) cluster named Cluster1
+
+You create a container image named App1 on your administrative workstation. You need to deploy App1 to Cluster1. What should you do first?
 
 - **A.** Run the docker push command. **← CORRETTA**
 - **B.** Create an App Service plan.
@@ -4466,7 +4779,14 @@ You have the App Service plan shown in the following exhibit. The scale-in setti
 ## Domanda 307
 *Tipo: multiple_choice · fonte: text_layer*
 
-You have an Azure virtual machine named VM1 that runs Windows Server 2019. The VM was deployed using default drive settings. You sign in to VM1 as a user named User1 and perform the following actions: Create files on drive C. Create files on drive D. Modify the screen saver timeout. Change the desktop background. You plan to redeploy VM1. Which changes will be lost after you redeploy VM1?
+You have an Azure virtual machine named VM1 that runs Windows Server 2019. The VM was deployed using default drive settings. You sign in to VM1 as a user named User1 and perform the following actions:
+
+Create files on drive C.
+Create files on drive D.
+Modify the screen saver timeout.
+Change the desktop background.
+
+You plan to redeploy VM1. Which changes will be lost after you redeploy VM1?
 
 - **A.** the modified screen saver timeout
 - **B.** the new desktop background
@@ -4500,7 +4820,12 @@ You have an Azure subscription. You have an on-premises virtual machine named VM
 ## Domanda 309
 *Tipo: hotspot · fonte: manual_vision*
 
-You have an Azure subscription that contains a virtual machine scale set. The scale set contains four instances that have the following configurations: Operating system: Windows Server 2016 Size: Standard_D1_v2 You run the get-azvmss cmdlet as shown in the following exhibit: Use the drop-down menus to select the answer choice that completes each statement based on the information presented in the graphic. NOTE: Each correct selection is worth one point.
+You have an Azure subscription that contains a virtual machine scale set. The scale set contains four instances that have the following configurations:
+
+Operating system: Windows Server 2016
+Size: Standard_D1_v2
+
+You run the get-azvmss cmdlet as shown in the following exhibit: Use the drop-down menus to select the answer choice that completes each statement based on the information presented in the graphic. NOTE: Each correct selection is worth one point.
 
 **Risposta corretta:** When an administrator changes the virtual machine size, the size will be changed on up to [answer choice] virtual machines simultaneously. -> 4 | When a new build of the Windows Server 2016 image is released, the new build will be deployed to up to [answer choice] virtual machines simultaneously. -> 1
 > Immagini: q309_post0.png
@@ -4661,7 +4986,7 @@ You plan to deploy several Azure virtual machines that will run Windows Server 2
 
 You have an Azure subscription that contains the resources shown in the following table. In Azure Cloud Shell, you need to create a virtual machine by using an Azure Resource Manager (ARM) template. How should you complete the command? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
 
-**Risposta corretta:** Cmdlet -> New-AzResourceGroupDeployment | Parametro -> -ResourceGroupName RG1 `
+**Risposta corretta:** Cmdlet -> New-AzResourceGroupDeployment | Parameter -> -ResourceGroupName RG1 `
 > Immagini: q320_post0.png
 
 **Spiegazione:** Deploying an ARM template to a resource group from PowerShell is done with New-AzResourceGroupDeployment, which needs -ResourceGroupName to name the target group (here RG1) together with -TemplateFile or -TemplateUri. New-AzVm creates a VM without a template, New-AzResource creates a single generic resource, and New-AzTemplateSpec only stores a template as a template spec. Reference: https://docs.microsoft.com/en-us/powershell/module/az.resources/new-azresourcegroupdeployment
@@ -4834,7 +5159,7 @@ You plan to deploy several Azure virtual machines that will run Windows Server 2
 
 You have an Azure subscription. The subscription contains a virtual machine that runs Windows 10. You need to join the virtual machine to an Active Directory domain. How should you complete the Azure Resource Manager (ARM) template? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
 
-**Risposta corretta:** "type" -> "Microsoft.Compute/virtualMachines/extensions", | Box 2 (dopo settings) -> "ProtectedSettings":{
+**Risposta corretta:** "type" -> "Microsoft.Compute/virtualMachines/extensions", | [box 2] "Password": "[parameters('domainPassword')]" -> "ProtectedSettings":{
 > Immagini: q332_post0.png
 
 **Spiegazione:** Box 1: "Microsoft.Compute/VirtualMachines/extensions", The following JSON example uses the Microsoft.Compute/virtualMachines/extensions resource type to install the Active Directory domain join extension. Parameters are used that you specify at deployment time. When the extension is deployed, the VM is joined to the specified managed domain. Box 2: "ProtectedSettings":{ Example: { "apiVersion": "2015-06-15", "type": "Microsoft.Compute/virtualMachines/extensions", "name": "[concat(parameters('dnsLabelPrefix'),'/joindomain')]", "location": "[parameters('location')]", "dependsOn": [ "[concat('Microsoft.Compute/virtualMachines/', parameters('dnsLabelPrefix'))]" ], "properties": { "publisher": "Microsoft.Compute", "type": "JsonADDomainExtension", "typeHandlerVersion": "1.3", "autoUpgradeMinorVersion": true, "settings": { "Name": "[parameters('domainToJoin')]", "OUPath": "[parameters('ouPath')]", "User": "[concat(parameters('domainToJoin'), '\\', parameters('domainUsername'))]", "Restart": "true", "Options": "[parameters('domainJoinOptions')]" }, "protectedSettings": { "Password": "[parameters('domainPassword')]" } } } Reference: https://docs.microsoft.com/en-us/azure/active-directory-domain-services/join-windows-vm- template
@@ -4874,7 +5199,7 @@ You are creating an Azure Kubernetes Services (AKS) cluster as shown in the foll
 
 You have an Azure subscription that contains an Azure Kubernetes Service (AKS) cluster named Cluster1. Cluster1 hosts a node pool named Pool1 that has four nodes. You need to perform a coordinated upgrade of Cluster1. The solution must meet the following requirements: Deploy two new nodes to perform the upgrade. Minimize costs. How should you complete the command? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
 
-**Risposta corretta:** az aks nodepool [box 1] -> updates | [box 2] (dopo -n pool1 -g RG1 --cluster-name cluster1) -> --max-surge 2
+**Risposta corretta:** az aks nodepool [box 1] -> updates | -n pool1 -g RG1 --cluster-name cluster1 [box 2] -> --max-surge 2
 > Nota: Comando completo: az aks nodepool updates -n pool1 -g RG1 --cluster-name cluster1 --max-surge 2
 > Immagini: q335_post0.png
 
@@ -4954,7 +5279,7 @@ You have an Azure subscription. You plan to deploy the Azure container instances
 
 You have an Azure container registry named contoso2023 as shown in the following exhibit. You need to enable contoso2023 to use a dedicated data endpoint. Which two settings should you configure for contoso2023? To answer, select the appropriate settings in the answer area. NOTE: Each correct answer is worth one point.
 
-**Risposta corretta:** Impostazione 1 -> Networking | Impostazione 2 -> Connected registries (Preview)
+**Risposta corretta:** Setting 1 -> Networking | Setting 2 -> Connected registries (Preview)
 > Immagini: q341_post0.png
 
 **Spiegazione:** Dedicated data endpoints are a Premium feature, and contoso2023 uses the Standard plan, so the registry has to be upgraded to Premium first. The data endpoints are then enabled from the Networking blade (Public access, Dedicated data endpoint). The official answer also highlights Connected registries: a connected registry requires the parent registry to have dedicated data endpoints enabled, but the setting itself lives under Networking. Reference: https://learn.microsoft.com/en-us/azure/container-registry/container-registry-dedicated-data-endpoints
@@ -5063,7 +5388,13 @@ You have an Azure App Service app named App1 that contains two running instances
 ## Domanda 349
 *Tipo: hotspot · fonte: manual_vision*
 
-You have an Azure subscription that contains the container images shown in the following table. You plan to use the following services: Azure Container Instances Azure Container Apps Azure App Service In which services can you run the images? To answer, select the options in the answer area. NOTE: Each correct answer is worth one point.
+You have an Azure subscription that contains the container images shown in the following table. You plan to use the following services:
+
+Azure Container Instances
+Azure Container Apps
+Azure App Service
+
+In which services can you run the images? To answer, select the options in the answer area. NOTE: Each correct answer is worth one point.
 
 **Risposta corretta:** Image1 -> Azure Container Instances and App Services only | Image2 -> Azure Container Instances, Azure Container Apps, and App Services
 > Immagini: q349_post0.png
@@ -5366,7 +5697,52 @@ You have a Standard Azure App Service plan named Plan1. You need to ensure that 
 ## Domanda 369
 *Tipo: multiple_choice · fonte: text_layer*
 
-Case study - This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided. To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study. At the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section. To start the case study - To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question. Overview - ADatum Corporation is consulting firm that has a main office in Montreal and branch offices in Seattle and New York. Existing Environment - Azure Environment - ADatum has an Azure subscription that contains three resource groups named RG1, RG2, and RG3. The subscription contains the storage accounts shown in the following table. The subscription contains the virtual machines shown in the following table. The subscription has an Azure container registry that contains the images shown in the following table. The subscription contains the resources shown in the following table. Azure Key Vault - The subscription contains an Azure key vault named Vault1. Vault1 contains the certificates shown in the following table. Vault1 contains the keys shown in the following table. Microsoft Entra Environment - ADatum has a Microsoft Entra tenant named adatum.com that is linked to the Azure subscription and contains the users shown in the following table. The tenant contains the groups shown in the following table. The adatum.com tenant has a custom security attribute named Attribute1. Planned Changes - ADatum plans to implement the following changes: Configure a data collection rule (DCR) named DCR1 to collect only system events that have an event ID of 4648 from VM2 and VM4. In storage1, create a new container named cont2 that has the following access policies: o Three stored access policies named Stored1, Stored2, and Stored3 o A legal hold for immutable blob storage Whenever possible, use directories to organize storage account content. Grant User1 the permissions required to link Zone1 to VNet1. Assign Attribute1 to supported adatum.com resources. In storage2, create an encryption scope named Scope1. Deploy new containers by using Image1 or Image2. Technical Requirements - ADatum must meet the following technical requirements: Use TLS for WebApp1. Follow the principle of least privilege. Grant permissions at the required scope only. Ensure that Scope1 is used to encrypt storage services. Use Azure Backup to back up cont1 and share1 as frequently as possible. Whenever possible, use Azure Disk Encryption and a key encryption key (KEK) to encrypt the virtual machines. You need to configure WebApp1 to meet the technical requirements. Which certificate can you use from Vault1?
+Case study - This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided. To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study. At the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section. To start the case study - To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question.
+
+Overview
+
+ADatum Corporation is consulting firm that has a main office in Montreal and branch offices in Seattle and New York.
+
+Existing Environment
+
+Azure Environment
+
+ADatum has an Azure subscription that contains three resource groups named RG1, RG2, and RG3. The subscription contains the storage accounts shown in the following table. The subscription contains the virtual machines shown in the following table. The subscription has an Azure container registry that contains the images shown in the following table. The subscription contains the resources shown in the following table.
+
+Azure Key Vault
+
+The subscription contains an Azure key vault named Vault1. Vault1 contains the certificates shown in the following table. Vault1 contains the keys shown in the following table.
+
+Microsoft Entra Environment
+
+ADatum has a Microsoft Entra tenant named adatum.com that is linked to the Azure subscription and contains the users shown in the following table. The tenant contains the groups shown in the following table. The adatum.com tenant has a custom security attribute named Attribute1.
+
+Planned Changes
+
+ADatum plans to implement the following changes:
+
+Configure a data collection rule (DCR) named DCR1 to collect only system events that have an event ID of 4648 from VM2 and VM4.
+In storage1, create a new container named cont2 that has the following access policies:
+  Three stored access policies named Stored1, Stored2, and Stored3
+  A legal hold for immutable blob storage
+Whenever possible, use directories to organize storage account content.
+Grant User1 the permissions required to link Zone1 to VNet1.
+Assign Attribute1 to supported adatum.com resources.
+In storage2, create an encryption scope named Scope1.
+Deploy new containers by using Image1 or Image2.
+
+Technical Requirements
+
+ADatum must meet the following technical requirements:
+
+Use TLS for WebApp1.
+Follow the principle of least privilege.
+Grant permissions at the required scope only.
+Ensure that Scope1 is used to encrypt storage services.
+Use Azure Backup to back up cont1 and share1 as frequently as possible.
+Whenever possible, use Azure Disk Encryption and a key encryption key (KEK) to encrypt the virtual machines.
+
+You need to configure WebApp1 to meet the technical requirements. Which certificate can you use from Vault1?
 
 - **A.** Cert1 only
 - **B.** Cert1 or Cert2 only **← CORRETTA**
@@ -5426,7 +5802,52 @@ Note: This question is part of a series of questions that present the same scena
 ## Domanda 373
 *Tipo: multiple_choice · fonte: text_layer*
 
-Case study - This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided. To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study. At the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section. To start the case study - To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question. Overview - ADatum Corporation is consulting firm that has a main office in Montreal and branch offices in Seattle and New York. Existing Environment - Azure Environment - ADatum has an Azure subscription that contains three resource groups named RG1, RG2, and RG3. The subscription contains the storage accounts shown in the following table. The subscription contains the virtual machines shown in the following table. The subscription has an Azure container registry that contains the images shown in the following table. The subscription contains the resources shown in the following table. Azure Key Vault - The subscription contains an Azure key vault named Vault1. Vault1 contains the certificates shown in the following table. Vault1 contains the keys shown in the following table. Microsoft Entra Environment - ADatum has a Microsoft Entra tenant named adatum.com that is linked to the Azure subscription and contains the users shown in the following table. The tenant contains the groups shown in the following table. The adatum.com tenant has a custom security attribute named Attribute1. Planned Changes - ADatum plans to implement the following changes: Configure a data collection rule (DCR) named DCR1 to collect only system events that have an event ID of 4648 from VM2 and VM4. In storage1, create a new container named cont2 that has the following access policies: o Three stored access policies named Stored1, Stored2, and Stored3 o a legal hold for immutable blob storage Whenever possible, use directories to organize storage account content. Grant User1 the permissions required to link Zone1 to VNet1. Assign Attribute1 to supported adatum.com resources. In storage2, create an encryption scope named Scope1. Deploy new containers by using Image1 or Image2. Technical Requirements - ADatum must meet the following technical requirements: Use TLS for WebApp1. Follow the principle of least privilege. Grant permissions at the required scope only. Ensure that Scope1 is used to encrypt storage services. Use Azure Backup to back up cont1 and share1 as frequently as possible. Whenever possible, use Azure Disk Encryption and a key encryption key (KEK) to encrypt the virtual machines. You need to meet the technical requirements for the KEK. Which PowerShell cmdlet and key should you use?
+Case study - This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided. To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study. At the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section. To start the case study - To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question.
+
+Overview
+
+ADatum Corporation is consulting firm that has a main office in Montreal and branch offices in Seattle and New York.
+
+Existing Environment
+
+Azure Environment
+
+ADatum has an Azure subscription that contains three resource groups named RG1, RG2, and RG3. The subscription contains the storage accounts shown in the following table. The subscription contains the virtual machines shown in the following table. The subscription has an Azure container registry that contains the images shown in the following table. The subscription contains the resources shown in the following table.
+
+Azure Key Vault
+
+The subscription contains an Azure key vault named Vault1. Vault1 contains the certificates shown in the following table. Vault1 contains the keys shown in the following table.
+
+Microsoft Entra Environment
+
+ADatum has a Microsoft Entra tenant named adatum.com that is linked to the Azure subscription and contains the users shown in the following table. The tenant contains the groups shown in the following table. The adatum.com tenant has a custom security attribute named Attribute1.
+
+Planned Changes
+
+ADatum plans to implement the following changes:
+
+Configure a data collection rule (DCR) named DCR1 to collect only system events that have an event ID of 4648 from VM2 and VM4.
+In storage1, create a new container named cont2 that has the following access policies:
+  Three stored access policies named Stored1, Stored2, and Stored3
+  A legal hold for immutable blob storage
+Whenever possible, use directories to organize storage account content.
+Grant User1 the permissions required to link Zone1 to VNet1.
+Assign Attribute1 to supported adatum.com resources.
+In storage2, create an encryption scope named Scope1.
+Deploy new containers by using Image1 or Image2.
+
+Technical Requirements
+
+ADatum must meet the following technical requirements:
+
+Use TLS for WebApp1.
+Follow the principle of least privilege.
+Grant permissions at the required scope only.
+Ensure that Scope1 is used to encrypt storage services.
+Use Azure Backup to back up cont1 and share1 as frequently as possible.
+Whenever possible, use Azure Disk Encryption and a key encryption key (KEK) to encrypt the virtual machines.
+
+You need to meet the technical requirements for the KEK. Which PowerShell cmdlet and key should you use?
 
 - **A.** Set-AzVMDiskEncryptionExtension and Key2.
 - **B.** Set-AzDiskEncryptionKey and Key2.
@@ -5750,7 +6171,12 @@ You have an Azure subscription that contains a virtual network named VNET1. VNET
 ## Domanda 395
 *Tipo: multiple_choice · fonte: text_layer*
 
-You have an Azure subscription that contains the resources shown in the following table. The Not allowed resource types Azure policy that has policy enforcement enabled is assigned to RG1 and uses the following parameters: Microsoft.Network/virtualNetworksMicrosoft.Compute/virtualMachines In RG1, you need to create a new virtual machine named VM2, and then connect VM2 to VNET1. What should you do first?
+You have an Azure subscription that contains the resources shown in the following table. The Not allowed resource types Azure policy that has policy enforcement enabled is assigned to RG1 and uses the following parameters:
+
+Microsoft.Network/virtualNetworks
+Microsoft.Compute/virtualMachines
+
+In RG1, you need to create a new virtual machine named VM2, and then connect VM2 to VNET1. What should you do first?
 
 - **A.** Remove Microsoft.Compute/virtualMachines from the policy. **← CORRETTA**
 - **B.** Create an Azure Resource Manager template
@@ -5811,7 +6237,16 @@ You have an Azure subscription named Subscription1 that contains the virtual net
 ## Domanda 399
 *Tipo: hotspot · fonte: manual_vision*
 
-You have an Azure virtual machine that runs Windows Server 2019 and has the following configurations: Name: VM1 Location: West US Connected to: VNET1 Private IP address: 10.1.0.4 Public IP addresses: 52.186.85.63 DNS suffix in Windows Server: Adatum.com You create the Azure DNS zones shown in the following table. You need to identify which DNS zones you can link to VNET1 and the DNS zones to which VM1 can automatically register. Which zones should you identify? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
+You have an Azure virtual machine that runs Windows Server 2019 and has the following configurations:
+
+Name: VM1
+Location: West US
+Connected to: VNET1
+Private IP address: 10.1.0.4
+Public IP addresses: 52.186.85.63
+DNS suffix in Windows Server: Adatum.com
+
+You create the Azure DNS zones shown in the following table. You need to identify which DNS zones you can link to VNET1 and the DNS zones to which VM1 can automatically register. Which zones should you identify? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
 
 **Risposta corretta:** DNS zones that you can link to VNET1 -> The private zones only | DNS zones to which VM1 can automatically register -> The private zones only
 > Immagini: q399_post0.png
@@ -6071,7 +6506,15 @@ You have an Azure subscription that contains the resources in the following tabl
 ## Domanda 417
 *Tipo: hotspot · fonte: manual_vision*
 
-You have an Azure virtual machine named VM1 that connects to a virtual network named VNet1. VM1 has the following configurations: Subnet: 10.0.0.0/24 Availability set: AVSet Network security group (NSG): None Private IP address: 10.0.0.4 (dynamic) Public IP address: 40.90.219.6 (dynamic) You deploy a standard, Internet-facing load balancer named slb1. You need to configure slb1 to allow connectivity to VM1. Which changes should you apply to VM1 as you configure slb1? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
+You have an Azure virtual machine named VM1 that connects to a virtual network named VNet1. VM1 has the following configurations:
+
+Subnet: 10.0.0.0/24
+Availability set: AVSet
+Network security group (NSG): None
+Private IP address: 10.0.0.4 (dynamic)
+Public IP address: 40.90.219.6 (dynamic)
+
+You deploy a standard, Internet-facing load balancer named slb1. You need to configure slb1 to allow connectivity to VM1. Which changes should you apply to VM1 as you configure slb1? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
 
 **Risposta corretta:** Before you create a backend pool on slb1, you must -> Remove the public IP address from VM1 | Before you can connect to VM1 from slb1, you must -> Create and configure an NSG
 > Immagini: q417_post0.png
@@ -6243,7 +6686,13 @@ Note: This question is part of a series of questions that present the same scena
 ## Domanda 429
 *Tipo: hotspot_yes_no · fonte: manual_vision*
 
-You manage two Azure subscriptions named Subscription1 and Subscription2. Subscription1 has following virtual networks: The virtual networks contain the following subnets: Subscription2 contains the following virtual network: Name: VNETA Address space: 10.10.128.0/17 Location: Canada Central VNETA contains the following subnets: For each of the following statements, select Yes if the statement is true. Otherwise, select No. NOTE: Each correct selection is worth one point.
+You manage two Azure subscriptions named Subscription1 and Subscription2. Subscription1 has following virtual networks: The virtual networks contain the following subnets: Subscription2 contains the following virtual network:
+
+Name: VNETA
+Address space: 10.10.128.0/17
+Location: Canada Central
+
+VNETA contains the following subnets: For each of the following statements, select Yes if the statement is true. Otherwise, select No. NOTE: Each correct selection is worth one point.
 
 **Risposta corretta:** A Site-to-Site connection can be established between VNET1 and VNET2. -> No | VNET1 and VNET2 can be peered. -> Yes | VNET1 and VNETA can be peered. -> Yes
 > Immagini: q429_post0.png
@@ -6787,7 +7236,12 @@ You have an Azure subscription that contains the virtual machines shown in the f
 ## Domanda 467
 *Tipo: hotspot_yes_no · fonte: manual_vision*
 
-You have two Azure virtual machines as shown in the following table. You create the Azure DNS zones shown in the following table. You perform the following actions: ׀¢׀3⁄4 fabrikam.com, you add a virtual network link to vnet1 and enable auto registration. For contoso.com, you assign vm1 and vm2 the Owner role. For each of the following statements, select Yes if the statement is true. Otherwise, select No. NOTE: Each correct selection is worth one point.
+You have two Azure virtual machines as shown in the following table. You create the Azure DNS zones shown in the following table. You perform the following actions:
+
+To fabrikam.com, you add a virtual network link to vnet1 and enable auto registration.
+For contoso.com, you assign vm1 and vm2 the Owner role.
+
+For each of the following statements, select Yes if the statement is true. Otherwise, select No. NOTE: Each correct selection is worth one point.
 
 **Risposta corretta:** The DNS A record for vm1 is added to contoso.com and has the IP address of 131.107.50.20. -> No | The DNS A record for vm1 is added to fabrikam.com and has the IP address of 10.0.1.4. -> Yes | The DNS A record for vm2 is added to fabrikam.com and has the IP address of 10.0.1.5. -> Yes
 > Immagini: q467_post0.png
@@ -6839,7 +7293,12 @@ You have an Azure subscription named Subscription1. Subscription1 contains the v
 ## Domanda 471
 *Tipo: multiple_choice · fonte: text_layer*
 
-Your on-premises network contains an SMB share named Share1. You have an Azure subscription that contains the following resources: A web app named webapp1 A virtual network named VNET1 You need to ensure that webapp1 can connect to Share1. What should you deploy?
+Your on-premises network contains an SMB share named Share1. You have an Azure subscription that contains the following resources:
+
+A web app named webapp1
+A virtual network named VNET1
+
+You need to ensure that webapp1 can connect to Share1. What should you deploy?
 
 - **A.** an Azure Application Gateway
 - **B.** an Azure Active Directory (Azure AD) Application Proxy
@@ -6981,7 +7440,14 @@ You have an Azure subscription that contains 20 virtual machines, a network secu
 ## Domanda 480
 *Tipo: hotspot · fonte: manual_vision*
 
-Your network contains an on-premises Active Directory Domain Services (AD DS) domain named contoso.com. The domain contains the servers shown in the following table. You plan to migrate contoso.com to Azure. You create an Azure virtual network named VNET1 that has the following settings: Address space: 10.0.0.0/16 Subnet: Name: Subnet1 IPv4: 10.0.1.0/24 You need to move DC1 to VNET1. The solution must ensure that the member servers in contoso.com can resolve AD DS DNS names. How should you configure DC1? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
+Your network contains an on-premises Active Directory Domain Services (AD DS) domain named contoso.com. The domain contains the servers shown in the following table. You plan to migrate contoso.com to Azure. You create an Azure virtual network named VNET1 that has the following settings:
+
+Address space: 10.0.0.0/16
+Subnet:
+Name: Subnet1
+IPv4: 10.0.1.0/24
+
+You need to move DC1 to VNET1. The solution must ensure that the member servers in contoso.com can resolve AD DS DNS names. How should you configure DC1? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
 
 **Risposta corretta:** IP address -> Use 10.0.1.3 | Name resolution -> Configure VNET1 to use a custom DNS server
 > Esibito: q480_pre0.png, q480_pre1.png
@@ -7484,7 +7950,13 @@ You have an Azure subscription that contains the virtual networks shown in the f
 ## Domanda 512
 *Tipo: multiple_choice · fonte: text_layer*
 
-You have an Azure virtual network named VNet1 that contains the following settings: IPv4 address space: 172.16.10.0/24 Subnet name: Subnet1 Subnet address range: 172.16.10.0/25 What is the maximum number of virtual machines that can connect to Subnet1?
+You have an Azure virtual network named VNet1 that contains the following settings:
+
+IPv4 address space: 172.16.10.0/24
+Subnet name: Subnet1
+Subnet address range: 172.16.10.0/25
+
+What is the maximum number of virtual machines that can connect to Subnet1?
 
 - **A.** 24
 - **B.** 25
@@ -7772,7 +8244,14 @@ You have the web apps shown in the following table. You need to monitor the perf
 ## Domanda 531
 *Tipo: multiple_choice · fonte: text_layer*
 
-You have an Azure virtual machine named VM1. You use Azure Backup to create a backup of VM1 named Backup1. After creating Backup1, you perform the following changes to VM1: Modify the size of VM1. Copy a file named Budget.xls to a folder named Data. Reset the password for the built-in administrator account. Add a data disk to VM1. An administrator uses the Replace existing option to restore VM1 from Backup1. You need to ensure that all the changes to VM1 are restored. Which change should you perform again?
+You have an Azure virtual machine named VM1. You use Azure Backup to create a backup of VM1 named Backup1. After creating Backup1, you perform the following changes to VM1:
+
+Modify the size of VM1.
+Copy a file named Budget.xls to a folder named Data.
+Reset the password for the built-in administrator account.
+Add a data disk to VM1.
+
+An administrator uses the Replace existing option to restore VM1 from Backup1. You need to ensure that all the changes to VM1 are restored. Which change should you perform again?
 
 - **A.** Modify the size of VM1.
 - **B.** Reset the password for the built-in administrator account.
@@ -7828,7 +8307,20 @@ You have two Azure App Service app named App1 and App2. Each app has a productio
 ## Domanda 535
 *Tipo: hotspot_yes_no · fonte: manual_vision*
 
-You have an Azure subscription that contains an Azure Active Directory (Azure AD) tenant named contoso.com. The tenant is synced to the on-premises Active Directory domain. The domain contains the users shown in the following table. You enable self-service password reset (SSPR) for all users and configure SSPR to have the following authentication methods: Number of methods required to reset: 2 Methods available to users: Mobile phone, Security questions Number of questions required to register: 3 Number of questions required to reset: 3 You select the following security questions: What is your favorite food? In what city was your first job? What was the name of your first pet? For each of the following statements, select Yes if the statement is true. Otherwise, select No. NOTE: Each correct selection is worth one point.
+You have an Azure subscription that contains an Azure Active Directory (Azure AD) tenant named contoso.com. The tenant is synced to the on-premises Active Directory domain. The domain contains the users shown in the following table. You enable self-service password reset (SSPR) for all users and configure SSPR to have the following authentication methods:
+
+Number of methods required to reset: 2
+Methods available to users: Mobile phone, Security questions
+Number of questions required to register: 3
+Number of questions required to reset: 3
+
+You select the following security questions:
+
+What is your favorite food?
+In what city was your first job?
+What was the name of your first pet?
+
+For each of the following statements, select Yes if the statement is true. Otherwise, select No. NOTE: Each correct selection is worth one point.
 
 **Risposta corretta:** SecAdmin1 must answer the following question during the self-service password reset: In what city was your first job? -> No | BillAdmin1 must answer the following question during the self-service password reset: What is your favorite food? -> No | User1 must answer the following question during the self-service password reset: What was the name of your first pet? -> Yes
 > Immagini: q535_post0.png
@@ -8170,7 +8662,12 @@ You have an Azure subscription that contains the storage accounts shown in the f
 ## Domanda 559
 *Tipo: hotspot · fonte: manual_vision*
 
-You have an Azure subscription that is linked to an Azure AD tenant. The tenant contains two users named User1 and User2. The subscription contains the resources shown in the following table. The subscription contains the alert rules shown in the following table. The users perform the following action: User1 creates a new virtual disk and attaches the disk to VM1 User2 creates a new resource tag and assigns the tag to RG1 and VM1 Which alert rules are triggered by each user? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
+You have an Azure subscription that is linked to an Azure AD tenant. The tenant contains two users named User1 and User2. The subscription contains the resources shown in the following table. The subscription contains the alert rules shown in the following table. The users perform the following action:
+
+User1 creates a new virtual disk and attaches the disk to VM1
+User2 creates a new resource tag and assigns the tag to RG1 and VM1
+
+Which alert rules are triggered by each user? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
 
 **Risposta corretta:** User1 -> Alert1 and Alert2 are triggered | User2 -> Alert1 and Alert2 are triggered
 > Immagini: q559_post0.png
@@ -8248,7 +8745,23 @@ You have an Azure subscription that contains 10 network security groups (NSGs), 
 ## Domanda 564
 *Tipo: hotspot_yes_no · fonte: manual_vision*
 
-You have an Azure subscription named Sub1 that contains the resources shown in the following table. Sub1 contains the following alert rule: Name: Alert1 Scope: All resource groups in Sub1 Include all future resources Condition: All administrative operations Actions: Action1 Sub1 contains the following alert processing rule: Name: Rule1 Scope: Sub1 Rule type: Suppress notifications Apply the rule: On a specific time Start: August 10, 2022 End: August 13, 2022 For each of the following statements, select Yes if the statement is true. Otherwise, select No. NOTE: Each correct selection is worth one point.
+You have an Azure subscription named Sub1 that contains the resources shown in the following table. Sub1 contains the following alert rule:
+
+Name: Alert1
+Scope: All resource groups in Sub1 (include all future resources)
+Condition: All administrative operations
+Actions: Action1
+
+Sub1 contains the following alert processing rule:
+
+Name: Rule1
+Scope: Sub1
+Rule type: Suppress notifications
+Apply the rule: On a specific time
+Start: August 10, 2022
+End: August 13, 2022
+
+For each of the following statements, select Yes if the statement is true. Otherwise, select No. NOTE: Each correct selection is worth one point.
 
 **Risposta corretta:** If you create a resource group in Sub1 on August 11, 2022, Alert1 is listed in the Azure portal. -> Yes | If you create a resource group in Sub1 on August 12, 2022, an email message is sent to admin1@contoso.com. -> No | If you add a tag to RG1 on August 15, 2022, an email message is sent to admin1@contoso.com. -> Yes
 > Immagini: q564_post0.png
@@ -8482,7 +8995,13 @@ You have an Azure subscription that contains a virtual machine named VM1. You ha
 ## Domanda 580
 *Tipo: multiple_choice · fonte: text_layer*
 
-You have an Azure subscription that has Traffic Analytics configured. You deploy a new virtual machine named VM1 that has the following settings: Region: East US Virtual network: VNet1 NIC network security group: NSG1 You need to monitor VM1 traffic by using Traffic Analytics. Which settings should you configure?
+You have an Azure subscription that has Traffic Analytics configured. You deploy a new virtual machine named VM1 that has the following settings:
+
+Region: East US
+Virtual network: VNet1
+NIC network security group: NSG1
+
+You need to monitor VM1 traffic by using Traffic Analytics. Which settings should you configure?
 
 - **A.** Diagnostic settings for VM1
 - **B.** NSG flow logs for NSG1 **← CORRETTA**
@@ -8539,7 +9058,52 @@ You have an Azure subscription that contains an Azure Backup vault named Backup1
 ## Domanda 584
 *Tipo: hotspot · fonte: manual_vision*
 
-Case study - This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided. To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study. At the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section. To start the case study - To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question. Overview - ADatum Corporation is consulting firm that has a main office in Montreal and branch offices in Seattle and New York. Existing Environment - Azure Environment - ADatum has an Azure subscription that contains three resource groups named RG1, RG2, and RG3. The subscription contains the storage accounts shown in the following table. The subscription contains the virtual machines shown in the following table. The subscription has an Azure container registry that contains the images shown in the following table. The subscription contains the resources shown in the following table. Azure Key Vault - The subscription contains an Azure key vault named Vault1. Vault1 contains the certificates shown in the following table. Vault1 contains the keys shown in the following table. Microsoft Entra Environment - ADatum has a Microsoft Entra tenant named adatum.com that is linked to the Azure subscription and contains the users shown in the following table. The tenant contains the groups shown in the following table. The adatum.com tenant has a custom security attribute named Attribute1. Planned Changes - ADatum plans to implement the following changes: Configure a data collection rule (DCR) named DCR1 to collect only system events that have an event ID of 4648 from VM2 and VM4. In storage1, create a new container named cont2 that has the following access policies: o Three stored access policies named Stored1, Stored2, and Stored3 o A legal hold for immutable blob storage Whenever possible, use directories to organize storage account content. Grant User1 the permissions required to link Zone1 to VNet1. Assign Attribute1 to supported adatum.com resources. In storage2, create an encryption scope named Scope1. Deploy new containers by using Image1 or Image2. Technical Requirements - ADatum must meet the following technical requirements: Use TLS for WebApp1. Follow the principle of least privilege. Grant permissions at the required scope only. Ensure that Scope1 is used to encrypt storage services. Use Azure Backup to back up cont1 and share1 as frequently as possible. Whenever possible, use Azure Disk Encryption and a key encryption key (KEK) to encrypt the virtual machines. You need to configure Azure Backup to meet the technical requirements for cont1 and share1. To what should you set the backup frequency for each resource? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
+Case study - This is a case study. Case studies are not timed separately. You can use as much exam time as you would like to complete each case. However, there may be additional case studies and sections on this exam. You must manage your time to ensure that you are able to complete all questions included on this exam in the time provided. To answer the questions included in a case study, you will need to reference information that is provided in the case study. Case studies might contain exhibits and other resources that provide more information about the scenario that is described in the case study. Each question is independent of the other questions in this case study. At the end of this case study, a review screen will appear. This screen allows you to review your answers and to make changes before you move to the next section of the exam. After you begin a new section, you cannot return to this section. To start the case study - To display the first question in this case study, click the Next button. Use the buttons in the left pane to explore the content of the case study before you answer the questions. Clicking these buttons displays information such as business requirements, existing environment, and problem statements. If the case study has an All Information tab, note that the information displayed is identical to the information displayed on the subsequent tabs. When you are ready to answer a question, click the Question button to return to the question.
+
+Overview
+
+ADatum Corporation is consulting firm that has a main office in Montreal and branch offices in Seattle and New York.
+
+Existing Environment
+
+Azure Environment
+
+ADatum has an Azure subscription that contains three resource groups named RG1, RG2, and RG3. The subscription contains the storage accounts shown in the following table. The subscription contains the virtual machines shown in the following table. The subscription has an Azure container registry that contains the images shown in the following table. The subscription contains the resources shown in the following table.
+
+Azure Key Vault
+
+The subscription contains an Azure key vault named Vault1. Vault1 contains the certificates shown in the following table. Vault1 contains the keys shown in the following table.
+
+Microsoft Entra Environment
+
+ADatum has a Microsoft Entra tenant named adatum.com that is linked to the Azure subscription and contains the users shown in the following table. The tenant contains the groups shown in the following table. The adatum.com tenant has a custom security attribute named Attribute1.
+
+Planned Changes
+
+ADatum plans to implement the following changes:
+
+Configure a data collection rule (DCR) named DCR1 to collect only system events that have an event ID of 4648 from VM2 and VM4.
+In storage1, create a new container named cont2 that has the following access policies:
+  Three stored access policies named Stored1, Stored2, and Stored3
+  A legal hold for immutable blob storage
+Whenever possible, use directories to organize storage account content.
+Grant User1 the permissions required to link Zone1 to VNet1.
+Assign Attribute1 to supported adatum.com resources.
+In storage2, create an encryption scope named Scope1.
+Deploy new containers by using Image1 or Image2.
+
+Technical Requirements
+
+ADatum must meet the following technical requirements:
+
+Use TLS for WebApp1.
+Follow the principle of least privilege.
+Grant permissions at the required scope only.
+Ensure that Scope1 is used to encrypt storage services.
+Use Azure Backup to back up cont1 and share1 as frequently as possible.
+Whenever possible, use Azure Disk Encryption and a key encryption key (KEK) to encrypt the virtual machines.
+
+You need to configure Azure Backup to meet the technical requirements for cont1 and share1. To what should you set the backup frequency for each resource? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
 
 **Risposta corretta:** cont1 -> Daily | share1 -> Every 4 hours
 > Immagini: q584_post0.png

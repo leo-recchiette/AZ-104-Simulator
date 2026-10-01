@@ -39,6 +39,24 @@ export function QuestionBody({ text, fontSize, marginBottom }: QuestionBodyProps
           );
         }
 
+        if (segment.kind === "heading") {
+          return (
+            <h3
+              key={i}
+              style={{
+                margin: `${i === 0 ? 0 : 8}px 0 6px`,
+                fontSize: 11.5,
+                letterSpacing: ".05em",
+                textTransform: "uppercase",
+                fontWeight: 600,
+                color: t.fa,
+              }}
+            >
+              {segment.text}
+            </h3>
+          );
+        }
+
         if (segment.kind === "list") {
           return (
             <ul
@@ -63,7 +81,21 @@ export function QuestionBody({ text, fontSize, marginBottom }: QuestionBodyProps
                   <span aria-hidden style={{ color: t.ac, lineHeight: 1.5 }}>
                     •
                   </span>
-                  <span>{item}</span>
+                  <div>
+                    {item.text}
+                    {item.children.length > 0 && (
+                      <ul style={{ display: "grid", gap: 5, margin: "6px 0 0", padding: 0, listStyle: "none" }}>
+                        {item.children.map((child, k) => (
+                          <li key={k} style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: 10 }}>
+                            <span aria-hidden style={{ color: t.fa, lineHeight: 1.5 }}>
+                              ◦
+                            </span>
+                            <span>{child}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
                 </li>
               ))}
             </ul>
