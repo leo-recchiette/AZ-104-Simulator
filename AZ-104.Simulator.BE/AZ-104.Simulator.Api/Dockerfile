@@ -15,7 +15,7 @@ RUN dotnet publish AZ-104.Simulator.BE/AZ-104.Simulator.Api/AZ-104.Simulator.Api
 # nell'immagine finale ne' viene mai scritto sciolto sull'host. Un rebuild va
 # rilanciato dopo un aggiornamento dello zip.
 RUN apt-get update && apt-get install -y --no-install-recommends unzip && rm -rf /var/lib/apt/lists/*
-COPY AZ-104.QuestionsDataset/az104_Dataset_Images.zip /tmp/images.zip
+COPY AZ-104.Simulator.Dataset/az104_Dataset_Images.zip /tmp/images.zip
 RUN mkdir -p /images && unzip -q -j /tmp/images.zip -d /images && rm /tmp/images.zip
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime

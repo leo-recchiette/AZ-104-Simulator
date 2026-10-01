@@ -24,10 +24,6 @@ History of submitted sessions: open any past attempt to go through its questions
 - **Two modes.** *Practice* lets you choose how many questions you want — or go open-ended and stop whenever you
   like, scoring only what you answered — whether to run a clock, and whether the solution should appear on its own
   as soon as you answer. *Simulation* is a fixed timed set under exam conditions.
-- **Linked questions stay together.** The "Solution: … Does this meet the goal?" series share one scenario, so they
-  are always drawn as a whole, and you can jump between them from a side panel.
-- **Every question type is clickable and scored** — multiple choice, drag & drop sequences, hotspot rows and
-  yes/no statements — rather than self-assessed.
 - **Microsoft's own partial credit rule**: one point per correctly answered component, nothing deducted for wrong
   ones, so a single mistake never zeroes out a multi-part question.
 - **Exhibits**: the screenshots that come with a question are shown inline and can be zoomed in and out, since many
@@ -43,7 +39,7 @@ History of submitted sessions: open any past attempt to go through its questions
 AZ-104.Simulator.BE/          .NET backend (API + test project)
 AZ-104.Simulator.FE/          React + TypeScript frontend
 AZ-104.Simulator.Database/    SQL schema and question bank importer
-AZ-104.QuestionsDataset/       Source data (JSON, a human-readable Markdown version, the exhibit images)
+AZ-104.Simulator.Dataset/     Source data (JSON, a human-readable Markdown version, the exhibit images)
 docker-compose.yml
 ```
 
@@ -76,7 +72,7 @@ to reload the question bank from an updated JSON file.
 ### Reloading the question bank
 
 The importer replaces the contents of the question tables with what it reads from
-`AZ-104.QuestionsDataset/az104_606_domande.json` — it is not incremental. Note that the JSON is **copied into
+`AZ-104.Simulator.Dataset/az104_606_domande.json` — it is not incremental. Note that the JSON is **copied into
 the importer image** at build time rather than mounted, so after editing the dataset rerun it with `--build`,
 otherwise the stale copy gets imported again:
 
