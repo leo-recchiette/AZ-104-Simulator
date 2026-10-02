@@ -31,10 +31,11 @@ export function ReviewGroupCard({ unit }: ReviewGroupCardProps) {
     [0, 0],
   );
   const allCorrect = total > 0 && earned >= total;
-  // Filtrando, le parti mostrate possono essere meno di quelle totali: va detto.
+  // Filtrando, le parti mostrate possono essere meno di quelle totali: va detto. Una sola parte e'
+  // possibile: a oltranza di un gruppo si valutano solo le sotto-domande con risposta.
   const partsLabel =
     unit.parts.length === unit.totalParts
-      ? `${unit.totalParts} parts`
+      ? `${unit.totalParts} ${unit.totalParts === 1 ? "part" : "parts"}`
       : `${unit.parts.length} of ${unit.totalParts} parts`;
 
   return (

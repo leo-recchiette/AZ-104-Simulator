@@ -79,11 +79,15 @@ export function SessionPage() {
   );
 
   // A numero fisso tutte, anche senza risposta: quelle omesse non conterebbero nel denominatore.
-  // A oltranza solo le unita' cominciate, ma intere: le parti lasciate in bianco valgono zero.
+  // A oltranza solo le domande cominciate, anche dentro un gruppo: le sotto-domande saltate restano
+  // fuori come le domande singole, altrimenti la prima risposta a un gruppo abbasserebbe il punteggio.
   // Le stesse per l'invio e per il punteggio live, che cosi' mostra proprio cio' che l'invio darebbe.
   const scored = useMemo(
-    () => (state.openEnded ? state.questions.filter((_, i) => unitStarted[units.unitOf[i]]) : state.questions),
-    [state.openEnded, state.questions, unitStarted, units],
+    () =>
+      state.openEnded
+        ? state.questions.filter((q) => isAnswerStarted(q, state.answers[q.number] ?? []))
+        : state.questions,
+    [state.openEnded, state.questions, state.answers],
   );
   const submissions = useMemo(
     () => scored.map((q) => ({ questionNumber: q.number, userAnswers: state.answers[q.number] ?? [] })),
@@ -265,7 +269,7 @@ export function SessionPage() {
   if (nothingToScore) confirmText = "You haven't answered any question yet, so there's nothing to score.";
   else if (state.openEnded) {
     confirmText =
-      "Only the questions you answered are scored: the ones you skipped are left out. Blank parts of a question you started still score zero.";
+      "Only the questions you answered are scored: the ones you skipped are left out, linked questions included. Blank rows of a question you started still score zero.";
   }
 
   const timerCaption = limit ? "Time remaining" : "Elapsed";
