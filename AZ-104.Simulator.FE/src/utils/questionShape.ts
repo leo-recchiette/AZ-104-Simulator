@@ -1,6 +1,6 @@
 import type { OptionDto, QuestionDto } from "../types/question";
 import type { QuestionAnswerDto } from "../types/answer";
-import { gradeMultipleChoice, gradeRows } from "./grading";
+import { gradeMultipleChoice, gradeRows, parseMultiValueAnswer } from "./grading";
 
 export type AnswerShape = "options" | "draggable" | "prompts";
 
@@ -25,12 +25,18 @@ export function isAnswerStarted(question: QuestionDto, value: string[]): boolean
   return isQuestionAnswered(question, value);
 }
 
+export function isRowComplete(raw: string | null | undefined, correctAnswer?: string): boolean {
+  const chosen = raw ? raw.split("\n").filter(Boolean).length : 0;
+  const needed = correctAnswer !== undefined ? (parseMultiValueAnswer(correctAnswer)?.length ?? 1) : 1;
+  return chosen >= needed;
+}
+
 /** Solo per l'auto-reveal: il numero di scelte attese si conosce solo dalla soluzione. */
 export function isAnswerComplete(question: QuestionDto, value: string[], correct: QuestionAnswerDto): boolean {
   const shape = getAnswerShape(question);
   if (shape === "options") return value.length >= correct.correctLetters.length;
   if (shape === "draggable") return value.filter(Boolean).length >= correct.answerRows.length;
-  return isQuestionAnswered(question, value);
+  return question.prompts.every((_, ri) => isRowComplete(value[ri], correct.answerRows[ri]?.answer));
 }
 
 /** Un pool Yes/No e' a scelta singola: l'unico caso in cui lo si sa senza rivelare nulla. */

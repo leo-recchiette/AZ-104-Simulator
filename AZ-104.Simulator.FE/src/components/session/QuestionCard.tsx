@@ -3,7 +3,7 @@ import { useTheme } from "../../theme/ThemeContext";
 import { useDisplaySettings } from "../../settings/DisplaySettingsContext";
 import type { QuestionDto } from "../../types/question";
 import type { AnswerCheckResultDto } from "../../types/answer";
-import { getAnswerShape, isAnswerComplete, questionTypeLabel, correctAnswerLines, needsBullets } from "../../utils/questionShape";
+import { getAnswerShape, isAnswerComplete, isRowComplete, questionTypeLabel, correctAnswerLines, needsBullets } from "../../utils/questionShape";
 import { MultipleChoiceAnswer } from "./MultipleChoiceAnswer";
 import { SequenceAnswer } from "./SequenceAnswer";
 import { RowSelectAnswer } from "./RowSelectAnswer";
@@ -45,7 +45,7 @@ export function QuestionCard({ question, value, onChange, flagged, onToggleFlag,
   const answerLocked = isPractice && !!correct && (revealed || isAnswerComplete(question, value, correct));
   const lockedRows =
     isPractice && !!correct
-      ? question.prompts.map((_, ri) => revealed || (value[ri] ?? "").trim() !== "")
+      ? question.prompts.map((_, ri) => revealed || isRowComplete(value[ri], correct.answerRows[ri]?.answer))
       : undefined;
 
   // Il risultato lo chiede SessionPage; resta nascosto finche' la risposta non e' completa.

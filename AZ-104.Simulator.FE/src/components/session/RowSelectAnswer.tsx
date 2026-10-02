@@ -2,7 +2,7 @@ import { useTheme } from "../../theme/ThemeContext";
 import type { PromptOptionsDto } from "../../types/question";
 import type { AnswerRowDto } from "../../types/answer";
 import { parseMultiValueAnswer } from "../../utils/grading";
-import { isYesNoPool } from "../../utils/questionShape";
+import { isRowComplete, isYesNoPool } from "../../utils/questionShape";
 import { QUESTION_FONT, QUESTION_FONT_FEATURES } from "../../theme/fonts";
 import { PlaceholderText } from "../PlaceholderText";
 
@@ -37,7 +37,8 @@ export function RowSelectAnswer({ prompts, value, onChange, answerRows, answered
     <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
       {prompts.map((row, ri) => {
         const chosen = chosenLabels(value[ri]);
-        const rawCorrect = answeredRowsOnly && chosen.length === 0 ? undefined : answerRows?.[ri]?.answer;
+        const rowAnswer = answerRows?.[ri]?.answer;
+        const rawCorrect = answeredRowsOnly && !isRowComplete(value[ri], rowAnswer) ? undefined : rowAnswer;
         const correctSet =
           rawCorrect !== undefined ? new Set((parseMultiValueAnswer(rawCorrect) ?? [rawCorrect]).map((s) => s.toLowerCase())) : undefined;
         const single = isYesNoPool(row.options);
