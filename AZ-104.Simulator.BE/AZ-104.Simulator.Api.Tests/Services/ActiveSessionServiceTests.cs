@@ -24,6 +24,7 @@ public sealed class ActiveSessionServiceTests
         actual.CurrentIndex.Should().Be(1);
         actual.Answers.Should().ContainKey(7);
         actual.OpenEnded.Should().BeTrue();
+        actual.LiveScore.Should().BeTrue();
     }
 
     [TestMethod]
@@ -79,6 +80,7 @@ public sealed class ActiveSessionServiceTests
                 && s.FlaggedIndexes.SequenceEqual(new[] { 1 })
                 && s.AutoReveal
                 && s.OpenEnded
+                && s.LiveScore
                 && s.TimeLimitSeconds == 1800),
             Arg.Any<CancellationToken>());
     }
@@ -168,6 +170,7 @@ public sealed class ActiveSessionServiceTests
         TimeLimitSeconds = 1800,
         AutoReveal = false,
         OpenEnded = true,
+        LiveScore = true,
         StartedAt = DateTimeOffset.UnixEpoch,
         SavedAt = DateTimeOffset.UnixEpoch.AddMinutes(5),
     };
@@ -185,6 +188,7 @@ public sealed class ActiveSessionServiceTests
             1800,
             AutoReveal: true,
             OpenEnded: true,
+            LiveScore: true,
             DateTimeOffset.UnixEpoch,
             DateTimeOffset.UnixEpoch.AddMinutes(5));
 

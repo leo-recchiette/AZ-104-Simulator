@@ -119,6 +119,7 @@ CREATE TABLE active_session (
     auto_reveal         BOOLEAN   NOT NULL DEFAULT FALSE,
     -- Practice a oltranza: question_numbers sono solo le domande gia' proposte.
     open_ended          BOOLEAN   NOT NULL DEFAULT FALSE,
+    live_score          BOOLEAN   NOT NULL DEFAULT FALSE,
     -- Orologio del client: mai confrontarli con now() del server.
     started_at          TIMESTAMPTZ NOT NULL,
     saved_at            TIMESTAMPTZ NOT NULL,

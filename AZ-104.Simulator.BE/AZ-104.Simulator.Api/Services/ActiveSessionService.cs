@@ -39,6 +39,7 @@ public sealed class ActiveSessionService : IActiveSessionService
             session.TimeLimitSeconds,
             session.AutoReveal,
             session.OpenEnded,
+            session.LiveScore,
             session.StartedAt,
             session.SavedAt);
     }
@@ -60,6 +61,7 @@ public sealed class ActiveSessionService : IActiveSessionService
             TimeLimitSeconds = request.TimeLimitSeconds,
             AutoReveal = request.AutoReveal,
             OpenEnded = request.OpenEnded,
+            LiveScore = request.LiveScore,
             StartedAt = request.StartedAt,
             SavedAt = request.SavedAt,
         };

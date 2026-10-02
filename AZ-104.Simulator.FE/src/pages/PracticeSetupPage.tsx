@@ -26,10 +26,18 @@ export function PracticeSetupPage() {
   const [count, setCount] = useState(20);
   const [timed, setTimed] = useState(false);
   const [autoReveal, setAutoReveal] = useState(false);
+  const [liveScore, setLiveScore] = useState(false);
   const [minutes, setMinutes] = useState(30);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [emptyBank, setEmptyBank] = useState(false);
+
+  // Il punteggio live svelerebbe le risposte prima della soluzione: senza auto-reveal si spegne.
+  function toggleAutoReveal() {
+    const next = !autoReveal;
+    setAutoReveal(next);
+    if (!next) setLiveScore(false);
+  }
 
   async function handleStart() {
     setError(null);
@@ -43,7 +51,7 @@ export function PracticeSetupPage() {
         setLoading(false);
         return;
       }
-      dispatch({ type: "START_SESSION", mode: "practice", questions, timeLimitSeconds: timed ? minutes * 60 : null, autoReveal, openEnded });
+      dispatch({ type: "START_SESSION", mode: "practice", questions, timeLimitSeconds: timed ? minutes * 60 : null, autoReveal, openEnded, liveScore });
       navigate("/session");
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Impossibile caricare le domande.");
@@ -161,7 +169,7 @@ export function PracticeSetupPage() {
               </div>
             </div>
             <button
-              onClick={() => setAutoReveal((p) => !p)}
+              onClick={toggleAutoReveal}
               style={{
                 width: 52, height: 30, borderRadius: 16, border: `1px solid ${autoReveal ? t.ac : t.bd3}`,
                 background: autoReveal ? t.ac : t.track, position: "relative", padding: 0, transition: "background .18s",
@@ -169,6 +177,30 @@ export function PracticeSetupPage() {
               }}
             >
               <span style={{ position: "absolute", top: 3, left: autoReveal ? 26 : 3, width: 22, height: 22, borderRadius: "50%", background: "#fff", boxShadow: "0 1px 3px rgba(0,0,0,.25)", transition: "left .18s" }} />
+            </button>
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, padding: "16px 0", borderTop: `1px solid ${t.bd2}`, opacity: autoReveal ? 1 : 0.55 }}>
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 600 }}>Live score</div>
+              <div style={{ fontSize: 12.5, color: t.fa, marginTop: 2 }}>
+                {!autoReveal
+                  ? "Available with automatic reveal turned on"
+                  : openEnded
+                    ? "What you'd score if you finished now, counting only the questions you answered"
+                    : "What you'd score if you submitted now: unanswered questions count as zero"}
+              </div>
+            </div>
+            <button
+              onClick={() => setLiveScore((p) => !p)}
+              disabled={!autoReveal}
+              style={{
+                width: 52, height: 30, borderRadius: 16, border: `1px solid ${liveScore ? t.ac : t.bd3}`,
+                background: liveScore ? t.ac : t.track, position: "relative", padding: 0, transition: "background .18s",
+                flexShrink: 0, cursor: autoReveal ? "pointer" : "default",
+              }}
+            >
+              <span style={{ position: "absolute", top: 3, left: liveScore ? 26 : 3, width: 22, height: 22, borderRadius: "50%", background: "#fff", boxShadow: "0 1px 3px rgba(0,0,0,.25)", transition: "left .18s" }} />
             </button>
           </div>
 

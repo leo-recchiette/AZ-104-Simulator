@@ -7,13 +7,19 @@ import {
   useDisplaySettings,
 } from "../settings/DisplaySettingsContext";
 
+interface Toggle {
+  value: boolean;
+  onChange: (next: boolean) => void;
+}
+
 interface OptionsMenuProps {
   variant?: "default" | "onDark";
-  autoReveal?: { value: boolean; onChange: (next: boolean) => void };
+  autoReveal?: Toggle;
+  liveScore?: Toggle;
 }
 
 
-export function OptionsMenu({ variant = "default", autoReveal }: OptionsMenuProps) {
+export function OptionsMenu({ variant = "default", autoReveal, liveScore }: OptionsMenuProps) {
   const { theme, tokens: t, toggleTheme } = useTheme();
   const { questionFontSize, setQuestionFontSize } = useDisplaySettings();
   const [open, setOpen] = useState(false);
@@ -101,29 +107,9 @@ export function OptionsMenu({ variant = "default", autoReveal }: OptionsMenuProp
           {autoReveal && (
             <>
               <div style={sectionLabelStyle(t.fa)}>Solutions</div>
-              <button
-                onClick={() => autoReveal.onChange(!autoReveal.value)}
-                role="switch"
-                aria-checked={autoReveal.value}
-                style={{
-                  display: "flex", alignItems: "center", gap: 12, width: "100%", textAlign: "left",
-                  marginBottom: 18, padding: 0, border: "none", background: "none", font: "inherit",
-                  color: autoReveal.value ? t.ac : t.mu,
-                }}
-              >
-                <span
-                  aria-hidden="true"
-                  style={{
-                    flex: "none", width: 38, height: 22, borderRadius: 12, position: "relative",
-                    background: autoReveal.value ? t.ac : t.track,
-                    border: `1px solid ${autoReveal.value ? t.ac : t.bd3}`,
-                    transition: "background .18s",
-                  }}
-                >
-                  <span style={{ position: "absolute", top: 2, left: autoReveal.value ? 18 : 2, width: 16, height: 16, borderRadius: "50%", background: "#fff", boxShadow: "0 1px 3px rgba(0,0,0,.25)", transition: "left .18s" }} />
-                </span>
-                <span style={{ fontSize: 13, fontWeight: 500, lineHeight: 1.35 }}>Reveal automatically when answered</span>
-              </button>
+              <MenuSwitch toggle={autoReveal} label="Reveal automatically when answered" />
+              {/* Dipende dall'auto-reveal: SessionPage lo passa solo quando e' acceso. */}
+              {liveScore && <MenuSwitch toggle={liveScore} label="Show the live score" />}
               <div style={{ height: 1, background: t.bd2, margin: "0 0 16px" }} />
             </>
           )}
@@ -140,6 +126,35 @@ export function OptionsMenu({ variant = "default", autoReveal }: OptionsMenuProp
         </div>
       )}
     </div>
+  );
+}
+
+function MenuSwitch({ toggle, label }: { toggle: Toggle; label: string }) {
+  const { tokens: t } = useTheme();
+  return (
+    <button
+      onClick={() => toggle.onChange(!toggle.value)}
+      role="switch"
+      aria-checked={toggle.value}
+      style={{
+        display: "flex", alignItems: "center", gap: 12, width: "100%", textAlign: "left",
+        marginBottom: 18, padding: 0, border: "none", background: "none", font: "inherit",
+        color: toggle.value ? t.ac : t.mu,
+      }}
+    >
+      <span
+        aria-hidden="true"
+        style={{
+          flex: "none", width: 38, height: 22, borderRadius: 12, position: "relative",
+          background: toggle.value ? t.ac : t.track,
+          border: `1px solid ${toggle.value ? t.ac : t.bd3}`,
+          transition: "background .18s",
+        }}
+      >
+        <span style={{ position: "absolute", top: 2, left: toggle.value ? 18 : 2, width: 16, height: 16, borderRadius: "50%", background: "#fff", boxShadow: "0 1px 3px rgba(0,0,0,.25)", transition: "left .18s" }} />
+      </span>
+      <span style={{ fontSize: 13, fontWeight: 500, lineHeight: 1.35 }}>{label}</span>
+    </button>
   );
 }
 

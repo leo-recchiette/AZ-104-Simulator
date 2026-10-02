@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSession } from "../session/SessionContext";
 import { useTheme } from "../theme/ThemeContext";
 import { useElapsedTime } from "../hooks/useElapsedTime";
+import { useLiveScore } from "../hooks/useLiveScore";
 import { checkAnswers, getScore, saveAttempt } from "../api/results";
 import { getExam } from "../api/questions";
 import { ApiError } from "../api/client";
@@ -13,18 +14,28 @@ import { groupMembers, sessionUnits, unitsAnswered, unitsStarted } from "../util
 import { isAnswerStarted } from "../utils/questionShape";
 import { OptionsMenu } from "../components/OptionsMenu";
 import { HEADER_GRADIENT } from "../theme/tokens";
-import { MAX_QUESTION_COUNT } from "../constants";
+import { MAX_QUESTION_COUNT, PASS_MARK_PERCENT } from "../constants";
 
 // Non token del tema: stanno sul banner blu, uguale in light e dark.
 const CLOCK_OK = "#3ddc84";
 const CLOCK_WARN = "#ffd23f";
 const CLOCK_DANGER = "#ff6b6b";
+const SCORE_ORANGE = "#ff9f43";
 const WARN_FRACTION = 1 / 3;
 const DANGER_FRACTION = 0.1;
 // Debounce: le hotspot si compilano una riga alla volta.
 const AUTO_REVEAL_DELAY_MS = 400;
 // Riferimento stabile: un [] nuovo a ogni render rilancerebbe l'effetto dell'auto-reveal.
 const NO_ANSWER: string[] = [];
+
+/** Fasce del punteggio live: verde dalla soglia di superamento, poi giallo, arancione e rosso. */
+function scoreColor(percentage: number | null): string {
+  if (percentage === null) return "#ffffff";
+  if (percentage >= PASS_MARK_PERCENT) return CLOCK_OK;
+  if (percentage >= PASS_MARK_PERCENT - 10) return CLOCK_WARN;
+  if (percentage >= PASS_MARK_PERCENT - 20) return SCORE_ORANGE;
+  return CLOCK_DANGER;
+}
 
 function fmt(totalSeconds: number): string {
   const m = Math.floor(totalSeconds / 60);
@@ -67,12 +78,19 @@ export function SessionPage() {
     [state.questions, units, state.answers],
   );
 
+  // A numero fisso tutte, anche senza risposta: quelle omesse non conterebbero nel denominatore.
+  // A oltranza solo le unita' cominciate, ma intere: le parti lasciate in bianco valgono zero.
+  // Le stesse per l'invio e per il punteggio live, che cosi' mostra proprio cio' che l'invio darebbe.
+  const scored = useMemo(
+    () => (state.openEnded ? state.questions.filter((_, i) => unitStarted[units.unitOf[i]]) : state.questions),
+    [state.openEnded, state.questions, unitStarted, units],
+  );
+  const submissions = useMemo(
+    () => scored.map((q) => ({ questionNumber: q.number, userAnswers: state.answers[q.number] ?? [] })),
+    [scored, state.answers],
+  );
+
   const handleFinish = useCallback(async () => {
-    // A numero fisso tutte, anche senza risposta: quelle omesse non conterebbero nel denominatore.
-    // A oltranza solo le unita' cominciate, ma intere: le parti lasciate in bianco valgono zero.
-    const scored = state.openEnded
-      ? state.questions.filter((_, i) => unitStarted[units.unitOf[i]])
-      : state.questions;
     // A oltranza senza risposte non c'e' niente da valutare: la sessione si scarta.
     if (scored.length === 0) {
       dispatch({ type: "RESET" });
@@ -83,10 +101,6 @@ export function SessionPage() {
     setError(null);
     setSubmitting(true);
     try {
-      const submissions = scored.map((q) => ({
-        questionNumber: q.number,
-        userAnswers: state.answers[q.number] ?? [],
-      }));
       const score = await getScore(submissions);
       dispatch({ type: "FINISH_SESSION", score, timeUsedSeconds: elapsedSecRef.current, questions: scored });
       navigate("/results");
@@ -116,13 +130,15 @@ export function SessionPage() {
       setError(err instanceof ApiError ? err.message : "Impossibile calcolare il punteggio.");
       setSubmitting(false);
     }
-  }, [dispatch, navigate, state.answers, state.questions, state.mode, state.startedAt, state.openEnded, units, unitStarted]);
+  }, [dispatch, navigate, scored, submissions, state.mode, state.startedAt]);
 
   const elapsedMs = useElapsedTime(state.startedAt, paused);
   const elapsedSec = Math.floor(elapsedMs / 1000);
   elapsedSecRef.current = elapsedSec;
   const limit = state.timeLimitSeconds;
   const remaining = limit ? Math.max(0, limit - elapsedSec) : 0;
+  const showLiveScore = isPractice && state.liveScore;
+  const liveScore = useLiveScore(showLiveScore ? submissions : null);
 
   useEffect(() => {
     if (!limit) return;
@@ -227,6 +243,10 @@ export function SessionPage() {
   if (limit) timePct = (elapsedSec / limit) * 100;
   else if (!state.openEnded) timePct = (answeredCount / totalUnits) * 100;
 
+  const scoreHint = state.openEnded
+    ? "What you'd score if you finished now: only the questions you answered count."
+    : "What you'd score if you submitted now: unanswered questions count as zero.";
+
   const members = groupMembers(state.questions, state.currentIndex);
   const card = (
     <QuestionCard
@@ -285,6 +305,14 @@ export function SessionPage() {
             </span>
           </div>
           <div style={{ flex: 1 }} />
+          {showLiveScore && (
+            <div title={scoreHint} style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+              <span style={{ fontSize: 12.5, color: "#e4e7ee" }}>Score</span>
+              <span style={{ fontSize: 20, fontWeight: 600, fontVariantNumeric: "tabular-nums", color: scoreColor(liveScore), transition: "color .3s" }}>
+                {liveScore === null ? "—" : `${liveScore.toFixed(1)}%`}
+              </span>
+            </div>
+          )}
           <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
             <span style={{ fontSize: 12.5, color: "#e4e7ee" }}>{timerCaption}</span>
             <span style={{ fontSize: 20, fontWeight: 600, fontVariantNumeric: "tabular-nums", color: timeColor }}>{timeLabel}</span>
@@ -312,6 +340,11 @@ export function SessionPage() {
             autoReveal={
               isPractice
                 ? { value: state.autoReveal, onChange: (next) => dispatch({ type: "SET_AUTO_REVEAL", autoReveal: next }) }
+                : undefined
+            }
+            liveScore={
+              isPractice && state.autoReveal
+                ? { value: state.liveScore, onChange: (next) => dispatch({ type: "SET_LIVE_SCORE", liveScore: next }) }
                 : undefined
             }
           />

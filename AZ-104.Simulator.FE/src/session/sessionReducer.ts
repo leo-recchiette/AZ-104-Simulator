@@ -21,6 +21,11 @@ export interface SessionState {
   openEnded: boolean;
   /** Le domande ancora da proporre a oltranza. null dopo un ripristino: non si salva, va ripescato. */
   pool: QuestionDto[] | null;
+  /**
+   * Percentuale che darebbe l'invio adesso, nell'header. Solo con autoReveal: senza, svelerebbe le
+   * risposte prima della soluzione. Sempre false in Simulation.
+   */
+  liveScore: boolean;
   startedAt: number | null;
   status: "idle" | "in-progress" | "finished";
   score: ExamScoreDto | null;
@@ -31,7 +36,7 @@ export interface SessionState {
 }
 
 export type SessionAction =
-  | { type: "START_SESSION"; mode: SessionMode; questions: QuestionDto[]; timeLimitSeconds: number | null; autoReveal?: boolean; openEnded?: boolean }
+  | { type: "START_SESSION"; mode: SessionMode; questions: QuestionDto[]; timeLimitSeconds: number | null; autoReveal?: boolean; openEnded?: boolean; liveScore?: boolean }
   | { type: "RESTORE_SESSION"; state: SessionState }
   | { type: "SET_ANSWER"; questionNumber: number; answer: string[] }
   | { type: "GO_NEXT" }
@@ -40,6 +45,7 @@ export type SessionAction =
   | { type: "SET_POOL"; questions: QuestionDto[] }
   | { type: "SET_CHECK_RESULT"; questionNumber: number; result: AnswerCheckResultDto }
   | { type: "SET_AUTO_REVEAL"; autoReveal: boolean }
+  | { type: "SET_LIVE_SCORE"; liveScore: boolean }
   | { type: "TOGGLE_FLAG"; index: number }
   /** questions: quelle valutate. A oltranza sono meno di quelle proposte. */
   | { type: "FINISH_SESSION"; score: ExamScoreDto; timeUsedSeconds: number; questions: QuestionDto[] }
@@ -57,6 +63,7 @@ export const initialSessionState: SessionState = {
   autoReveal: false,
   openEnded: false,
   pool: null,
+  liveScore: false,
   startedAt: null,
   status: "idle",
   score: null,
@@ -78,6 +85,7 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
         autoReveal: action.mode === "practice" && !!action.autoReveal,
         openEnded,
         pool: openEnded ? action.questions.slice(shown) : null,
+        liveScore: action.mode === "practice" && !!action.autoReveal && !!action.liveScore,
         startedAt: Date.now(),
         status: "in-progress",
       };
@@ -123,8 +131,14 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
       return { ...state, pool: action.questions.filter((q) => !shown.has(q.number)) };
     }
 
-    case "SET_AUTO_REVEAL":
-      return { ...state, autoReveal: state.mode === "practice" && action.autoReveal };
+    // Il punteggio live non sopravvive all'auto-reveal spento.
+    case "SET_AUTO_REVEAL": {
+      const autoReveal = state.mode === "practice" && action.autoReveal;
+      return { ...state, autoReveal, liveScore: autoReveal && state.liveScore };
+    }
+
+    case "SET_LIVE_SCORE":
+      return { ...state, liveScore: state.autoReveal && action.liveScore };
 
     case "SET_CHECK_RESULT":
       return {

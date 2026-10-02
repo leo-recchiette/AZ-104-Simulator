@@ -21,6 +21,9 @@ public sealed record ActiveSession
     /// <summary>Practice a oltranza: QuestionNumbers sono solo le domande gia' proposte.</summary>
     public required bool OpenEnded { get; init; }
 
+    /// <summary>Practice: percentuale dell'esame aggiornata a ogni risposta.</summary>
+    public required bool LiveScore { get; init; }
+
     /// <summary>Orologio del client: la differenza e' il tempo giocato.</summary>
     public required DateTimeOffset StartedAt { get; init; }
 

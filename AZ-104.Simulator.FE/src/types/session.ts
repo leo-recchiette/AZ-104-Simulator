@@ -13,6 +13,8 @@ export interface SaveActiveSessionDto {
   autoReveal: boolean;
   /** Practice a oltranza: questionNumbers sono solo le domande proposte finora. */
   openEnded: boolean;
+  /** Practice: percentuale dell'esame aggiornata a ogni risposta. */
+  liveScore: boolean;
   /** ISO 8601, entrambi dall'orologio di questo client: la differenza e' il tempo gia' giocato. */
   startedAt: string;
   savedAt: string;

@@ -11,6 +11,7 @@ internal sealed record ActiveSessionRow
     public int? TimeLimitSeconds { get; init; }
     public required bool AutoReveal { get; init; }
     public required bool OpenEnded { get; init; }
+    public required bool LiveScore { get; init; }
     public required DateTimeOffset StartedAt { get; init; }
     public required DateTimeOffset SavedAt { get; init; }
 }

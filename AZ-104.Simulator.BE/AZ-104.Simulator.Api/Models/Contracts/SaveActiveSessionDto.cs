@@ -10,5 +10,6 @@ public sealed record SaveActiveSessionDto(
     int? TimeLimitSeconds,
     bool AutoReveal,
     bool OpenEnded,
+    bool LiveScore,
     DateTimeOffset StartedAt,
     DateTimeOffset SavedAt);
