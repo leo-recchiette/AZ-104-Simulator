@@ -14,9 +14,8 @@ const SessionContext = createContext<SessionContextValue | null>(null);
 
 const SAVE_DEBOUNCE_MS = 600;
 
-/** Stesso criterio dello storico: basta una risposta non vuota, anche una riga di hotspot. */
 function hasAnyAnswer(state: SessionState): boolean {
-  return Object.values(state.answers).some((answer) => answer.some((value) => value.trim() !== ""));
+  return Object.values(state.answers).some((answer) => answer.some((value) => value && value.trim() !== ""));
 }
 
 function toSaveDto(state: SessionState): SaveActiveSessionDto | null {

@@ -91,8 +91,8 @@ export function SessionPage() {
       dispatch({ type: "FINISH_SESSION", score, timeUsedSeconds: elapsedSecRef.current, questions: scored });
       navigate("/results");
 
-      // Una sessione senza alcuna risposta non va nello storico. Il salvataggio e' best-effort.
-      const answeredAnything = submissions.some((s) => s.userAnswers.some((a) => a.trim() !== ""));
+      
+      const answeredAnything = submissions.some((s) => s.userAnswers.some((a) => a && a.trim() !== ""));
 
       if (!answeredAnything) {
         dispatch({ type: "SET_HISTORY_OUTCOME", outcome: "discarded" });
