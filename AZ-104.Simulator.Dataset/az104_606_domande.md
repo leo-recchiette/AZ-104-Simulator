@@ -5174,7 +5174,7 @@ You have an Azure subscription that contains three virtual machines named VM1, V
 - **A.** Create a proximity placement group.
 - **B.** Deallocate VM1. **← CORRETTA**
 - **C.** Convert AvSet1 into a managed availability set.
-- **D.** Shut down VM3 and VM3.
+- **D.** Shut down VM2 and VM3.
 
 **Risposta corretta:** B
 
