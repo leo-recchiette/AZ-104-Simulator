@@ -3097,7 +3097,7 @@ You have an Azure subscription. The subscription contains a storage account name
 ## Domanda 204
 *Tipo: hotspot_yes_no · fonte: manual_vision*
 
-You have an Azure subscription. You plan to deploy a storage account named storage1 by using the following Azure Resource Manager (ARM) template. For each of the following statements, select Yes if the statement is hue. Otherwise, select No. NOTE: Each correct selection is worth one point.
+You have an Azure subscription. You plan to deploy a storage account named storage1 by using the following Azure Resource Manager (ARM) template. For each of the following statements, select Yes if the statement is true. Otherwise, select No. NOTE: Each correct selection is worth one point.
 
 **Risposta corretta:** Changes made to the data in storage1 can be rolled back after seven days. -> No | Only users located in the East US Azure region can connect to storage1. -> No | Three copies of storage1 will be maintained in the East US Azure region. -> Yes
 > Immagini: q204_post0.png
