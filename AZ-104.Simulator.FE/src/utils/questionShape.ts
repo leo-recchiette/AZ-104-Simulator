@@ -1,6 +1,6 @@
 import type { OptionDto, QuestionDto } from "../types/question";
 import type { QuestionAnswerDto } from "../types/answer";
-import { gradeMultipleChoice, gradeRows, parseMultiValueAnswer } from "./grading";
+import { gradeMultipleChoice, gradeRows, parseMultiValueAnswer, pointsEarned } from "./grading";
 
 export type AnswerShape = "options" | "draggable" | "prompts";
 
@@ -37,6 +37,13 @@ export function isAnswerComplete(question: QuestionDto, value: string[], correct
   if (shape === "options") return value.length >= correct.correctLetters.length;
   if (shape === "draggable") return value.filter(Boolean).length >= correct.answerRows.length;
   return question.prompts.every((_, ri) => isRowComplete(value[ri], correct.answerRows[ri]?.answer));
+}
+
+/** Come la review: basta un punto perso. Mai prima che l'auto-reveal mostri la soluzione. */
+export function isRevealedWrong(question: QuestionDto, value: string[], correct: QuestionAnswerDto): boolean {
+  if (!isAnswerComplete(question, value, correct)) return false;
+  const [earned, total] = pointsEarned(getAnswerShape(question), value, correct, question.options.map((o) => o.letter));
+  return earned < total;
 }
 
 /** Un pool Yes/No e' a scelta singola: l'unico caso in cui lo si sa senza rivelare nulla. */

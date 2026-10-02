@@ -6,11 +6,13 @@ interface GroupNavProps {
   members: GroupMember[];
   currentIndex: number;
   answers: Record<number, string[]>;
+  /** Per indice in questions; null senza auto-reveal. */
+  wrong: boolean[] | null;
   onSelect: (index: number) => void;
 }
 
 /** Elenco laterale per saltare fra le sotto-domande di uno scenario. */
-export function GroupNav({ members, currentIndex, answers, onSelect }: GroupNavProps) {
+export function GroupNav({ members, currentIndex, answers, wrong, onSelect }: GroupNavProps) {
   const { tokens: t } = useTheme();
   const label = groupTypeLabel(members[0]?.question.groupType ?? null);
 
@@ -44,15 +46,26 @@ export function GroupNav({ members, currentIndex, answers, onSelect }: GroupNavP
               }}
             >
               <span style={{ flex: 1 }}>Question {position + 1}</span>
-              {/* Verde = risposta data, non giusta. */}
-              <span
-                role="img"
-                aria-label={answered ? "Answered" : "Not answered"}
-                title={answered ? "Answered" : "Not answered"}
-                style={{ flex: "none", fontSize: 10, lineHeight: 1, color: answered ? t.ok : t.er }}
-              >
-                ●
-              </span>
+              {/* Verde = risposta data, non giusta. Il badge "Wrong" qui non ci sta: la ✗ della review. */}
+              {wrong?.[member.index] ? (
+                <span
+                  role="img"
+                  aria-label="Answered incorrectly"
+                  title="Answered incorrectly"
+                  style={{ flex: "none", fontSize: 13, lineHeight: 1, fontWeight: 700, color: t.er }}
+                >
+                  ✗
+                </span>
+              ) : (
+                <span
+                  role="img"
+                  aria-label={answered ? "Answered" : "Not answered"}
+                  title={answered ? "Answered" : "Not answered"}
+                  style={{ flex: "none", fontSize: 10, lineHeight: 1, color: answered ? t.ok : t.er }}
+                >
+                  ●
+                </span>
+              )}
             </button>
           );
         })}

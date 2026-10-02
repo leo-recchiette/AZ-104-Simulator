@@ -4,6 +4,7 @@ import type { QuestionDto } from "../../types/question";
 import { isQuestionAnswered } from "../../utils/questionShape";
 import { groupTypeLabel, type SessionUnits } from "../../utils/groups";
 import { NavigatorEntry, NavigatorFilter, NavigatorPanel } from "../NavigatorPanel";
+import { WrongBadge } from "./WrongBadge";
 
 interface QuestionNavigatorProps {
   open: boolean;
@@ -13,6 +14,8 @@ interface QuestionNavigatorProps {
   unitAnswered: boolean[];
   answers: Record<number, string[]>;
   flags: Record<number, boolean>;
+  /** Per indice in questions; null senza auto-reveal. */
+  wrong: boolean[] | null;
   currentIndex: number;
   onOpen: () => void;
   onClose: () => void;
@@ -21,7 +24,7 @@ interface QuestionNavigatorProps {
 
 /** Elenco delle domande per unita', con le sotto-domande annidate, per saltare ai buchi. */
 export function QuestionNavigator({
-  open, focusUnanswered, questions, units, unitAnswered, answers, flags, currentIndex,
+  open, focusUnanswered, questions, units, unitAnswered, answers, flags, wrong, currentIndex,
   onOpen, onClose, onSelect,
 }: QuestionNavigatorProps) {
   const { tokens: t } = useTheme();
@@ -41,6 +44,8 @@ export function QuestionNavigator({
   const totalUnits = units.members.length;
   const answeredUnits = unitAnswered.filter(Boolean).length;
   const missing = totalUnits - answeredUnits;
+  const unitWrong = units.members.map((memberIndexes) => memberIndexes.some((i) => !!wrong?.[i]));
+  const wrongUnits = unitWrong.filter(Boolean).length;
 
   const visibleUnits = units.members
     .map((memberIndexes, unit) => ({ unit, memberIndexes }))
@@ -53,7 +58,7 @@ export function QuestionNavigator({
       onOpen={onOpen}
       onClose={onClose}
       title="All questions"
-      subtitle={`${answeredUnits} of ${totalUnits} answered${missing > 0 ? ` · ${missing} left` : ""}`}
+      subtitle={`${answeredUnits} of ${totalUnits} answered${missing > 0 ? ` · ${missing} left` : ""}${wrongUnits > 0 ? ` · ${wrongUnits} wrong` : ""}`}
       filter={
         <NavigatorFilter active={onlyUnanswered} onClick={() => setOnlyUnanswered((v) => !v)} label="Only unanswered" />
       }
@@ -91,6 +96,7 @@ export function QuestionNavigator({
               marks={
                 <>
                   <Flag flagged={!!flags[index]} />
+                  {wrong?.[index] && <WrongBadge />}
                   <Dot answered={answered} />
                 </>
               }
@@ -130,6 +136,7 @@ export function QuestionNavigator({
                   {groupTypeLabel(questions[memberIndexes[0]].groupType)} · {answeredMembers}/{memberIndexes.length}
                 </span>
               </span>
+              {unitWrong[unit] && <WrongBadge />}
               <Dot answered={answered} />
             </button>
 
@@ -145,6 +152,7 @@ export function QuestionNavigator({
                     marks={
                       <>
                         <Flag flagged={!!flags[index]} />
+                        {wrong?.[index] && <WrongBadge />}
                         <Dot answered={isQuestionAnswered(questions[index], answers[questions[index].number] ?? [])} />
                       </>
                     }

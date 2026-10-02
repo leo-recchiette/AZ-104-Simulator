@@ -11,7 +11,7 @@ import { QuestionCard } from "../components/session/QuestionCard";
 import { GroupNav } from "../components/session/GroupNav";
 import { QuestionNavigator } from "../components/session/QuestionNavigator";
 import { groupMembers, sessionUnits, unitsAnswered, unitsStarted } from "../utils/groups";
-import { isAnswerStarted } from "../utils/questionShape";
+import { isAnswerStarted, isRevealedWrong } from "../utils/questionShape";
 import { OptionsMenu } from "../components/OptionsMenu";
 import { HEADER_GRADIENT } from "../theme/tokens";
 import { MAX_QUESTION_COUNT, PASS_MARK_PERCENT } from "../constants";
@@ -169,6 +169,45 @@ export function SessionPage() {
     return () => clearTimeout(timer);
   }, [isPractice, state.autoReveal, state.checkResults, question, value, dispatch]);
 
+  const autoRevealOn = isPractice && state.autoReveal;
+  // Per indice. Solo con l'auto-reveal, l'unico caso in cui la correzione e' gia' sullo schermo.
+  const wrong = useMemo(
+    () =>
+      autoRevealOn
+        ? state.questions.map((q) => {
+            const correct = state.checkResults[q.number]?.correctAnswer;
+            return !!correct && isRevealedWrong(q, state.answers[q.number] ?? [], correct);
+          })
+        : null,
+    [autoRevealOn, state.questions, state.checkResults, state.answers],
+  );
+
+  // Le correzioni stanno solo in memoria: dopo un ripristino, o lasciando una domanda prima del
+  // debounce, mancano. Si recuperano in blocco; la corrente ha gia' il suo auto-reveal.
+  const missingChecks = useMemo(
+    () =>
+      autoRevealOn
+        ? state.questions
+            .filter((q, i) => i !== state.currentIndex && !state.checkResults[q.number] && isAnswerStarted(q, state.answers[q.number] ?? []))
+            .map((q) => ({ questionNumber: q.number, userAnswers: state.answers[q.number] ?? [] }))
+        : [],
+    [autoRevealOn, state.questions, state.currentIndex, state.checkResults, state.answers],
+  );
+
+  useEffect(() => {
+    if (missingChecks.length === 0) return;
+    let cancelled = false;
+    checkAnswers(missingChecks)
+      .then((results) => {
+        if (cancelled) return;
+        for (const result of results) dispatch({ type: "SET_CHECK_RESULT", questionNumber: result.questionNumber, result });
+      })
+      .catch((err) => console.error("Impossibile recuperare le correzioni:", err));
+    return () => {
+      cancelled = true;
+    };
+  }, [missingChecks, dispatch]);
+
   if (!question) return null;
 
   async function handleReveal() {
@@ -270,6 +309,7 @@ export function SessionPage() {
         members={members}
         currentIndex={state.currentIndex}
         answers={state.answers}
+        wrong={wrong}
         onSelect={(index) => dispatch({ type: "GO_TO", index })}
       />
       {/* minWidth 0: altrimenti il flex item non si restringe. */}
@@ -419,6 +459,7 @@ export function SessionPage() {
         unitAnswered={unitAnswered}
         answers={state.answers}
         flags={state.flags}
+        wrong={wrong}
         currentIndex={state.currentIndex}
         onOpen={() => setNavFilter("all")}
         onClose={() => setNavFilter(null)}
