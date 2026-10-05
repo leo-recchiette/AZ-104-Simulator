@@ -5037,7 +5037,6 @@
   "answer_text": "Three resource groups are created when you run the script. -> No | A resource group named RGroup5 is created. -> No | All the resource groups are created in the East US Azure region. -> Yes",
   "images_question": [
    "q135_pre0.png",
-   "q135_pre1.png",
    "q135_pre2.png"
   ],
   "images_answer": [
@@ -8056,8 +8055,7 @@
   "all_actions": [],
   "answer_text": "Setting 1 -> Access Control (IAM) | Setting 2 -> Geo-replication",
   "images_question": [
-   "q210_pre0.png",
-   "q210_pre1.png"
+   "q210_pre0.png"
   ],
   "images_answer": [
    "q210_post0.png"
@@ -8660,7 +8658,6 @@
   "answer_text": "To minimize the network costs of accessing adatum22, modify the [answer choice] setting. -> Default routing tier | After adatum22 is created, you can modify the [answer choice] setting. -> Encryption type",
   "images_question": [
    "q225_pre0.png",
-   "q225_pre1.png",
    "q225_pre2.png"
   ],
   "images_answer": [
@@ -13765,7 +13762,6 @@
   "answer_text": "You can deploy a virtual machine to RG1. -> Yes | You can deploy a virtual machine to RG2. -> No | You can manually create a resource group named RG3. -> Yes",
   "images_question": [
    "q354_pre0.png",
-   "q354_pre1.png",
    "q354_pre2.png"
   ],
   "images_answer": [
