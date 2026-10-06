@@ -4769,10 +4769,10 @@ You deploy an Azure Kubernetes Service (AKS) cluster that has the network profil
 
 You have the App Service plan shown in the following exhibit. The scale-in settings for the App Service plan are configured as shown in the following exhibit. The scale out rule is configured with the same duration and cool down tile as the scale in rule. Use the drop-down menus to select the answer choice that completes each statement based on the information presented in the graphic. NOTE: Each correct selection is worth one point.
 
-**Risposta corretta:** If after deployment CPU usage is 70 percent for one hour and then reaches 90 percent for five minutes, at that time the total number of instances will be [answer choice]. -> 5 | If after deployment the CPU maintains constant usage of 90 percent for one hour, and then the average CPU usage is below 25 percent for nine minutes, at that point the number of instances will be [answer choice]. -> 3
+**Risposta corretta:** If after deployment CPU usage is 70 percent for one hour and then reaches 90 percent for five minutes, at that time the total number of instances will be [answer choice]. -> 2 | If after deployment the CPU maintains constant usage of 90 percent for one hour, and then the average CPU usage is below 25 percent for nine minutes, at that point the number of instances will be [answer choice]. -> 4
 > Immagini: q306_post0.png
 
-**Spiegazione:** Box 1: 5 - The maximum 5 will kept as the CPU Usage >= 30. Box 2: 3 - As soon as the average CPU usage drops below 30%, the count will decrease by 1. After the 5 minute cool-down it will decrease by another 1, reaching 3. Reference: https://docs.microsoft.com/en-us/azure/azure-monitor/learn/tutorial-autoscale-performance- schedule
+**Spiegazione:** Box 1: 2 - CPU at 70% for one hour triggers neither rule (scale out needs a maximum CPU above 85%, scale in an average CPU below 30%), so the plan stays at the default of 1 instance. Once the CPU reaches 90% for five minutes, the scale out condition holds for the whole 5-minute duration and the count increases by 1, to 2. Box 2: 4 - One hour at 90% triggers the scale out rule repeatedly until the maximum of 5 instances is reached. When the average CPU drops below 25%, the scale in rule fires after 5 minutes and the count decreases by 1, to 4. The 5-minute cool down that follows only ends at minute 10, so at minute 9 no second scale in has happened yet. Reference: https://docs.microsoft.com/en-us/azure/azure-monitor/learn/tutorial-autoscale-performance- schedule
 
 ---
 
