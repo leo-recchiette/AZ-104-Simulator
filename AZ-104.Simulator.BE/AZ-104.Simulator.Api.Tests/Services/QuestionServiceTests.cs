@@ -15,7 +15,7 @@ public sealed class QuestionServiceTests
     {
         var sut = new QuestionService(Repository(questions: [Question()], options: [Option()]));
 
-        var actual = await sut.GetRandomSetAsync(count: 1, type: null, CancellationToken.None);
+        var actual = await sut.GetRandomSetAsync(count: 1, type: null, DrawMode.Random, CancellationToken.None);
 
         var expected = new[]
         {
@@ -33,9 +33,21 @@ public sealed class QuestionServiceTests
             questions: [Question(), Grouped(2, "ss01"), Grouped(3, "ss01"), Grouped(50, "ss09")],
             options: []));
 
-        var actual = await sut.GetRandomSetAsync(count: 3, type: null, CancellationToken.None);
+        var actual = await sut.GetRandomSetAsync(count: 3, type: null, DrawMode.Random, CancellationToken.None);
 
         actual.Select(q => q.Number).Should().Equal(1, 2, 3, 50);
+    }
+
+    [TestMethod]
+    public async Task Should_Forward_The_DrawMode_To_The_Repository()
+    {
+        // Come pescare lo decide la query: il service deve solo inoltrarlo.
+        var repository = Repository(questions: [Question()], options: []);
+        var sut = new QuestionService(repository);
+
+        await sut.GetRandomSetAsync(count: 5, type: null, DrawMode.LeastSeen, CancellationToken.None);
+
+        await repository.Received(1).GetRandomAsync(5, null, DrawMode.LeastSeen, Arg.Any<CancellationToken>());
     }
 
     #region Utils
@@ -43,7 +55,7 @@ public sealed class QuestionServiceTests
     private static IQuestionRepository Repository(IReadOnlyList<Question> questions, IReadOnlyList<Option> options)
     {
         var repository = Substitute.For<IQuestionRepository>();
-        repository.GetRandomAsync(Arg.Any<int>(), Arg.Any<QuestionType?>(), Arg.Any<CancellationToken>()).Returns(questions);
+        repository.GetRandomAsync(Arg.Any<int>(), Arg.Any<QuestionType?>(), Arg.Any<DrawMode>(), Arg.Any<CancellationToken>()).Returns(questions);
         repository.GetOptionsAsync(Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<CancellationToken>()).Returns(options);
         repository.GetAnswerRowsAsync(Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<CancellationToken>()).Returns([]);
         repository.GetAnswerRowOptionsAsync(Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<CancellationToken>()).Returns([]);

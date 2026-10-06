@@ -1,26 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../theme/ThemeContext";
-import { useSession } from "../session/SessionContext";
-import { getExam } from "../api/questions";
 import { getAllAttempts } from "../api/results";
-import { ApiError } from "../api/client";
 import type { ExamAttemptDto } from "../types/answer";
 import { FloatingThemeToggle } from "../components/FloatingThemeToggle";
-import { EmptyBankDialog } from "../components/EmptyBankDialog";
 import { ResumeSessionBanner } from "../components/ResumeSessionBanner";
 import { ProgressChart } from "../components/ProgressChart";
-import { EXAM_QUESTION_COUNT, EXAM_TIME_LIMIT_MINUTES, EXAM_TIME_LIMIT_SECONDS, PASS_MARK_PERCENT } from "../constants";
+import { EXAM_QUESTION_COUNT, EXAM_TIME_LIMIT_MINUTES, PASS_MARK_PERCENT } from "../constants";
 import { MODE_BG_GRADIENT } from "../theme/tokens";
 import badgeUrl from "../assets/microsoft-certified-associate-badge.png";
 
 export function ModeSelectPage() {
   const navigate = useNavigate();
   const { theme, tokens: t } = useTheme();
-  const { dispatch } = useSession();
-  const [startingSimulation, setStartingSimulation] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [emptyBank, setEmptyBank] = useState(false);
   const [history, setHistory] = useState<ExamAttemptDto[]>([]);
 
   useEffect(() => {
@@ -29,25 +21,6 @@ export function ModeSelectPage() {
       .then(setHistory)
       .catch((err) => console.error("Impossibile caricare lo storico dei tentativi:", err));
   }, []);
-
-  async function goSimulation() {
-    setError(null);
-    setStartingSimulation(true);
-    try {
-      const questions = await getExam(EXAM_QUESTION_COUNT);
-      // 200 con []: question bank vuoto, non un errore dell'API.
-      if (questions.length === 0) {
-        setEmptyBank(true);
-        setStartingSimulation(false);
-        return;
-      }
-      dispatch({ type: "START_SESSION", mode: "exam", questions, timeLimitSeconds: EXAM_TIME_LIMIT_SECONDS });
-      navigate("/session");
-    } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Impossibile caricare le domande.");
-      setStartingSimulation(false);
-    }
-  }
 
   const modeBgGrad = theme === "dark" ? MODE_BG_GRADIENT.dark : MODE_BG_GRADIENT.light;
 
@@ -63,7 +36,6 @@ export function ModeSelectPage() {
   return (
     <>
       <FloatingThemeToggle />
-      {emptyBank && <EmptyBankDialog onClose={() => setEmptyBank(false)} />}
       <div style={{ flex: 1, position: "relative", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 24px", background: `${modeBgGrad}, ${t.bg}` }}>
         <div style={{ position: "absolute", top: -180, left: -120, width: 520, height: 520, borderRadius: "50%", background: "radial-gradient(circle, rgba(0,120,212,.32), transparent 70%)", filter: "blur(10px)", pointerEvents: "none" }} />
         <div style={{ position: "absolute", bottom: -220, right: -160, width: 640, height: 640, borderRadius: "50%", background: "radial-gradient(circle, rgba(80,230,255,.18), transparent 70%)", filter: "blur(10px)", pointerEvents: "none" }} />
@@ -94,10 +66,6 @@ export function ModeSelectPage() {
             />
           </div>
 
-          {error && (
-            <p style={{ margin: "0 0 20px", color: t.er, fontSize: 14 }}>{error}</p>
-          )}
-
           <ResumeSessionBanner />
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 18 }}>
@@ -125,13 +93,11 @@ export function ModeSelectPage() {
             </button>
 
             <button
-              onClick={goSimulation}
-              disabled={startingSimulation}
+              onClick={() => navigate("/simulation/setup")}
               style={{
                 textAlign: "left", background: t.card, border: `1px solid ${t.bd}`, borderRadius: 14,
                 padding: "26px 24px 24px", boxShadow: `0 1px 2px ${t.sh}`, color: "inherit",
                 transition: "box-shadow .18s, border-color .18s, transform .18s", font: "inherit",
-                opacity: startingSimulation ? 0.7 : 1,
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
@@ -144,9 +110,7 @@ export function ModeSelectPage() {
                 <span style={{ fontSize: 19, fontWeight: 600 }}>Simulation</span>
               </div>
               <p style={{ margin: 0, color: t.mu, fontSize: 14, lineHeight: 1.5 }}>
-                {startingSimulation
-                  ? "Loading questions..."
-                  : `${EXAM_QUESTION_COUNT} questions drawn at random from the pool, ${EXAM_TIME_LIMIT_MINUTES} minutes on the clock, no solutions until you submit.`}
+                {`${EXAM_QUESTION_COUNT} questions, ${EXAM_TIME_LIMIT_MINUTES} minutes on the clock, no solutions until you submit.`}
               </p>
             </button>
           </div>

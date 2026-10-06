@@ -1,5 +1,8 @@
 export type QuestionType = "multiple_choice" | "drag_and_drop" | "hotspot" | "hotspot_yes_no";
 
+/** Come pescare dal bank: a caso, o prima le domande proposte meno volte nelle sessioni salvate. */
+export type DrawMode = "random" | "least_seen";
+
 export interface OptionDto {
   letter: string;
   text: string;

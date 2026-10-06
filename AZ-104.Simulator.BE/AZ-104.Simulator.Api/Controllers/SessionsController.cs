@@ -1,3 +1,4 @@
+using Simulator.Api.Mapper;
 using Simulator.Api.Models.Contracts;
 using Simulator.Api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +37,7 @@ public sealed class SessionsController : ControllerBase
             { QuestionNumbers.Count: 0 } => "questionNumbers non puo' essere vuoto.",
             { QuestionNumbers.Count: > MaxCount } => $"non piu' di {MaxCount} domande per sessione.",
             { TimeLimitSeconds: <= 0 } => "timeLimitSeconds, se presente, deve essere positivo.",
+            { DrawMode: var draw } when !DrawModeMapper.IsValid(draw) => $"drawMode deve essere uno tra: {string.Join(", ", DrawModeMapper.Values)}.",
             _ => null,
         };
         if (error is not null)

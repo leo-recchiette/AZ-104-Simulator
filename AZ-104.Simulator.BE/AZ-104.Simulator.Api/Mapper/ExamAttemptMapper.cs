@@ -8,6 +8,7 @@ public static class ExamAttemptMapper
     public static ExamAttemptDto ToDto(this ExamAttempt attempt) => new(
         attempt.Id, 
         attempt.Mode, 
+        attempt.DrawMode,
         attempt.QuestionCount,
         attempt.Percentage,
         attempt.StartTime, 

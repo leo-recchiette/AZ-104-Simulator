@@ -32,6 +32,7 @@ function toSaveDto(state: SessionState): SaveActiveSessionDto | null {
     autoReveal: state.autoReveal,
     openEnded: state.openEnded,
     liveScore: state.liveScore,
+    drawMode: state.drawMode,
     startedAt: new Date(state.startedAt).toISOString(),
     savedAt: new Date().toISOString(),
   };
@@ -55,6 +56,7 @@ function fromDto(dto: ActiveSessionDto): SessionState {
     autoReveal: dto.autoReveal,
     openEnded: dto.openEnded,
     liveScore: dto.autoReveal && dto.liveScore,
+    drawMode: dto.drawMode,
     startedAt: Date.now() - playedMs,
     status: "in-progress",
   };

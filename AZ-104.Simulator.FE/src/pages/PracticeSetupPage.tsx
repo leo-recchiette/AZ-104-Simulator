@@ -7,7 +7,9 @@ import { ApiError } from "../api/client";
 import { FloatingThemeToggle } from "../components/FloatingThemeToggle";
 import { EmptyBankDialog } from "../components/EmptyBankDialog";
 import { ResumeSessionBanner } from "../components/ResumeSessionBanner";
-import { MAX_QUESTION_COUNT } from "../constants";
+import { DrawModeToggle } from "../components/DrawModeToggle";
+import type { DrawMode } from "../types/question";
+import { MAX_QUESTION_COUNT, PRACTICE_DEFAULT_DRAW_MODE } from "../constants";
 
 const COUNT_OPTIONS = [10, 20, 30, 40, 50, 60, 70, 80];
 const MINUTE_OPTIONS = [15, 30, 45, 60, 90, 120];
@@ -24,6 +26,7 @@ export function PracticeSetupPage() {
 
   const [openEnded, setOpenEnded] = useState(false);
   const [count, setCount] = useState(20);
+  const [drawMode, setDrawMode] = useState<DrawMode>(PRACTICE_DEFAULT_DRAW_MODE);
   const [timed, setTimed] = useState(false);
   const [autoReveal, setAutoReveal] = useState(false);
   const [liveScore, setLiveScore] = useState(false);
@@ -43,15 +46,15 @@ export function PracticeSetupPage() {
     setError(null);
     setLoading(true);
     try {
-      // A oltranza serve l'intero bank, gia' mescolato: le domande si propongono un'unita' alla volta.
-      const questions = await getExam(openEnded ? MAX_QUESTION_COUNT : count);
+      // A oltranza serve l'intero bank, nell'ordine di estrazione: le domande si propongono un'unita' alla volta.
+      const questions = await getExam(openEnded ? MAX_QUESTION_COUNT : count, drawMode);
       // 200 con []: question bank vuoto, non un errore dell'API.
       if (questions.length === 0) {
         setEmptyBank(true);
         setLoading(false);
         return;
       }
-      dispatch({ type: "START_SESSION", mode: "practice", questions, timeLimitSeconds: timed ? minutes * 60 : null, autoReveal, openEnded, liveScore });
+      dispatch({ type: "START_SESSION", mode: "practice", drawMode, questions, timeLimitSeconds: timed ? minutes * 60 : null, autoReveal, openEnded, liveScore });
       navigate("/session");
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Impossibile caricare le domande.");
@@ -122,6 +125,8 @@ export function PracticeSetupPage() {
               })}
             </div>
           )}
+
+          <DrawModeToggle value={drawMode} onChange={setDrawMode} />
 
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, padding: "16px 0", borderTop: `1px solid ${t.bd2}` }}>
             <div>

@@ -25,6 +25,7 @@ public sealed class ActiveSessionServiceTests
         actual.Answers.Should().ContainKey(7);
         actual.OpenEnded.Should().BeTrue();
         actual.LiveScore.Should().BeTrue();
+        actual.DrawMode.Should().Be("least_seen");
     }
 
     [TestMethod]
@@ -81,6 +82,7 @@ public sealed class ActiveSessionServiceTests
                 && s.AutoReveal
                 && s.OpenEnded
                 && s.LiveScore
+                && s.DrawMode == "least_seen"
                 && s.TimeLimitSeconds == 1800),
             Arg.Any<CancellationToken>());
     }
@@ -171,6 +173,7 @@ public sealed class ActiveSessionServiceTests
         AutoReveal = false,
         OpenEnded = true,
         LiveScore = true,
+        DrawMode = "least_seen",
         StartedAt = DateTimeOffset.UnixEpoch,
         SavedAt = DateTimeOffset.UnixEpoch.AddMinutes(5),
     };
@@ -190,7 +193,8 @@ public sealed class ActiveSessionServiceTests
             OpenEnded: true,
             LiveScore: true,
             DateTimeOffset.UnixEpoch,
-            DateTimeOffset.UnixEpoch.AddMinutes(5));
+            DateTimeOffset.UnixEpoch.AddMinutes(5),
+            DrawMode: "least_seen");
 
     #endregion
 }

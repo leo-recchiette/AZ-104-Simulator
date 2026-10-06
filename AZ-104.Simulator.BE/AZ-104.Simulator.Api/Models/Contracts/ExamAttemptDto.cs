@@ -4,6 +4,7 @@ namespace Simulator.Api.Models.Contracts;
 public sealed record ExamAttemptDto(
     int Id,
     string Mode,
+    string DrawMode,
     int QuestionCount,
     double Percentage,
     DateTimeOffset StartTime,

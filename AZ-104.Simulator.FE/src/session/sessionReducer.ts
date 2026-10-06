@@ -1,4 +1,4 @@
-import type { QuestionDto } from "../types/question";
+import type { DrawMode, QuestionDto } from "../types/question";
 import type { AnswerCheckResultDto, ExamScoreDto } from "../types/answer";
 import { leadingUnitSize } from "../utils/groups";
 
@@ -26,6 +26,8 @@ export interface SessionState {
    * risposte prima della soluzione. Sempre false in Simulation.
    */
   liveScore: boolean;
+  /** Scelto nel setup; la Practice a oltranza lo riusa per ripescare il bank dopo un ripristino. */
+  drawMode: DrawMode;
   startedAt: number | null;
   status: "idle" | "in-progress" | "finished";
   score: ExamScoreDto | null;
@@ -36,7 +38,7 @@ export interface SessionState {
 }
 
 export type SessionAction =
-  | { type: "START_SESSION"; mode: SessionMode; questions: QuestionDto[]; timeLimitSeconds: number | null; autoReveal?: boolean; openEnded?: boolean; liveScore?: boolean }
+  | { type: "START_SESSION"; mode: SessionMode; drawMode: DrawMode; questions: QuestionDto[]; timeLimitSeconds: number | null; autoReveal?: boolean; openEnded?: boolean; liveScore?: boolean }
   | { type: "RESTORE_SESSION"; state: SessionState }
   | { type: "SET_ANSWER"; questionNumber: number; answer: string[] }
   | { type: "GO_NEXT" }
@@ -64,6 +66,7 @@ export const initialSessionState: SessionState = {
   openEnded: false,
   pool: null,
   liveScore: false,
+  drawMode: "random",
   startedAt: null,
   status: "idle",
   score: null,
@@ -86,6 +89,7 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
         openEnded,
         pool: openEnded ? action.questions.slice(shown) : null,
         liveScore: action.mode === "practice" && !!action.autoReveal && !!action.liveScore,
+        drawMode: action.drawMode,
         startedAt: Date.now(),
         status: "in-progress",
       };

@@ -1,6 +1,11 @@
+using Simulator.Api.Mapper;
+
 namespace Simulator.Api.Models.Contracts;
 
-/// <summary>Upsert dell'intera sessione, non un merge. Solo i numeri delle domande, non il testo.</summary>
+/// <summary>
+/// Upsert dell'intera sessione, non un merge. Solo i numeri delle domande, non il testo. DrawMode ha un default:
+/// un client vecchio che non lo manda pescava comunque a caso.
+/// </summary>
 public sealed record SaveActiveSessionDto(
     string Mode,
     IReadOnlyList<int> QuestionNumbers,
@@ -12,4 +17,5 @@ public sealed record SaveActiveSessionDto(
     bool OpenEnded,
     bool LiveScore,
     DateTimeOffset StartedAt,
-    DateTimeOffset SavedAt);
+    DateTimeOffset SavedAt,
+    string DrawMode = DrawModeMapper.Default);

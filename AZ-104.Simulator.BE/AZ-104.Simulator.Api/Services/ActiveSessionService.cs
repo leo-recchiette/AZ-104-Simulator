@@ -40,6 +40,7 @@ public sealed class ActiveSessionService : IActiveSessionService
             session.AutoReveal,
             session.OpenEnded,
             session.LiveScore,
+            session.DrawMode,
             session.StartedAt,
             session.SavedAt);
     }
@@ -62,6 +63,7 @@ public sealed class ActiveSessionService : IActiveSessionService
             AutoReveal = request.AutoReveal,
             OpenEnded = request.OpenEnded,
             LiveScore = request.LiveScore,
+            DrawMode = request.DrawMode,
             StartedAt = request.StartedAt,
             SavedAt = request.SavedAt,
         };

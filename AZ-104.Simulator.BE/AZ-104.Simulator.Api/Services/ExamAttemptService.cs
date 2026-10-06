@@ -22,6 +22,7 @@ public sealed class ExamAttemptService : IExamAttemptService
         var attempt = new ExamAttempt
         {
             Mode = request.Mode,
+            DrawMode = request.DrawMode,
             QuestionCount = request.QuestionCount,
             Percentage = request.Percentage,
             StartTime = request.StartTime,

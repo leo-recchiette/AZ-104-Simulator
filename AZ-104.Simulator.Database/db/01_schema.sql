@@ -81,6 +81,8 @@ CREATE INDEX idx_questions_type ON questions (type);
 CREATE TABLE exam_attempts (
     id             SERIAL PRIMARY KEY,
     mode           TEXT             NOT NULL CHECK (mode IN ('practice', 'exam')),
+    -- Come sono state pescate le domande. I tentativi precedenti la scelta erano tutti casuali.
+    draw_mode      TEXT             NOT NULL DEFAULT 'random' CHECK (draw_mode IN ('random', 'least_seen')),
     question_count INTEGER          NOT NULL,
     percentage     DOUBLE PRECISION NOT NULL,
     start_time     TIMESTAMPTZ      NOT NULL,
@@ -120,6 +122,8 @@ CREATE TABLE active_session (
     -- Practice a oltranza: question_numbers sono solo le domande gia' proposte.
     open_ended          BOOLEAN   NOT NULL DEFAULT FALSE,
     live_score          BOOLEAN   NOT NULL DEFAULT FALSE,
+    -- Serve a ripescare il bank della Practice a oltranza dopo un ripristino.
+    draw_mode           TEXT      NOT NULL DEFAULT 'random' CHECK (draw_mode IN ('random', 'least_seen')),
     -- Orologio del client: mai confrontarli con now() del server.
     started_at          TIMESTAMPTZ NOT NULL,
     saved_at            TIMESTAMPTZ NOT NULL,

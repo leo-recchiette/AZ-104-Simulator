@@ -15,9 +15,9 @@ public sealed class QuestionService : IQuestionService
         _repository = repository;
     }
 
-    public async Task<IReadOnlyList<QuestionDto>> GetRandomSetAsync(int count, QuestionType? type, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<QuestionDto>> GetRandomSetAsync(int count, QuestionType? type, DrawMode drawMode, CancellationToken cancellationToken)
     {
-        var questions = await _repository.GetRandomAsync(count, type, cancellationToken);
+        var questions = await _repository.GetRandomAsync(count, type, drawMode, cancellationToken);
         return await BuildDtosAsync(questions, cancellationToken);
     }
 

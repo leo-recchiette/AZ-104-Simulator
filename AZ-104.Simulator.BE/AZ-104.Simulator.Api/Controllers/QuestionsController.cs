@@ -19,15 +19,20 @@ public sealed class QuestionsController : ControllerBase
         _questionService = questionService;
     }
 
-    /// <summary>"type" filtra opzionalmente su uno dei 4 tipi.</summary>
+    /// <summary>"type" filtra opzionalmente su uno dei 4 tipi; "draw" sceglie come pescare.</summary>
     [HttpGet("getExam")]
     public async Task<ActionResult<IReadOnlyList<QuestionDto>>> GetExamAsync(
         [FromQuery] int count = 40,
         [FromQuery] string? type = null,
+        [FromQuery] string draw = DrawModeMapper.Default,
         CancellationToken cancellationToken = default)
     {
         if (count is < 1 or > MaxCount)
             return BadRequest($"count deve essere fra 1 e {MaxCount}.");
+
+        if (!DrawModeMapper.IsValid(draw))
+            return BadRequest($"draw deve essere uno tra: {string.Join(", ", DrawModeMapper.Values)}.");
+        var drawMode = DrawModeMapper.FromDb(draw);
 
         QuestionType? parsedType = null;
         if (type is not null)
@@ -42,7 +47,7 @@ public sealed class QuestionsController : ControllerBase
             }
         }
 
-        var questions = await _questionService.GetRandomSetAsync(count, parsedType, cancellationToken);
+        var questions = await _questionService.GetRandomSetAsync(count, parsedType, drawMode, cancellationToken);
         return Ok(questions);
     }
 }

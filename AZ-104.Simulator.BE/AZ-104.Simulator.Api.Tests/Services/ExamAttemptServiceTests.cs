@@ -26,6 +26,7 @@ public sealed class ExamAttemptServiceTests
         var expected = new ExamAttempt
         {
             Mode = "practice",
+            DrawMode = "least_seen",
             QuestionCount = 30,
             Percentage = 76.5,
             StartTime = StartTime,
@@ -33,6 +34,23 @@ public sealed class ExamAttemptServiceTests
         };
 
         inserted.Should().BeEquivalentTo(expected);
+    }
+
+    [TestMethod]
+    public async Task Should_Default_To_Random_When_The_Client_Omits_The_DrawMode()
+    {
+        // Client vecchio: pescava sempre a caso, quindi il default dice il vero.
+        ExamAttempt? inserted = null;
+        var repository = Substitute.For<IExamAttemptRepository>();
+        repository
+            .InsertAsync(Arg.Do<ExamAttempt>(attempt => inserted = attempt), Arg.Any<IReadOnlyList<ExamAttemptAnswer>>(), Arg.Any<CancellationToken>())
+            .Returns(Saved());
+        var sut = Sut(repository);
+        var request = new SaveExamAttemptDto("exam", 54, 70, StartTime, EndTime, Answers: null);
+
+        await sut.SaveAttemptAsync(request, CancellationToken.None);
+
+        inserted!.DrawMode.Should().Be("random");
     }
 
     [TestMethod]
@@ -89,6 +107,7 @@ public sealed class ExamAttemptServiceTests
         var expected = new ExamAttemptDto(
             Id: 7,
             Mode: "practice",
+            DrawMode: "least_seen",
             QuestionCount: 30,
             Percentage: 76.5,
             StartTime: StartTime,
@@ -212,7 +231,8 @@ public sealed class ExamAttemptServiceTests
         StartTime: StartTime,
         EndTime: EndTime,
         // Anche la domanda in bianco va salvata.
-        Answers: [new AnswerSubmissionDto(7, ["C"]), new AnswerSubmissionDto(3, [])]);
+        Answers: [new AnswerSubmissionDto(7, ["C"]), new AnswerSubmissionDto(3, [])],
+        DrawMode: "least_seen");
 
     private static AttemptAnswerDto ReviewedAnswer(int number, IReadOnlyList<string> userAnswers) =>
         new(number, userAnswers, Question: null, CorrectAnswer: null);
@@ -221,6 +241,7 @@ public sealed class ExamAttemptServiceTests
     {
         Id = 42,
         Mode = "practice",
+        DrawMode = "least_seen",
         QuestionCount = 30,
         Percentage = 76.5,
         StartTime = StartTime,
@@ -232,6 +253,7 @@ public sealed class ExamAttemptServiceTests
     {
         Id = id,
         Mode = "exam",
+        DrawMode = "random",
         QuestionCount = 60,
         Percentage = percentage,
         StartTime = StartTime.AddDays(id),
@@ -242,6 +264,7 @@ public sealed class ExamAttemptServiceTests
     private static ExamAttemptDto AttemptDto(int id, double percentage) => new(
         Id: id,
         Mode: "exam",
+        DrawMode: "random",
         QuestionCount: 60,
         Percentage: percentage,
         StartTime: StartTime.AddDays(id),

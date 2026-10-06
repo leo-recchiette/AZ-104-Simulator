@@ -4,6 +4,7 @@ import { useSession } from "./session/SessionContext";
 import { useTheme } from "./theme/ThemeContext";
 import { ModeSelectPage } from "./pages/ModeSelectPage";
 import { PracticeSetupPage } from "./pages/PracticeSetupPage";
+import { SimulationSetupPage } from "./pages/SimulationSetupPage";
 import { SessionPage } from "./pages/SessionPage";
 import { ResultsPage } from "./pages/ResultsPage";
 import { HistoryPage } from "./pages/HistoryPage";
@@ -33,6 +34,7 @@ export function App() {
       <Routes>
         <Route path="/" element={<ModeSelectPage />} />
         <Route path="/practice/setup" element={<PracticeSetupPage />} />
+        <Route path="/simulation/setup" element={<SimulationSetupPage />} />
         {/* Fuori da RequireSession: lo storico si legge dal database, non dalla sessione in corso. */}
         <Route path="/history" element={<HistoryPage />} />
         <Route path="/history/:id" element={<AttemptDetailPage />} />

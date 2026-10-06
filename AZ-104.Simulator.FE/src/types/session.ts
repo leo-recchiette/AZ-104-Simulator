@@ -1,4 +1,4 @@
-import type { QuestionDto } from "./question";
+import type { DrawMode, QuestionDto } from "./question";
 
 /** Cio' che il client manda a PUT /api/sessions/current: la sessione in corso, senza il testo delle domande. */
 export interface SaveActiveSessionDto {
@@ -15,6 +15,8 @@ export interface SaveActiveSessionDto {
   openEnded: boolean;
   /** Practice: percentuale dell'esame aggiornata a ogni risposta. */
   liveScore: boolean;
+  /** Serve a ripescare il bank a oltranza dopo un ripristino. */
+  drawMode: DrawMode;
   /** ISO 8601, entrambi dall'orologio di questo client: la differenza e' il tempo gia' giocato. */
   startedAt: string;
   savedAt: string;

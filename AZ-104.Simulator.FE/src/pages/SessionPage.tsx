@@ -120,6 +120,7 @@ export function SessionPage() {
         const startTime = new Date(endTime.getTime() - elapsedSecRef.current * 1000);
         saveAttempt({
           mode: state.mode,
+          drawMode: state.drawMode,
           questionCount: scored.length,
           percentage: score.percentage,
           startTime: startTime.toISOString(),
@@ -134,7 +135,7 @@ export function SessionPage() {
       setError(err instanceof ApiError ? err.message : "Impossibile calcolare il punteggio.");
       setSubmitting(false);
     }
-  }, [dispatch, navigate, scored, submissions, state.mode, state.startedAt]);
+  }, [dispatch, navigate, scored, submissions, state.mode, state.drawMode, state.startedAt]);
 
   const elapsedMs = useElapsedTime(state.startedAt, paused);
   const elapsedSec = Math.floor(elapsedMs / 1000);
@@ -250,7 +251,7 @@ export function SessionPage() {
       setError(null);
       setLoadingMore(true);
       try {
-        dispatch({ type: "SET_POOL", questions: await getExam(MAX_QUESTION_COUNT) });
+        dispatch({ type: "SET_POOL", questions: await getExam(MAX_QUESTION_COUNT, state.drawMode) });
       } catch (err) {
         setError(err instanceof ApiError ? err.message : "Impossibile caricare altre domande.");
         return;

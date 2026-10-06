@@ -1,4 +1,5 @@
 using Simulator.Api.Extensions;
+using Simulator.Api.Mapper;
 using Simulator.Api.Models.Contracts;
 using Simulator.Api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -57,6 +58,7 @@ public sealed class ResultsController : ControllerBase
         var error = request switch
         {
             { Mode: var mode } when !ValidModes.Contains(mode) => $"mode deve essere uno tra: {string.Join(", ", ValidModes)}.",
+            { DrawMode: var draw } when !DrawModeMapper.IsValid(draw) => $"drawMode deve essere uno tra: {string.Join(", ", DrawModeMapper.Values)}.",
             { QuestionCount: < 1 or > MaxCount } => $"questionCount deve essere fra 1 e {MaxCount}.",
             { Percentage: < 0 or > 100 } => "percentage deve essere fra 0 e 100.",
             { StartTime: var start, EndTime: var end } when end < start => "endTime non puo' precedere startTime.",

@@ -11,5 +11,6 @@ public sealed record ActiveSessionDto(
     bool AutoReveal,
     bool OpenEnded,
     bool LiveScore,
+    string DrawMode,
     DateTimeOffset StartedAt,
     DateTimeOffset SavedAt);

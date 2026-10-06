@@ -24,25 +24,42 @@ public sealed class QuestionRepository : IQuestionRepository
     /// <summary>Il '#' non compare mai in un group_id, quindi le chiavi non collidono.</summary>
     private const string UnitKey = "COALESCE(group_id, '#' || number)";
 
-    /// <summary>Un gruppo occupa un posto solo e torna intero e contiguo.</summary>
-    public async Task<IReadOnlyList<Question>> GetRandomAsync(int count, QuestionType? type, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Question>> GetRandomAsync(int count, QuestionType? type, DrawMode drawMode, CancellationToken cancellationToken)
     {
         var typeFilter = type is null ? "" : "WHERE type = @type::question_type";
 
+        // LeastSeen: prima le unita' proposte meno volte nelle sessioni salvate, a caso fra le pari merito.
+        // seen conta le sessioni, non le righe: un gruppo ha una riga per domanda in ogni sessione.
+        // Random: times e' sempre 0 e l'ordine e' solo il sorteggio.
+        var leastSeen = drawMode is DrawMode.LeastSeen;
+        var seenCte = leastSeen
+            ? $"""
+              seen AS (
+                  SELECT {UnitKey} AS unit_key, count(DISTINCT a.attempt_id) AS times
+                  FROM exam_attempt_answers a
+                  JOIN questions q ON q.number = a.question_number
+                  GROUP BY 1
+              ),
+              """
+            : "";
+        var times = leastSeen ? "COALESCE(s.times, 0)" : "0";
+        var seenJoin = leastSeen ? "LEFT JOIN seen s ON s.unit_key = u.unit_key" : "";
 
         var sql = $"""
-            WITH picked AS (
-                SELECT unit_key, random() AS draw
+            WITH {seenCte}
+            picked AS (
+                SELECT u.unit_key, {times} AS times, random() AS draw
                 FROM (
                     SELECT DISTINCT {UnitKey} AS unit_key
                     FROM questions
                     {typeFilter}
                 ) u
-                ORDER BY draw
+                {seenJoin}
+                ORDER BY times, draw
                 LIMIT @count
             ),
             units AS (
-                SELECT unit_key, row_number() OVER (ORDER BY draw) AS ord FROM picked
+                SELECT unit_key, row_number() OVER (ORDER BY times, draw) AS ord FROM picked
             )
             SELECT {SelectColumns}
             FROM questions q

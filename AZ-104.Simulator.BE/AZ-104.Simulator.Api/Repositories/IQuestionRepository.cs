@@ -4,8 +4,7 @@ namespace Simulator.Api.Repositories;
 
 public interface IQuestionRepository
 {
-    /// <summary>Sorteggia unita', non domande: un gruppo torna intero, contiguo e gia' ordinato.</summary>
-    Task<IReadOnlyList<Question>> GetRandomAsync(int count, QuestionType? type, CancellationToken cancellationToken);
+    Task<IReadOnlyList<Question>> GetRandomAsync(int count, QuestionType? type, DrawMode drawMode, CancellationToken cancellationToken);
 
     Task<IReadOnlyList<Question>> GetByNumbersAsync(IReadOnlyCollection<int> numbers, CancellationToken cancellationToken);
 

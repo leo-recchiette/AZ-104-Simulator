@@ -20,7 +20,8 @@ public sealed class ActiveSessionRepository : IActiveSessionRepository
             SELECT mode AS "Mode", question_numbers AS "QuestionNumbers", answers::text AS "Answers",
                    flagged_indexes AS "FlaggedIndexes", current_index AS "CurrentIndex",
                    time_limit_seconds AS "TimeLimitSeconds", auto_reveal AS "AutoReveal",
-                   open_ended AS "OpenEnded", live_score AS "LiveScore", started_at AS "StartedAt", saved_at AS "SavedAt"
+                   open_ended AS "OpenEnded", live_score AS "LiveScore", draw_mode AS "DrawMode",
+                   started_at AS "StartedAt", saved_at AS "SavedAt"
             FROM active_session
             WHERE id = 1
             """;
@@ -43,6 +44,7 @@ public sealed class ActiveSessionRepository : IActiveSessionRepository
             AutoReveal = row.AutoReveal,
             OpenEnded = row.OpenEnded,
             LiveScore = row.LiveScore,
+            DrawMode = row.DrawMode,
             StartedAt = row.StartedAt,
             SavedAt = row.SavedAt,
         };
@@ -53,10 +55,10 @@ public sealed class ActiveSessionRepository : IActiveSessionRepository
         const string sql = """
             INSERT INTO active_session (
                 id, mode, question_numbers, answers, flagged_indexes, current_index,
-                time_limit_seconds, auto_reveal, open_ended, live_score, started_at, saved_at, updated_at)
+                time_limit_seconds, auto_reveal, open_ended, live_score, draw_mode, started_at, saved_at, updated_at)
             VALUES (
                 1, @Mode, @QuestionNumbers, @Answers::jsonb, @FlaggedIndexes, @CurrentIndex,
-                @TimeLimitSeconds, @AutoReveal, @OpenEnded, @LiveScore, @StartedAt, @SavedAt, now())
+                @TimeLimitSeconds, @AutoReveal, @OpenEnded, @LiveScore, @DrawMode, @StartedAt, @SavedAt, now())
             ON CONFLICT (id) DO UPDATE SET
                 mode = EXCLUDED.mode,
                 question_numbers = EXCLUDED.question_numbers,
@@ -67,6 +69,7 @@ public sealed class ActiveSessionRepository : IActiveSessionRepository
                 auto_reveal = EXCLUDED.auto_reveal,
                 open_ended = EXCLUDED.open_ended,
                 live_score = EXCLUDED.live_score,
+                draw_mode = EXCLUDED.draw_mode,
                 started_at = EXCLUDED.started_at,
                 saved_at = EXCLUDED.saved_at,
                 updated_at = now()
@@ -83,6 +86,7 @@ public sealed class ActiveSessionRepository : IActiveSessionRepository
             session.AutoReveal,
             session.OpenEnded,
             session.LiveScore,
+            session.DrawMode,
             session.StartedAt,
             session.SavedAt,
         };

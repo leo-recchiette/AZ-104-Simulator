@@ -1,4 +1,4 @@
-import type { QuestionDto } from "./question";
+import type { DrawMode, QuestionDto } from "./question";
 
 export interface AnswerSubmissionDto {
   questionNumber: number;
@@ -33,6 +33,7 @@ export interface ExamScoreDto {
 
 export interface SaveExamAttemptDto {
   mode: "practice" | "exam";
+  drawMode: DrawMode;
   questionCount: number;
   percentage: number;
   /** ISO 8601. */
@@ -46,6 +47,8 @@ export interface SaveExamAttemptDto {
 export interface ExamAttemptDto {
   id: number;
   mode: "practice" | "exam";
+  /** "random" anche per i tentativi salvati prima che si potesse scegliere: si pescava sempre a caso. */
+  drawMode: DrawMode;
   questionCount: number;
   percentage: number;
   startTime: string;
