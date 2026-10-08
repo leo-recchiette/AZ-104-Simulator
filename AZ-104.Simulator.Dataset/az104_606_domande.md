@@ -6584,12 +6584,12 @@ You have an Azure subscription that contains the Azure virtual machines shown in
 ## Domanda 422
 *Tipo: hotspot · fonte: manual_vision*
 
-You have an Azure subscription that contains the resource groups shown in the following table. RG1 contains the resources shown in the following table. You need to identify which resources you can move from RG1 to RG2, and which resources you can move from RG2 to RG1. Which resources should you identify? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
+You have an Azure subscription that contains the resource groups shown in the following table. RG1 contains the resources shown in the following table. RG2 contains the resources shown in the following table. You need to identify which resources you can move from RG1 to RG2, and which resources you can move from RG2 to RG1. Which resources should you identify? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
 
 **Risposta corretta:** Resources that you can move from RG1 to RG2 -> IP1, VNET2, and storage1 | Resources that you can move from RG2 to RG1 -> IP2, VNET2, and storage2
 > Immagini: q422_post0.png
 
-**Spiegazione:** A Delete (CanNotDelete) lock prevents deleting a resource or resource group but still allows changes, so it does not block moving resources. The expected answer therefore treats IP1, VNET2 and storage1 (RG1 to RG2) and IP2, VNET2 and storage2 (RG2 to RG1) as movable. Note that the resource names in the exhibit do not match those in the question, and that Microsoft documents that a Read-only lock on the source or destination resource group or subscription blocks moves, so the Read-only lock on VNET2 makes this answer debatable. Reference: https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/move-resource-group-and-subscription
+**Spiegazione:** A Read-only lock blocks a move only when it is on the source or destination resource group (or subscription): a resource that has its own Read-only lock can still be moved to another resource group, and a Delete (CanNotDelete) lock still allows changes, so it never blocks a move. RG1 has no lock and RG2 only a Delete lock, so every resource can be moved in both directions: IP1, VNET1 and storage1 from RG1 to RG2 (the option reads "VNET2", a typo in the original answer area) and IP2, VNET2 and storage2 from RG2 to RG1. The table of RG1's resources was missing from the source and has been reconstructed as the counterpart of RG2's, as the answer options imply; the answer does not depend on its locks, since locks on the resources themselves never block a move. Reference: https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/move-resource-group-and-subscription https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/lock-resources
 
 ---
 
