@@ -35,6 +35,7 @@ public static class QuestionMapper
                     isYesNo ? YesNoOptions : rowOptionsByAnswerRowId[r.Id].Select(o => o.Text).ToList())).ToList(),
             Images: images.Where(i => i.Kind == QuestionImageKind).OrderBy(i => i.Ord).Select(i => i.Filename).ToList(),
             GroupId: question.GroupId,
-            GroupType: question.GroupType);
+            GroupType: question.GroupType,
+            VariantGroup: question.VariantGroup);
     }
 }

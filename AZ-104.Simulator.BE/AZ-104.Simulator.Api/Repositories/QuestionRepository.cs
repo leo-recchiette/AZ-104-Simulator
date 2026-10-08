@@ -18,11 +18,14 @@ public sealed class QuestionRepository : IQuestionRepository
     private const string SelectColumns = """
         id, number, type, answer_layout AS "AnswerLayout", question AS "Text",
         explanation, answer_text AS "AnswerText", note, source,
-        group_id AS "GroupId", group_type AS "GroupType"
+        group_id AS "GroupId", group_type AS "GroupType", variant_group AS "VariantGroup"
         """;
 
-    /// <summary>Il '#' non compare mai in un group_id, quindi le chiavi non collidono.</summary>
-    private const string UnitKey = "COALESCE(group_id, '#' || number)";
+    /// <summary>
+    /// Un gruppo e una famiglia di varianti sono un'unita' sola. '~' e '#' non compaiono mai in un
+    /// group_id, quindi le chiavi non collidono.
+    /// </summary>
+    private const string UnitKey = "COALESCE(group_id, '~' || variant_group, '#' || number)";
 
     public async Task<IReadOnlyList<Question>> GetRandomAsync(int count, QuestionType? type, DrawMode drawMode, CancellationToken cancellationToken)
     {
@@ -30,6 +33,7 @@ public sealed class QuestionRepository : IQuestionRepository
 
         // LeastSeen: prima le unita' proposte meno volte nelle sessioni salvate, a caso fra le pari merito.
         // seen conta le sessioni, non le righe: un gruppo ha una riga per domanda in ogni sessione.
+        // Una famiglia di varianti conta per intero, e ne esce la variante proposta meno volte.
         // Random: times e' sempre 0 e l'ordine e' solo il sorteggio.
         var leastSeen = drawMode is DrawMode.LeastSeen;
         var seenCte = leastSeen
@@ -40,19 +44,37 @@ public sealed class QuestionRepository : IQuestionRepository
                   JOIN questions q ON q.number = a.question_number
                   GROUP BY 1
               ),
+              seen_questions AS (
+                  SELECT question_number, count(DISTINCT attempt_id) AS times
+                  FROM exam_attempt_answers
+                  GROUP BY 1
+              ),
               """
             : "";
         var times = leastSeen ? "COALESCE(s.times, 0)" : "0";
         var seenJoin = leastSeen ? "LEFT JOIN seen s ON s.unit_key = u.unit_key" : "";
+        var questionTimes = leastSeen ? "COALESCE(sq.times, 0)" : "0";
+        var seenQuestionsJoin = leastSeen ? "LEFT JOIN seen_questions sq ON sq.question_number = q.number" : "";
 
+        // candidates: di una famiglia di varianti passa un membro solo, dei gruppi tutti.
         var sql = $"""
             WITH {seenCte}
+            candidates AS (
+                SELECT question_number, unit_key
+                FROM (
+                    SELECT q.number AS question_number, {UnitKey} AS unit_key, q.variant_group,
+                           row_number() OVER (PARTITION BY q.variant_group ORDER BY {questionTimes}, random()) AS variant_rank
+                    FROM questions q
+                    {seenQuestionsJoin}
+                    {typeFilter}
+                ) c
+                WHERE variant_group IS NULL OR variant_rank = 1
+            ),
             picked AS (
                 SELECT u.unit_key, {times} AS times, random() AS draw
                 FROM (
-                    SELECT DISTINCT {UnitKey} AS unit_key
-                    FROM questions
-                    {typeFilter}
+                    SELECT DISTINCT unit_key
+                    FROM candidates
                 ) u
                 {seenJoin}
                 ORDER BY times, draw
@@ -63,7 +85,8 @@ public sealed class QuestionRepository : IQuestionRepository
             )
             SELECT {SelectColumns}
             FROM questions q
-            JOIN units u ON u.unit_key = COALESCE(q.group_id, '#' || q.number)
+            JOIN candidates c ON c.question_number = q.number
+            JOIN units u ON u.unit_key = c.unit_key
             ORDER BY u.ord, q.number
             """;
 

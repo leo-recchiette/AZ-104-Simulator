@@ -18,5 +18,6 @@ internal static class QuestionRowMapper
         Source = row.Source,
         GroupId = row.GroupId,
         GroupType = row.GroupType,
+        VariantGroup = row.VariantGroup,
     };
 }

@@ -19,6 +19,16 @@ public sealed class QuestionRowMapperTests
         sut.Should().BeEquivalentTo(expected);
     }
 
+    [TestMethod]
+    public void Should_Map_The_VariantGroup()
+    {
+        var input = QuestionRow() with { GroupId = null, GroupType = null, VariantGroup = "v17" };
+
+        var sut = input.ToQuestion();
+
+        sut.VariantGroup.Should().Be("v17");
+    }
+
     #region Utils
 
     private static QuestionRow QuestionRow() => new(
@@ -32,7 +42,8 @@ public sealed class QuestionRowMapperTests
         Note: null,
         Source: "manual_vision",
         GroupId: "ss01",
-        GroupType: "scenario_series");
+        GroupType: "scenario_series",
+        VariantGroup: null);
 
     private static Question Question() => new()
     {

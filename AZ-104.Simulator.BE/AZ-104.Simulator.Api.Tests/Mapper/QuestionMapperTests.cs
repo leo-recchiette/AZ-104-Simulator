@@ -30,7 +30,8 @@ public sealed class QuestionMapperTests
             Prompts: [],
             Images: [],
             GroupId: null,
-            GroupType: null);
+            GroupType: null,
+            VariantGroup: null);
 
         sut.Should().BeEquivalentTo(expected);
     }
@@ -63,7 +64,8 @@ public sealed class QuestionMapperTests
             Prompts: [],
             Images: [],
             GroupId: null,
-            GroupType: null);
+            GroupType: null,
+            VariantGroup: null);
 
         sut.Should().BeEquivalentTo(expected);
     }
@@ -104,7 +106,8 @@ public sealed class QuestionMapperTests
             ],
             Images: ["q001_pre0.png", "q001_pre1.png"],
             GroupId: null,
-            GroupType: null);
+            GroupType: null,
+            VariantGroup: null);
 
         sut.Should().BeEquivalentTo(expected);
     }
@@ -127,9 +130,21 @@ public sealed class QuestionMapperTests
             Prompts: [new PromptOptionsDto("Statement 1", ["Yes", "No"])],
             Images: [],
             GroupId: null,
-            GroupType: null);
+            GroupType: null,
+            VariantGroup: null);
 
         sut.Should().BeEquivalentTo(expected);
+    }
+
+    [TestMethod]
+    public void Should_Expose_The_VariantGroup()
+    {
+        // Il client lo usa per non riproporre una variante gia' vista quando ripesca il bank.
+        var input = Question(type: QuestionType.MultipleChoice, answerLayout: null) with { VariantGroup = "v17" };
+
+        var sut = input.ToQuestionDto([], [], NoRowOptions(), NoImages());
+
+        sut.VariantGroup.Should().Be("v17");
     }
 
     #region Utils

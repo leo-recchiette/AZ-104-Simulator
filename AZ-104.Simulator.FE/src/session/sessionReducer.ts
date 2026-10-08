@@ -129,10 +129,17 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
     case "GO_TO":
       return { ...state, currentIndex: Math.min(Math.max(action.index, 0), state.questions.length - 1) };
 
-    // Il bank ripescato contiene anche le domande gia' proposte: non devono tornare.
+    // Il bank ripescato contiene anche le domande gia' proposte: non devono tornare, e nemmeno
+    // un'altra variante di una gia' proposta (il ripescaggio puo' sceglierne una diversa).
     case "SET_POOL": {
       const shown = new Set(state.questions.map((q) => q.number));
-      return { ...state, pool: action.questions.filter((q) => !shown.has(q.number)) };
+      const shownVariants = new Set(state.questions.map((q) => q.variantGroup).filter(Boolean));
+      return {
+        ...state,
+        pool: action.questions.filter(
+          (q) => !shown.has(q.number) && !(q.variantGroup && shownVariants.has(q.variantGroup)),
+        ),
+      };
     }
 
     // Il punteggio live non sopravvive all'auto-reveal spento.

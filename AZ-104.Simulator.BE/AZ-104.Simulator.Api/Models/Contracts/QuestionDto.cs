@@ -7,6 +7,7 @@ namespace Simulator.Api.Models.Contracts;
 ///   DraggableItems - 'ordered_answer', distrattori compresi; SequenceLength e' la lunghezza
 ///                    della sequenza (lo dice gia' il testo della domanda).
 ///   Prompts        - 'selection' e 'yes_no', una riga ciascuno.
+/// VariantGroup serve al client per non riproporre una variante gia' vista quando ripesca il bank.
 /// </summary>
 public sealed record QuestionDto(
     int Number,
@@ -18,4 +19,5 @@ public sealed record QuestionDto(
     IReadOnlyList<PromptOptionsDto> Prompts,
     IReadOnlyList<string> Images,
     string? GroupId,
-    string? GroupType);
+    string? GroupType,
+    string? VariantGroup);

@@ -160,7 +160,7 @@ public sealed class ActiveSessionServiceTests
     }
 
     private static QuestionDto Dto(int number) =>
-        new(number, "multiple_choice", $"Domanda {number}", [], [], 0, [], [], null, null);
+        new(number, "multiple_choice", $"Domanda {number}", [], [], 0, [], [], null, null, null);
 
     private static ActiveSession Session(IReadOnlyList<int> numbers) => new()
     {

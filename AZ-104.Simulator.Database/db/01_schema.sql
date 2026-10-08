@@ -29,11 +29,17 @@ CREATE TABLE questions (
     -- 'ss01'..'ss24' per le scenario series. group_members del JSON non si salva: e' derivabile.
     group_id      TEXT,
     group_type    TEXT,
+    -- 'v01'..'v17': stesso testo, opzioni o esibito diversi. Al contrario dei gruppi, una sessione
+    -- ne propone un membro solo.
+    variant_group TEXT,
     CONSTRAINT questions_group_both_or_neither
-        CHECK ((group_id IS NULL) = (group_type IS NULL))
+        CHECK ((group_id IS NULL) = (group_type IS NULL)),
+    CONSTRAINT questions_group_or_variant
+        CHECK (group_id IS NULL OR variant_group IS NULL)
 );
 
 CREATE INDEX questions_group_id_idx ON questions (group_id) WHERE group_id IS NOT NULL;
+CREATE INDEX questions_variant_group_idx ON questions (variant_group) WHERE variant_group IS NOT NULL;
 
 -- is_correct = "fa parte della risposta": per ordered_answer la posizione sta in answer_rows.ord.
 CREATE TABLE options (

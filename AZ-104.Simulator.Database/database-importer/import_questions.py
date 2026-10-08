@@ -46,8 +46,8 @@ def insert_question(cur: psycopg.Cursor, q: dict) -> int:
     cur.execute(
         """
         INSERT INTO questions (number, type, answer_layout, question, explanation,
-                               answer_text, note, source, group_id, group_type)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                               answer_text, note, source, group_id, group_type, variant_group)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         RETURNING id
         """,
         (
@@ -61,6 +61,7 @@ def insert_question(cur: psycopg.Cursor, q: dict) -> int:
             q["source"],
             q.get("group_id"),
             q.get("group_type"),
+            q.get("variant_group"),
         ),
     )
     return cur.fetchone()[0]
@@ -169,6 +170,28 @@ def find_group_mismatches(questions: list[dict]) -> list[tuple[str, list[int], l
     return mismatches
 
 
+def find_variant_mismatches(questions: list[dict]) -> list[list[tuple[int, str | None]]]:
+    """Domande con lo stesso testo che non stanno nella stessa variant_group, o variant_group con testi diversi."""
+    by_text: dict[str, list[tuple[int, str | None]]] = {}
+    by_variant: dict[str, set[str]] = {}
+    for q in questions:
+        text = " ".join(q["question"].split())
+        variant_group = q.get("variant_group")
+        by_text.setdefault(text, []).append((q["id"], variant_group))
+        if variant_group:
+            by_variant.setdefault(variant_group, set()).add(text)
+
+    mismatches = [
+        members
+        for members in by_text.values()
+        if len(members) > 1 and (len({v for _, v in members}) > 1 or members[0][1] is None)
+    ]
+    for variant_group, texts in by_variant.items():
+        if len(texts) > 1:
+            mismatches.append([(q["id"], variant_group) for q in questions if q.get("variant_group") == variant_group])
+    return mismatches
+
+
 def import_all(conn: psycopg.Connection, questions: list[dict]) -> None:
     with conn, conn.cursor() as cur:
         cur.execute("TRUNCATE questions RESTART IDENTITY CASCADE")
@@ -218,6 +241,12 @@ def main() -> int:
                 f"  attenzione: gruppo {group_id} incoerente - membri reali {actual}, dichiarati {declared}",
                 file=sys.stderr,
             )
+
+    variant_mismatches = find_variant_mismatches(questions)
+    if variant_mismatches:
+        for members in variant_mismatches[:10]:
+            described = ", ".join(f"{question_id} ({variant_group})" for question_id, variant_group in members)
+            print(f"  attenzione: varianti incoerenti - {described}", file=sys.stderr)
 
     if args.dry_run:
         print("dry run: database non toccato")

@@ -29,4 +29,6 @@ export interface QuestionDto {
   groupId: string | null;
   /** "scenario_series" | "case_study". Valorizzato se e solo se lo e' groupId. */
   groupType: string | null;
+  /** "v01".."v17": varianti della stessa domanda, una sola per sessione; null altrimenti. */
+  variantGroup: string | null;
 }

@@ -106,7 +106,8 @@ public sealed class QuestionServiceTests
         Prompts: [],
         Images: [],
         GroupId: null,
-        GroupType: null);
+        GroupType: null,
+        VariantGroup: null);
 
     #endregion
 }

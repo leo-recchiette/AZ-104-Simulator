@@ -6,6 +6,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -46,6 +47,7 @@
    3,
    4
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -78,6 +80,7 @@
    3,
    4
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -110,6 +113,7 @@
    3,
    4
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -138,6 +142,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -178,6 +183,7 @@
    7,
    8
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -210,6 +216,7 @@
    7,
    8
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -242,6 +249,7 @@
    7,
    8
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -274,6 +282,7 @@
    10,
    11
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -306,6 +315,7 @@
    10,
    11
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -338,6 +348,7 @@
    10,
    11
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -366,6 +377,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -406,6 +418,7 @@
    14,
    15
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -438,6 +451,7 @@
    14,
    15
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -470,6 +484,7 @@
    14,
    15
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -498,6 +513,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -534,6 +550,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -570,6 +587,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -606,6 +624,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -642,6 +661,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "drag_and_drop",
   "answer_layout": "ordered_answer",
   "answer_rows": [],
@@ -675,6 +695,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -711,6 +732,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -747,6 +769,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "drag_and_drop",
   "answer_layout": "ordered_answer",
   "answer_rows": [],
@@ -785,6 +808,7 @@
    25,
    26
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -817,6 +841,7 @@
    25,
    26
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -849,6 +874,7 @@
    25,
    26
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -877,6 +903,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -921,6 +948,7 @@
    29,
    30
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -953,6 +981,7 @@
    29,
    30
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -985,6 +1014,7 @@
    29,
    30
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -1013,6 +1043,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -1053,6 +1084,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -1089,6 +1121,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -1125,6 +1158,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -1161,6 +1195,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -1197,6 +1232,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -1233,6 +1269,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -1283,6 +1320,7 @@
    123,
    134
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -1319,6 +1357,7 @@
    123,
    134
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -1355,6 +1394,7 @@
    123,
    134
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -1383,6 +1423,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -1427,6 +1468,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -1463,6 +1505,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -1504,6 +1547,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -1542,6 +1586,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -1581,6 +1626,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -1619,6 +1665,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -1666,6 +1713,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -1704,6 +1752,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -1740,6 +1789,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -1772,6 +1822,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -1808,6 +1859,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -1844,6 +1896,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -1880,6 +1933,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -1919,6 +1973,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -1957,6 +2012,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v01",
   "type": "multiple_choice",
   "options": [
    {
@@ -1993,6 +2049,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -2034,6 +2091,7 @@
    60,
    91
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -2067,6 +2125,7 @@
    60,
    91
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -2100,6 +2159,7 @@
    60,
    91
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -2128,6 +2188,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "drag_and_drop",
   "answer_layout": "ordered_answer",
   "answer_rows": [],
@@ -2161,6 +2222,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v02",
   "type": "multiple_choice",
   "options": [
    {
@@ -2197,6 +2259,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -2234,6 +2297,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -2272,6 +2336,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -2314,6 +2379,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -2355,6 +2421,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -2391,6 +2458,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -2442,6 +2510,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -2478,6 +2547,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -2514,6 +2584,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -2566,6 +2637,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v03",
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -2616,6 +2688,7 @@
    75,
    89
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -2649,6 +2722,7 @@
    75,
    89
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -2682,6 +2756,7 @@
    75,
    89
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -2710,6 +2785,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -2746,6 +2822,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -2784,6 +2861,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -2820,6 +2898,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -2858,6 +2937,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -2894,6 +2974,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "drag_and_drop",
   "answer_layout": "ordered_answer",
   "answer_rows": [],
@@ -2928,6 +3009,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v02",
   "type": "multiple_choice",
   "options": [
    {
@@ -2964,6 +3046,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -3000,6 +3083,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -3037,6 +3121,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -3085,6 +3170,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -3132,6 +3218,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -3172,6 +3259,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -3213,6 +3301,7 @@
    75,
    89
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -3241,6 +3330,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -3282,6 +3372,7 @@
    60,
    91
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -3310,6 +3401,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -3353,6 +3445,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v01",
   "type": "multiple_choice",
   "options": [
    {
@@ -3389,6 +3482,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -3438,6 +3532,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -3474,6 +3569,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -3510,6 +3606,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -3562,6 +3659,7 @@
    100,
    536
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -3597,6 +3695,7 @@
    100,
    536
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -3632,6 +3731,7 @@
    100,
    536
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -3662,6 +3762,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -3698,6 +3799,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -3741,6 +3843,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v02",
   "type": "multiple_choice",
   "options": [
    {
@@ -3777,6 +3880,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -3821,6 +3925,7 @@
    123,
    134
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -3849,6 +3954,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -3896,6 +4002,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "drag_and_drop",
   "answer_layout": "selection",
   "answer_rows": [
@@ -3945,6 +4052,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -3977,6 +4085,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -4016,6 +4125,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -4054,6 +4164,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v01",
   "type": "multiple_choice",
   "options": [
    {
@@ -4090,6 +4201,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -4129,6 +4241,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v01",
   "type": "multiple_choice",
   "options": [
    {
@@ -4165,6 +4278,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v04",
   "type": "multiple_choice",
   "options": [
    {
@@ -4203,6 +4317,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -4241,6 +4356,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v01",
   "type": "multiple_choice",
   "options": [
    {
@@ -4277,6 +4393,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -4313,6 +4430,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -4351,6 +4469,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v01",
   "type": "multiple_choice",
   "options": [
    {
@@ -4387,6 +4506,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -4426,6 +4546,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v03",
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -4479,6 +4600,7 @@
    123,
    134
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -4515,6 +4637,7 @@
    123,
    134
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -4543,6 +4666,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v05",
   "type": "multiple_choice",
   "options": [
    {
@@ -4579,6 +4703,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -4615,6 +4740,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v06",
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -4657,6 +4783,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -4731,6 +4858,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -4769,6 +4897,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v05",
   "type": "multiple_choice",
   "options": [
    {
@@ -4805,6 +4934,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -4847,6 +4977,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -4901,6 +5032,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -4940,6 +5072,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -4988,6 +5121,7 @@
    123,
    134
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -5016,6 +5150,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -5053,6 +5188,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v04",
   "type": "multiple_choice",
   "options": [
    {
@@ -5091,6 +5227,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v04",
   "type": "multiple_choice",
   "options": [
    {
@@ -5129,6 +5266,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v04",
   "type": "multiple_choice",
   "options": [
    {
@@ -5167,6 +5305,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -5205,6 +5344,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -5251,6 +5391,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -5289,6 +5430,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -5328,6 +5470,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v04",
   "type": "multiple_choice",
   "options": [
    {
@@ -5366,6 +5509,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -5411,6 +5555,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -5451,6 +5596,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -5493,6 +5639,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "drag_and_drop",
   "answer_layout": "ordered_answer",
   "answer_rows": [],
@@ -5529,6 +5676,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -5575,6 +5723,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -5620,6 +5769,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -5656,6 +5806,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -5701,6 +5852,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": null,
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -5745,6 +5897,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -5784,6 +5937,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -5820,6 +5974,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -5858,6 +6013,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -5904,6 +6060,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -5942,6 +6099,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -5986,6 +6144,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -6030,6 +6189,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -6074,6 +6234,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -6112,6 +6273,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "drag_and_drop",
   "answer_layout": "ordered_answer",
   "answer_rows": [],
@@ -6145,6 +6307,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -6183,6 +6346,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "drag_and_drop",
   "answer_layout": "ordered_answer",
   "answer_rows": [],
@@ -6221,6 +6385,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -6267,6 +6432,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -6312,6 +6478,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -6356,6 +6523,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -6393,6 +6561,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -6431,6 +6600,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -6472,6 +6642,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "drag_and_drop",
   "answer_layout": "ordered_answer",
   "answer_rows": [],
@@ -6506,6 +6677,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -6549,6 +6721,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -6590,6 +6763,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -6626,6 +6800,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -6673,6 +6848,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v07",
   "type": "multiple_choice",
   "options": [
    {
@@ -6709,6 +6885,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -6754,6 +6931,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -6794,6 +6972,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v06",
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -6840,6 +7019,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -6876,6 +7056,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -6912,6 +7093,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v07",
   "type": "multiple_choice",
   "options": [
    {
@@ -6948,6 +7130,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "drag_and_drop",
   "answer_layout": "ordered_answer",
   "answer_rows": [],
@@ -6979,6 +7162,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -7017,6 +7201,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -7060,6 +7245,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -7107,6 +7293,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -7152,6 +7339,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -7188,6 +7376,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -7224,6 +7413,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -7266,6 +7456,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -7302,6 +7493,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v07",
   "type": "multiple_choice",
   "options": [
    {
@@ -7338,6 +7530,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -7375,6 +7568,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -7413,6 +7607,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -7449,6 +7644,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -7487,6 +7683,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -7528,6 +7725,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -7570,6 +7768,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v08",
   "type": "multiple_choice",
   "options": [
    {
@@ -7606,6 +7805,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -7642,6 +7842,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "drag_and_drop",
   "answer_layout": "selection",
   "answer_rows": [
@@ -7692,6 +7893,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -7728,6 +7930,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v09",
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -7766,6 +7969,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -7803,6 +8007,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v08",
   "type": "multiple_choice",
   "options": [
    {
@@ -7839,6 +8044,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -7881,6 +8087,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "drag_and_drop",
   "answer_layout": "ordered_answer",
   "answer_rows": [],
@@ -7914,6 +8121,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v07",
   "type": "multiple_choice",
   "options": [
    {
@@ -7950,6 +8158,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -7993,6 +8202,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -8071,6 +8281,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -8111,6 +8322,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -8159,6 +8371,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -8206,6 +8419,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v07",
   "type": "multiple_choice",
   "options": [
    {
@@ -8242,6 +8456,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -8280,6 +8495,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -8327,6 +8543,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v07",
   "type": "multiple_choice",
   "options": [
    {
@@ -8363,6 +8580,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -8405,6 +8623,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v07",
   "type": "multiple_choice",
   "options": [
    {
@@ -8441,6 +8660,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -8477,6 +8697,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v07",
   "type": "multiple_choice",
   "options": [
    {
@@ -8513,6 +8734,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -8557,6 +8779,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -8600,6 +8823,7 @@
    240,
    248
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -8628,6 +8852,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -8674,6 +8899,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -8717,6 +8943,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -8753,6 +8980,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -8797,6 +9025,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -8839,6 +9068,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v07",
   "type": "multiple_choice",
   "options": [
    {
@@ -8875,6 +9105,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -8918,6 +9149,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -8959,6 +9191,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -8995,6 +9228,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -9045,6 +9279,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -9081,6 +9316,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -9123,6 +9359,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -9158,6 +9395,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v10",
   "type": "multiple_choice",
   "options": [
    {
@@ -9196,6 +9434,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -9242,6 +9481,7 @@
    240,
    248
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -9270,6 +9510,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -9312,6 +9553,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -9374,6 +9616,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v09",
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -9412,6 +9655,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -9451,6 +9695,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -9490,6 +9735,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -9528,6 +9774,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v10",
   "type": "multiple_choice",
   "options": [
    {
@@ -9574,6 +9821,7 @@
    240,
    248
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -9602,6 +9850,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -9642,6 +9891,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": null,
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -9698,6 +9948,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": null,
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -9743,6 +9994,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": null,
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -9796,6 +10048,7 @@
    254,
    255
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -9828,6 +10081,7 @@
    254,
    255
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -9860,6 +10114,7 @@
    254,
    255
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -9894,6 +10149,7 @@
    322,
    323
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -9922,6 +10178,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -9967,6 +10224,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -10003,6 +10261,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -10051,6 +10310,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -10098,6 +10358,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -10139,6 +10400,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -10184,6 +10446,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "drag_and_drop",
   "answer_layout": "ordered_answer",
   "answer_rows": [],
@@ -10217,6 +10480,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -10252,6 +10516,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -10288,6 +10553,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -10330,6 +10596,7 @@
    322,
    323
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -10366,6 +10633,7 @@
    371,
    372
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -10402,6 +10670,7 @@
    371,
    372
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -10438,6 +10707,7 @@
    371,
    372
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -10466,6 +10736,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -10507,6 +10778,7 @@
    274,
    287
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -10542,6 +10814,7 @@
    274,
    287
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -10577,6 +10850,7 @@
    274,
    287
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -10607,6 +10881,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -10646,6 +10921,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -10691,6 +10967,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -10729,6 +11006,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -10769,6 +11047,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -10812,6 +11091,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -10848,6 +11128,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -10891,6 +11172,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -10937,6 +11219,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -10973,6 +11256,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v11",
   "type": "multiple_choice",
   "options": [
    {
@@ -11011,6 +11295,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -11061,6 +11346,7 @@
    297,
    298
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -11094,6 +11380,7 @@
    274,
    287
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -11124,6 +11411,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -11166,6 +11454,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -11202,6 +11491,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -11246,6 +11536,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -11293,6 +11584,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v12",
   "type": "multiple_choice",
   "options": [
    {
@@ -11336,6 +11628,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -11377,6 +11670,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -11413,6 +11707,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v13",
   "type": "multiple_choice",
   "options": [
    {
@@ -11456,6 +11751,7 @@
    297,
    298
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -11489,6 +11785,7 @@
    297,
    298
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -11522,6 +11819,7 @@
    297,
    298
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -11550,6 +11848,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -11586,6 +11885,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -11631,6 +11931,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -11667,6 +11968,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -11703,6 +12005,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -11743,6 +12046,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v14",
   "type": "multiple_choice",
   "options": [
    {
@@ -11779,6 +12083,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -11822,6 +12127,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -11870,6 +12176,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -11906,6 +12213,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -11948,6 +12256,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -11993,6 +12302,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -12031,6 +12341,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -12069,6 +12380,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -12114,6 +12426,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -12158,6 +12471,7 @@
    371,
    372
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -12186,6 +12500,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -12239,6 +12554,7 @@
    322,
    323
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -12267,6 +12583,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -12312,6 +12629,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -12350,6 +12668,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v14",
   "type": "multiple_choice",
   "options": [
    {
@@ -12386,6 +12705,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -12431,6 +12751,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -12465,6 +12786,7 @@
    322,
    323
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -12499,6 +12821,7 @@
    322,
    323
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -12527,6 +12850,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -12566,6 +12890,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -12612,6 +12937,7 @@
    327,
    328
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -12646,6 +12972,7 @@
    327,
    328
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -12680,6 +13007,7 @@
    327,
    328
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -12710,6 +13038,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -12748,6 +13077,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -12792,6 +13122,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v14",
   "type": "multiple_choice",
   "options": [
    {
@@ -12828,6 +13159,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -12870,6 +13202,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -12906,6 +13239,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -12950,6 +13284,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -12995,6 +13330,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -13038,6 +13374,7 @@
    366,
    367
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -13066,6 +13403,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -13109,6 +13447,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -13156,6 +13495,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -13194,6 +13534,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -13269,6 +13610,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -13307,6 +13649,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -13350,6 +13693,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -13394,6 +13738,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -13431,6 +13776,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v11",
   "type": "multiple_choice",
   "options": [
    {
@@ -13469,6 +13815,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -13508,6 +13855,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -13546,6 +13894,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -13593,6 +13942,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -13629,6 +13979,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -13667,6 +14018,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -13705,6 +14057,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -13741,6 +14094,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -13778,6 +14132,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v13",
   "type": "multiple_choice",
   "options": [
    {
@@ -13816,6 +14171,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -13853,6 +14209,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v12",
   "type": "multiple_choice",
   "options": [
    {
@@ -13896,6 +14253,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -13932,6 +14290,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -13968,6 +14327,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -14011,6 +14371,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -14048,6 +14409,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -14086,6 +14448,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -14126,6 +14489,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -14175,6 +14539,7 @@
    366,
    367
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -14208,6 +14573,7 @@
    366,
    367
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -14241,6 +14607,7 @@
    366,
    367
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -14269,6 +14636,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -14309,6 +14677,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": null,
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -14366,6 +14735,7 @@
    371,
    372
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -14402,6 +14772,7 @@
    371,
    372
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -14438,6 +14809,7 @@
    371,
    372
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -14466,6 +14838,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": null,
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -14511,6 +14884,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -14558,6 +14932,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -14594,6 +14969,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -14638,6 +15014,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -14677,6 +15054,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -14722,6 +15100,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -14764,6 +15143,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -14802,6 +15182,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -14848,6 +15229,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v15",
   "type": "multiple_choice",
   "options": [
    {
@@ -14884,6 +15266,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -14922,6 +15305,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -14964,6 +15348,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "drag_and_drop",
   "answer_layout": "ordered_answer",
   "answer_rows": [],
@@ -15000,6 +15385,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -15038,6 +15424,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -15074,6 +15461,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v16",
   "type": "multiple_choice",
   "options": [
    {
@@ -15112,6 +15500,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v17",
   "type": "multiple_choice",
   "options": [
    {
@@ -15152,6 +15541,7 @@
    391,
    392
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -15184,6 +15574,7 @@
    391,
    392
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -15218,6 +15609,7 @@
    391,
    392
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -15246,6 +15638,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -15293,6 +15686,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -15331,6 +15725,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -15369,6 +15764,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -15405,6 +15801,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -15441,6 +15838,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -15479,6 +15877,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -15524,6 +15923,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "drag_and_drop",
   "answer_layout": "ordered_answer",
   "answer_rows": [],
@@ -15559,6 +15959,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -15598,6 +15999,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -15634,6 +16036,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -15678,6 +16081,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -15723,6 +16127,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -15773,6 +16178,7 @@
    426,
    457
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -15806,6 +16212,7 @@
    426,
    457
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -15839,6 +16246,7 @@
    433,
    436
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -15867,6 +16275,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -15905,6 +16314,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -15944,6 +16354,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -15984,6 +16395,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -16020,6 +16432,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -16054,6 +16467,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -16096,6 +16510,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -16141,6 +16556,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -16180,6 +16596,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -16222,6 +16639,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -16260,6 +16678,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -16299,6 +16718,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -16345,6 +16765,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -16384,6 +16805,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -16437,6 +16859,7 @@
    425,
    435
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -16472,6 +16895,7 @@
    425,
    435
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -16507,6 +16931,7 @@
    425,
    435
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -16542,6 +16967,7 @@
    426,
    457
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -16570,6 +16996,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -16613,6 +17040,7 @@
    433,
    436
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -16641,6 +17069,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -16687,6 +17116,7 @@
    451,
    505
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -16724,6 +17154,7 @@
    451,
    505
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -16761,6 +17192,7 @@
    451,
    505
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -16796,6 +17228,7 @@
    433,
    436
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -16824,6 +17257,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -16865,6 +17299,7 @@
    425,
    435
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -16900,6 +17335,7 @@
    433,
    436
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -16929,6 +17365,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -16965,6 +17402,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -17010,6 +17448,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -17062,6 +17501,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -17107,6 +17547,7 @@
    451,
    505
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -17137,6 +17578,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -17182,6 +17624,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -17220,6 +17663,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -17259,6 +17703,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -17307,6 +17752,7 @@
    448,
    450
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -17340,6 +17786,7 @@
    448,
    450
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -17373,6 +17820,7 @@
    448,
    450
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -17401,6 +17849,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "drag_and_drop",
   "answer_layout": "ordered_answer",
   "answer_rows": [],
@@ -17440,6 +17889,7 @@
    448,
    450
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -17475,6 +17925,7 @@
    451,
    505
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -17505,6 +17956,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "drag_and_drop",
   "answer_layout": "ordered_answer",
   "answer_rows": [],
@@ -17539,6 +17991,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -17580,6 +18033,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -17618,6 +18072,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -17661,6 +18116,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -17731,6 +18187,7 @@
    426,
    457
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -17759,6 +18216,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v17",
   "type": "multiple_choice",
   "options": [
    {
@@ -17795,6 +18253,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -17833,6 +18292,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -17869,6 +18329,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -17921,6 +18382,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v17",
   "type": "multiple_choice",
   "options": [
    {
@@ -17957,6 +18419,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -17994,6 +18457,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -18035,6 +18499,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -18067,6 +18532,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -18105,6 +18571,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -18143,6 +18610,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -18179,6 +18647,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -18219,6 +18688,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -18259,6 +18729,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -18291,6 +18762,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -18334,6 +18806,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -18370,6 +18843,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -18406,6 +18880,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -18444,6 +18919,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v17",
   "type": "multiple_choice",
   "options": [
    {
@@ -18480,6 +18956,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -18518,6 +18995,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v17",
   "type": "multiple_choice",
   "options": [
    {
@@ -18554,6 +19032,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -18590,6 +19069,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -18633,6 +19113,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v17",
   "type": "multiple_choice",
   "options": [
    {
@@ -18669,6 +19150,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -18711,6 +19193,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -18749,6 +19232,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -18786,6 +19270,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -18822,6 +19307,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -18858,6 +19344,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -18896,6 +19383,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -18938,6 +19426,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v17",
   "type": "multiple_choice",
   "options": [
    {
@@ -18974,6 +19463,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v17",
   "type": "multiple_choice",
   "options": [
    {
@@ -19010,6 +19500,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -19048,6 +19539,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v17",
   "type": "multiple_choice",
   "options": [
    {
@@ -19084,6 +19576,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "drag_and_drop",
   "answer_layout": "ordered_answer",
   "answer_rows": [],
@@ -19119,6 +19612,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v17",
   "type": "multiple_choice",
   "options": [
    {
@@ -19155,6 +19649,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -19197,6 +19692,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v17",
   "type": "multiple_choice",
   "options": [
    {
@@ -19233,6 +19729,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v17",
   "type": "multiple_choice",
   "options": [
    {
@@ -19269,6 +19766,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -19307,6 +19805,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v17",
   "type": "multiple_choice",
   "options": [
    {
@@ -19343,6 +19842,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v17",
   "type": "multiple_choice",
   "options": [
    {
@@ -19379,6 +19879,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v17",
   "type": "multiple_choice",
   "options": [
    {
@@ -19415,6 +19916,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -19451,6 +19953,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -19493,6 +19996,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -19536,6 +20040,7 @@
    451,
    505
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -19566,6 +20071,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -19608,6 +20114,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v16",
   "type": "multiple_choice",
   "options": [
    {
@@ -19646,6 +20153,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -19696,6 +20204,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -19734,6 +20243,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -19773,6 +20283,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -19812,6 +20323,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -19852,6 +20364,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -19888,6 +20401,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -19927,6 +20441,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "drag_and_drop",
   "answer_layout": "ordered_answer",
   "answer_rows": [],
@@ -19960,6 +20475,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -20000,6 +20516,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -20039,6 +20556,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -20077,6 +20595,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -20113,6 +20632,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -20157,6 +20677,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -20195,6 +20716,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -20231,6 +20753,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -20267,6 +20790,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -20305,6 +20829,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -20341,6 +20866,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -20379,6 +20905,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -20425,6 +20952,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -20463,6 +20991,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -20508,6 +21037,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -20553,6 +21083,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -20589,6 +21120,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -20628,6 +21160,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -20664,6 +21197,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -20701,6 +21235,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -20743,6 +21278,7 @@
    100,
    536
   ],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -20773,6 +21309,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -20809,6 +21346,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -20853,6 +21391,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "drag_and_drop",
   "answer_layout": "ordered_answer",
   "answer_rows": [],
@@ -20892,6 +21431,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -20936,6 +21476,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -20972,6 +21513,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -21008,6 +21550,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -21044,6 +21587,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -21080,6 +21624,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -21125,6 +21670,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -21161,6 +21707,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -21206,6 +21753,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -21253,6 +21801,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -21290,6 +21839,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -21328,6 +21878,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v15",
   "type": "multiple_choice",
   "options": [
    {
@@ -21364,6 +21915,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -21403,6 +21955,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -21439,6 +21992,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "drag_and_drop",
   "answer_layout": "ordered_answer",
   "answer_rows": [],
@@ -21472,6 +22026,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -21508,6 +22063,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": "v02",
   "type": "multiple_choice",
   "options": [
    {
@@ -21544,6 +22100,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -21580,6 +22137,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -21618,6 +22176,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -21664,6 +22223,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -21705,6 +22265,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -21743,6 +22304,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -21779,6 +22341,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -21815,6 +22378,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -21852,6 +22416,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -21888,6 +22453,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -21920,6 +22486,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -21956,6 +22523,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -21992,6 +22560,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -22033,6 +22602,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -22069,6 +22639,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -22114,6 +22685,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -22159,6 +22731,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -22198,6 +22771,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -22234,6 +22808,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -22280,6 +22855,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -22316,6 +22892,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -22348,6 +22925,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -22380,6 +22958,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -22416,6 +22995,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -22452,6 +23032,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "multiple_choice",
   "options": [
    {
@@ -22492,6 +23073,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot_yes_no",
   "answer_layout": "yes_no",
   "answer_rows": [
@@ -22531,6 +23113,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": [],
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [
@@ -22576,6 +23159,7 @@
   "group_id": null,
   "group_type": null,
   "group_members": null,
+  "variant_group": null,
   "type": "hotspot",
   "answer_layout": "selection",
   "answer_rows": [

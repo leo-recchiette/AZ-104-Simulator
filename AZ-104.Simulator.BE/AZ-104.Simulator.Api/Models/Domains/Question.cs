@@ -23,4 +23,7 @@ public sealed record Question
 
     /// <summary>'scenario_series' | 'case_study'. Valorizzato se e solo se lo e' GroupId.</summary>
     public string? GroupType { get; init; }
+
+    /// <summary>'v01'..'v17': varianti della stessa domanda, una sola per sessione. Mai insieme a GroupId.</summary>
+    public string? VariantGroup { get; init; }
 }
