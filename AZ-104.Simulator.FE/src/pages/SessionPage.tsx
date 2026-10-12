@@ -49,7 +49,6 @@ export function SessionPage() {
   const { theme, tokens: t } = useTheme();
   const [showConfirm, setShowConfirm] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
-  const [paused, setPaused] = useState(false);
   // null = chiuso. Aperto "unanswered" quando si arriva dal riepilogo cercando i buchi.
   const [navFilter, setNavFilter] = useState<null | "all" | "unanswered">(null);
   const [submitting, setSubmitting] = useState(false);
@@ -137,7 +136,8 @@ export function SessionPage() {
     }
   }, [dispatch, navigate, scored, submissions, state.mode, state.drawMode, state.startedAt]);
 
-  const elapsedMs = useElapsedTime(state.startedAt, paused);
+  const paused = state.pausedAt !== null;
+  const elapsedMs = useElapsedTime(state.startedAt, state.pausedAt);
   const elapsedSec = Math.floor(elapsedMs / 1000);
   elapsedSecRef.current = elapsedSec;
   const limit = state.timeLimitSeconds;
@@ -364,7 +364,7 @@ export function SessionPage() {
           </div>
           {limit !== null && (
             <button
-              onClick={() => setPaused(true)}
+              onClick={() => dispatch({ type: "PAUSE" })}
               aria-label="Pause the session"
               style={headerButtonStyle}
             >
@@ -494,7 +494,7 @@ export function SessionPage() {
               {timeLabel}
             </div>
             <button
-              onClick={() => setPaused(false)}
+              onClick={() => dispatch({ type: "RESUME" })}
               style={{ width: "100%", padding: 14, borderRadius: 11, border: "none", background: t.ac, fontSize: 14.5, fontWeight: 600, color: "#fff", font: "inherit" }}
             >
               Riprendi

@@ -29,6 +29,11 @@ export interface SessionState {
   /** Scelto nel setup; la Practice a oltranza lo riusa per ripescare il bank dopo un ripristino. */
   drawMode: DrawMode;
   startedAt: number | null;
+  /**
+   * Istante della pausa, null se il tempo scorre. Nello stato e non in SessionPage: deve sopravvivere
+   * a un rimontaggio e al salvataggio, che altrimenti conterebbero la pausa come tempo giocato.
+   */
+  pausedAt: number | null;
   status: "idle" | "in-progress" | "finished";
   score: ExamScoreDto | null;
   /** Congelato all'invio: la pagina risultati non lo ricalcola. */
@@ -49,6 +54,8 @@ export type SessionAction =
   | { type: "SET_AUTO_REVEAL"; autoReveal: boolean }
   | { type: "SET_LIVE_SCORE"; liveScore: boolean }
   | { type: "TOGGLE_FLAG"; index: number }
+  | { type: "PAUSE" }
+  | { type: "RESUME" }
   /** questions: quelle valutate. A oltranza sono meno di quelle proposte. */
   | { type: "FINISH_SESSION"; score: ExamScoreDto; timeUsedSeconds: number; questions: QuestionDto[] }
   | { type: "SET_HISTORY_OUTCOME"; outcome: "discarded" | "failed" }
@@ -68,6 +75,7 @@ export const initialSessionState: SessionState = {
   liveScore: false,
   drawMode: "random",
   startedAt: null,
+  pausedAt: null,
   status: "idle",
   score: null,
   timeUsedSeconds: null,
@@ -162,6 +170,14 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
         ...state,
         flags: { ...state.flags, [action.index]: !state.flags[action.index] },
       };
+
+    case "PAUSE":
+      return state.pausedAt === null ? { ...state, pausedAt: Date.now() } : state;
+
+    // startedAt avanza di quanto e' durata la pausa: da qui in poi il tempo giocato non la contiene.
+    case "RESUME":
+      if (state.pausedAt === null || state.startedAt === null) return state;
+      return { ...state, startedAt: state.startedAt + (Date.now() - state.pausedAt), pausedAt: null };
 
     case "FINISH_SESSION":
       return {

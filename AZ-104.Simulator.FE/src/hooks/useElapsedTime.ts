@@ -1,32 +1,22 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 /**
- * Ricalcolato da Date.now() a ogni tick, cosi' resta giusto anche con un tab in background; le
- * pause si sottraggono. Mai nel SessionContext: il tick rirenderizzerebbe tutta la domanda.
+ * Ricalcolato da Date.now() a ogni tick, cosi' resta giusto anche con un tab in background; in
+ * pausa resta fermo a pausedAt. Le pause gia' finite stanno in startedAt (RESUME lo sposta avanti).
+ * Mai nel SessionContext: il tick rirenderizzerebbe tutta la domanda.
  */
-export function useElapsedTime(startedAt: number | null, paused = false, intervalMs = 1000): number {
-  const [elapsedMs, setElapsedMs] = useState(() => (startedAt !== null ? Date.now() - startedAt : 0));
-  const pausedTotalRef = useRef(0);
-  const pausedSinceRef = useRef<number | null>(null);
+export function useElapsedTime(startedAt: number | null, pausedAt: number | null = null, intervalMs = 1000): number {
+  const [elapsedMs, setElapsedMs] = useState(() => (startedAt !== null ? (pausedAt ?? Date.now()) - startedAt : 0));
 
   useEffect(() => {
     if (startedAt === null) return;
 
-    if (paused) {
-      pausedSinceRef.current = Date.now();
-      return;
-    }
-
-    if (pausedSinceRef.current !== null) {
-      pausedTotalRef.current += Date.now() - pausedSinceRef.current;
-      pausedSinceRef.current = null;
-    }
-
-    const read = () => setElapsedMs(Date.now() - startedAt - pausedTotalRef.current);
+    const read = () => setElapsedMs((pausedAt ?? Date.now()) - startedAt);
     read();
+    if (pausedAt !== null) return;
     const id = setInterval(read, intervalMs);
     return () => clearInterval(id);
-  }, [startedAt, paused, intervalMs]);
+  }, [startedAt, pausedAt, intervalMs]);
 
   return elapsedMs;
 }

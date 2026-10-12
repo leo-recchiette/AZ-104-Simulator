@@ -34,7 +34,8 @@ function toSaveDto(state: SessionState): SaveActiveSessionDto | null {
     liveScore: state.liveScore,
     drawMode: state.drawMode,
     startedAt: new Date(state.startedAt).toISOString(),
-    savedAt: new Date().toISOString(),
+    // In pausa il tempo giocato si e' fermato a pausedAt, non adesso.
+    savedAt: new Date(state.pausedAt ?? Date.now()).toISOString(),
   };
 }
 
@@ -44,6 +45,7 @@ function fromDto(dto: ActiveSessionDto): SessionState {
 
   // savedAt - startedAt e' il tempo giocato: riancorato ad adesso, l'app chiusa non consuma tempo.
   const playedMs = Math.max(0, new Date(dto.savedAt).getTime() - new Date(dto.startedAt).getTime());
+  const now = Date.now();
 
   return {
     ...initialSessionState,
@@ -57,7 +59,10 @@ function fromDto(dto: ActiveSessionDto): SessionState {
     openEnded: dto.openEnded,
     liveScore: dto.autoReveal && dto.liveScore,
     drawMode: dto.drawMode,
-    startedAt: Date.now() - playedMs,
+    startedAt: now - playedMs,
+    // Col tempo contato si riparte in pausa: un reload a pagina incustodita (un tab ricaricato al
+    // risveglio del portatile) non deve far correre il timer finche' non si torna davvero.
+    pausedAt: dto.timeLimitSeconds !== null ? now : null,
     status: "in-progress",
   };
 }
