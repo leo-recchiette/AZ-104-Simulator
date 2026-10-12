@@ -3,7 +3,8 @@ namespace Simulator.Api.Models.Contracts;
 /// <summary>
 /// La domanda prima della risposta, senza la soluzione. Il campo valorizzato dipende da
 /// AnswerLayout, non da Type:
-///   Options        - MultipleChoice.
+///   Options        - MultipleChoice; SelectCount e' quante lettere vanno scelte (lo dice gia' il
+///                    testo della domanda, "Which two...").
 ///   DraggableItems - 'ordered_answer', distrattori compresi; SequenceLength e' la lunghezza
 ///                    della sequenza (lo dice gia' il testo della domanda).
 ///   Prompts        - 'selection' e 'yes_no', una riga ciascuno.
@@ -14,6 +15,7 @@ public sealed record QuestionDto(
     string Type,
     string Text,
     IReadOnlyList<OptionDto> Options,
+    int SelectCount,
     IReadOnlyList<string> DraggableItems,
     int SequenceLength,
     IReadOnlyList<PromptOptionsDto> Prompts,

@@ -101,6 +101,7 @@ public sealed class QuestionServiceTests
         Type: "multiple_choice",
         Text: "Domanda di prova",
         Options: [new OptionDto(CorrectOption, "Opzione corretta")],
+        SelectCount: 1,
         DraggableItems: [],
         SequenceLength: 0,
         Prompts: [],

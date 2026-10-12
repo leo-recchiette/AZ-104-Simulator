@@ -1,3 +1,4 @@
+using Simulator.Api.Extensions;
 using Simulator.Api.Models.Contracts;
 using Simulator.Api.Models.Domains;
 
@@ -26,13 +27,15 @@ public static class QuestionMapper
             Type: QuestionTypeMapper.ToDb(question.Type),
             Text: question.Text,
             Options: isMultipleChoice ? options.Select(o => new OptionDto(o.Letter!, o.Text)).ToList() : [],
+            SelectCount: isMultipleChoice ? options.Count(o => o.IsCorrect) : 0,
             DraggableItems: isOrderedAnswer ? options.Select(o => o.Text).ToList() : [],
             SequenceLength: isOrderedAnswer ? answerRows.Count() : 0,
             Prompts: isMultipleChoice || isOrderedAnswer
                 ? []
                 : answerRows.Where(r => r.Prompt is not null).Select(r => new PromptOptionsDto(
                     r.Prompt!,
-                    isYesNo ? YesNoOptions : rowOptionsByAnswerRowId[r.Id].Select(o => o.Text).ToList())).ToList(),
+                    isYesNo ? YesNoOptions : rowOptionsByAnswerRowId[r.Id].Select(o => o.Text).ToList(),
+                    r.Answer.CorrectValueCount())).ToList(),
             Images: images.Where(i => i.Kind == QuestionImageKind).OrderBy(i => i.Ord).Select(i => i.Filename).ToList(),
             GroupId: question.GroupId,
             GroupType: question.GroupType,

@@ -8,11 +8,21 @@ public static class RowAnswerExtension
     /// </summary>
     public static bool HasRowMatches(this string given, string correct)
     {
-        if (correct.Length < 2 || correct[0] != '{' || correct[^1] != '}')
+        if (!IsMultiValue(correct))
             return string.Equals(given, correct, StringComparison.OrdinalIgnoreCase);
 
-        var correctSet = new HashSet<string>(correct[1..^1].Split(',').Select(s => s.Trim()), StringComparer.OrdinalIgnoreCase);
+        var correctSet = new HashSet<string>(MultiValues(correct), StringComparer.OrdinalIgnoreCase);
         var givenSet = new HashSet<string>(given.Split('\n').Select(s => s.Trim()), StringComparer.OrdinalIgnoreCase);
         return correctSet.SetEquals(givenSet);
     }
+
+    /// <summary>Quanti valori vanno scelti nella riga: quelli fra graffe, altrimenti uno.</summary>
+    public static int CorrectValueCount(this string correct) =>
+        IsMultiValue(correct) ? MultiValues(correct).Count() : 1;
+
+    private static bool IsMultiValue(string correct) =>
+        correct.Length >= 2 && correct[0] == '{' && correct[^1] == '}';
+
+    private static IEnumerable<string> MultiValues(string correct) =>
+        correct[1..^1].Split(',').Select(s => s.Trim());
 }

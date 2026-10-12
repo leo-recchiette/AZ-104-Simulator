@@ -25,6 +25,7 @@ public sealed class QuestionMapperTests
             Type: "multiple_choice",
             Text: "Domanda di prova",
             Options: [new OptionDto("A", "Opzione sbagliata"), new OptionDto("C", "Opzione corretta")],
+            SelectCount: 1,
             DraggableItems: [],
             SequenceLength: 0,
             Prompts: [],
@@ -34,6 +35,23 @@ public sealed class QuestionMapperTests
             VariantGroup: null);
 
         sut.Should().BeEquivalentTo(expected);
+    }
+
+    [TestMethod]
+    public void Should_Count_Every_Correct_Option_In_SelectCount()
+    {
+        var input = Question(type: QuestionType.MultipleChoice, answerLayout: null);
+        var options = new[]
+        {
+            Option(ord: 0, letter: "A", isCorrect: true),
+            Option(ord: 1, letter: "B", isCorrect: false),
+            Option(ord: 2, letter: "C", isCorrect: true),
+            Option(ord: 3, letter: "D", isCorrect: false),
+        };
+
+        var sut = input.ToQuestionDto(options, [], NoRowOptions(), NoImages());
+
+        sut.SelectCount.Should().Be(2);
     }
 
     [TestMethod]
@@ -59,6 +77,7 @@ public sealed class QuestionMapperTests
             Type: "drag_and_drop",
             Text: "Domanda di prova",
             Options: [],
+            SelectCount: 0,
             DraggableItems: ["An Azure Key Vault", "An Azure Storage account", "An access policy"],
             SequenceLength: 2,
             Prompts: [],
@@ -98,11 +117,12 @@ public sealed class QuestionMapperTests
             Type: "hotspot",
             Text: "Domanda di prova",
             Options: [],
+            SelectCount: 0,
             DraggableItems: [],
             SequenceLength: 0,
             Prompts: [
-                new PromptOptionsDto("To add a backend pool to LB1", ["Contributor on LB1", "Network Contributor on LB1"]),
-                new PromptOptionsDto("To add a health probe to LB2", ["Contributor on LB2", "Network Contributor on LB2"]),
+                new PromptOptionsDto("To add a backend pool to LB1", ["Contributor on LB1", "Network Contributor on LB1"], 1),
+                new PromptOptionsDto("To add a health probe to LB2", ["Contributor on LB2", "Network Contributor on LB2"], 1),
             ],
             Images: ["q001_pre0.png", "q001_pre1.png"],
             GroupId: null,
@@ -110,6 +130,24 @@ public sealed class QuestionMapperTests
             VariantGroup: null);
 
         sut.Should().BeEquivalentTo(expected);
+    }
+
+    [TestMethod]
+    public void Should_Count_Every_Correct_Value_Of_A_MultiValue_Row()
+    {
+        // Domanda 242: "Allowed permissions" vuole Read e List insieme.
+        var input = Question(type: QuestionType.Hotspot, answerLayout: "selection");
+        var row = AnswerRow(id: 40, ord: 0, prompt: "Allowed permissions", answer: "{Read,List}");
+        var rowOptions = new[]
+        {
+            RowOption(answerRowId: 40, ord: 0, text: "Read"),
+            RowOption(answerRowId: 40, ord: 1, text: "Write"),
+            RowOption(answerRowId: 40, ord: 2, text: "List"),
+        };
+
+        var sut = input.ToQuestionDto([], [row], rowOptions.ToLookup(o => o.AnswerRowId), NoImages());
+
+        sut.Prompts.Single().SelectCount.Should().Be(2);
     }
 
     [TestMethod]
@@ -125,9 +163,10 @@ public sealed class QuestionMapperTests
             Type: "hotspot_yes_no",
             Text: "Domanda di prova",
             Options: [],
+            SelectCount: 0,
             DraggableItems: [],
             SequenceLength: 0,
-            Prompts: [new PromptOptionsDto("Statement 1", ["Yes", "No"])],
+            Prompts: [new PromptOptionsDto("Statement 1", ["Yes", "No"], 1)],
             Images: [],
             GroupId: null,
             GroupType: null,

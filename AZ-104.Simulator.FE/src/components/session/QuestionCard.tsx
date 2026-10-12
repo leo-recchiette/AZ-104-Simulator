@@ -35,7 +35,8 @@ export function QuestionCard({ question, value, onChange, flagged, onToggleFlag,
   const { preamble, body } = splitPreamble(question.text);
   const revealed = panelOpen && !!checkResult;
   const correct = checkResult?.correctAnswer;
-  const multiHint = revealed && correct && correct.correctLetters.length > 1 ? `Select ${correct.correctLetters.length} answers` : "";
+  // Solo a soluzione vista: prima il numero di risposte va letto nel testo, come all'esame.
+  const multiHint = revealed && question.selectCount > 1 ? `Select ${question.selectCount} answers` : "";
   // Con l'auto-reveal le righe si correggono una alla volta; il pannello si apre a domanda completa.
   const rowsPreview = autoReveal && !revealed ? correct?.answerRows : undefined;
 
@@ -103,7 +104,7 @@ export function QuestionCard({ question, value, onChange, flagged, onToggleFlag,
         <ImageStack filenames={question.images} />
 
         {shape === "options" && (
-          <MultipleChoiceAnswer options={question.options} value={value} onChange={onChange} correctLetters={revealed ? correct?.correctLetters : undefined} locked={answerLocked} />
+          <MultipleChoiceAnswer options={question.options} selectCount={question.selectCount} value={value} onChange={onChange} correctLetters={revealed ? correct?.correctLetters : undefined} locked={answerLocked} />
         )}
         {shape === "draggable" && (
           <SequenceAnswer draggableItems={question.draggableItems} sequenceLength={question.sequenceLength} value={value} onChange={onChange} answerRows={revealed ? correct?.answerRows : undefined} locked={answerLocked} />

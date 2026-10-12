@@ -11,6 +11,8 @@ export interface OptionDto {
 export interface PromptOptionsDto {
   prompt: string;
   options: string[];
+  /** Quanti valori scegliere nella riga: 1, tranne le righe a piu' risposte (domanda 242). */
+  selectCount: number;
 }
 
 /** Solo uno fra options/draggableItems/prompts e' popolato: vedi utils/questionShape.ts. */
@@ -19,6 +21,8 @@ export interface QuestionDto {
   type: QuestionType;
   text: string;
   options: OptionDto[];
+  /** Quante lettere scegliere (le risposte corrette); 0 se non e' a scelta multipla. */
+  selectCount: number;
   draggableItems: string[];
   /** Lunghezza della sequenza da comporre; 0 se non e' una sequenza. */
   sequenceLength: number;

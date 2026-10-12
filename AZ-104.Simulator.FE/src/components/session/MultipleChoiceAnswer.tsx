@@ -1,10 +1,11 @@
 import { useTheme } from "../../theme/ThemeContext";
 import type { OptionDto } from "../../types/question";
 import { gradeMultipleChoice } from "../../utils/grading";
-import { isYesNoChoice } from "../../utils/questionShape";
 
 interface MultipleChoiceAnswerProps {
   options: OptionDto[];
+  /** Quante lettere si possono scegliere: 1 = radio. */
+  selectCount: number;
   value: string[];
   onChange: (next: string[]) => void;
   /** Solo dopo la rivelazione. */
@@ -13,14 +14,17 @@ interface MultipleChoiceAnswerProps {
 }
 
 /**
- * Sempre multi-selezione: prima di rivelare non si sa quante risposte servano. Eccezione le
- * Yes/No, a scelta singola (radio): sceglierle entrambe prenderebbe sempre il punto.
+ * Al massimo selectCount scelte: senza tetto, scegliere tutte le opzioni prenderebbe sempre ogni
+ * punto, perche' le lettere in piu' non tolgono nulla. Oltre il tetto la nuova scelta sostituisce
+ * la piu' vecchia: value e' in ordine di selezione.
  */
-export function MultipleChoiceAnswer({ options, value, onChange, correctLetters, locked }: MultipleChoiceAnswerProps) {
+export function MultipleChoiceAnswer({ options, selectCount, value, onChange, correctLetters, locked }: MultipleChoiceAnswerProps) {
   const { tokens: t } = useTheme();
   const revealed = correctLetters !== undefined;
   const grades = revealed ? gradeMultipleChoice(value, correctLetters, options.map((o) => o.letter)) : null;
-  const single = isYesNoChoice(options);
+  // Un'API non ancora aggiornata non manda selectCount: nessun tetto, come prima.
+  const limit = selectCount > 0 ? selectCount : options.length;
+  const single = limit === 1;
 
   function choose(letter: string) {
     if (locked) return;
@@ -28,7 +32,7 @@ export function MultipleChoiceAnswer({ options, value, onChange, correctLetters,
       onChange([letter]);
       return;
     }
-    onChange(value.includes(letter) ? value.filter((l) => l !== letter) : [...value, letter]);
+    onChange(value.includes(letter) ? value.filter((l) => l !== letter) : [...value, letter].slice(-limit));
   }
 
   return (

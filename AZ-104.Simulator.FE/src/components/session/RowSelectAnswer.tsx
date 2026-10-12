@@ -2,7 +2,7 @@ import { useTheme } from "../../theme/ThemeContext";
 import type { PromptOptionsDto } from "../../types/question";
 import type { AnswerRowDto } from "../../types/answer";
 import { parseMultiValueAnswer } from "../../utils/grading";
-import { isRowComplete, isYesNoPool } from "../../utils/questionShape";
+import { isRowComplete } from "../../utils/questionShape";
 import { QUESTION_FONT, QUESTION_FONT_FEATURES } from "../../theme/fonts";
 import { PlaceholderText } from "../PlaceholderText";
 
@@ -16,7 +16,7 @@ interface RowSelectAnswerProps {
   lockedRows?: boolean[];
 }
 
-/** Righe multiselezione: prima di rivelare non si sa quante scelte servano. Separate da "\n". */
+/** Le scelte di una riga, separate da "\n" e in ordine di selezione. */
 function chosenLabels(raw: string | undefined): string[] {
   return raw ? raw.split("\n") : [];
 }
@@ -24,12 +24,13 @@ function chosenLabels(raw: string | undefined): string[] {
 export function RowSelectAnswer({ prompts, value, onChange, answerRows, answeredRowsOnly, lockedRows }: RowSelectAnswerProps) {
   const { tokens: t } = useTheme();
 
-  function pick(rowIndex: number, label: string, single: boolean) {
+  // Al massimo limit scelte per riga, come MultipleChoiceAnswer: oltre, la nuova sostituisce la piu' vecchia.
+  function pick(rowIndex: number, label: string, limit: number) {
     if (lockedRows?.[rowIndex]) return;
     const current = chosenLabels(value[rowIndex]);
     const next = [...value];
-    if (single) next[rowIndex] = label;
-    else next[rowIndex] = current.includes(label) ? current.filter((l) => l !== label).join("\n") : [...current, label].join("\n");
+    if (limit === 1) next[rowIndex] = label;
+    else next[rowIndex] = (current.includes(label) ? current.filter((l) => l !== label) : [...current, label].slice(-limit)).join("\n");
     onChange(next);
   }
 
@@ -41,7 +42,9 @@ export function RowSelectAnswer({ prompts, value, onChange, answerRows, answered
         const rawCorrect = answeredRowsOnly && !isRowComplete(value[ri], rowAnswer) ? undefined : rowAnswer;
         const correctSet =
           rawCorrect !== undefined ? new Set((parseMultiValueAnswer(rawCorrect) ?? [rawCorrect]).map((s) => s.toLowerCase())) : undefined;
-        const single = isYesNoPool(row.options);
+        // Un'API non ancora aggiornata non manda selectCount: nessun tetto, come prima.
+        const limit = row.selectCount > 0 ? row.selectCount : row.options.length;
+        const single = limit === 1;
         const rowLocked = lockedRows?.[ri] ?? false;
         return (
           <div key={`${row.prompt}-${ri}`} style={{ border: `1px solid ${t.bd2}`, borderRadius: 12, padding: "16px 17px", background: t.sub }}>
@@ -65,7 +68,7 @@ export function RowSelectAnswer({ prompts, value, onChange, answerRows, answered
                 return (
                   <button
                     key={label}
-                    onClick={() => pick(ri, label, single)}
+                    onClick={() => pick(ri, label, limit)}
                     role={single ? "radio" : "checkbox"}
                     aria-checked={sel}
                     aria-disabled={rowLocked || undefined}

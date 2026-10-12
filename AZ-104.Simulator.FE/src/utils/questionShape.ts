@@ -1,4 +1,4 @@
-import type { OptionDto, QuestionDto } from "../types/question";
+import type { QuestionDto } from "../types/question";
 import type { QuestionAnswerDto } from "../types/answer";
 import { gradeMultipleChoice, gradeRows, parseMultiValueAnswer, pointsEarned } from "./grading";
 
@@ -44,17 +44,6 @@ export function isRevealedWrong(question: QuestionDto, value: string[], correct:
   if (!isAnswerComplete(question, value, correct)) return false;
   const [earned, total] = pointsEarned(getAnswerShape(question), value, correct, question.options.map((o) => o.letter));
   return earned < total;
-}
-
-/** Un pool Yes/No e' a scelta singola: l'unico caso in cui lo si sa senza rivelare nulla. */
-export function isYesNoPool(labels: string[]): boolean {
-  if (labels.length !== 2) return false;
-  const texts = labels.map((l) => l.trim().toLowerCase());
-  return texts.includes("yes") && texts.includes("no");
-}
-
-export function isYesNoChoice(options: OptionDto[]): boolean {
-  return isYesNoPool(options.map((o) => o.text));
 }
 
 export function questionTypeLabel(question: QuestionDto, shape: AnswerShape = getAnswerShape(question)): string {
