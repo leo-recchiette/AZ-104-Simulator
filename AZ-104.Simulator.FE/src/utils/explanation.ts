@@ -1,7 +1,7 @@
 /**
- * Spiegazioni del dataset, impaginate in fase di render: ogni "Box N:" e il "Reference:" finale
- * aprono un paragrafo, e gli URL spezzati dall'estrazione del PDF vengono ricuciti. Il testo nel
- * dataset resta com'e'.
+ * Spiegazioni del dataset, impaginate in fase di render: ogni "Box N:" (una riga di risposta),
+ * "Step N:" (un passo di una sequenza) e il "Reference:" finale aprono un blocco, e gli URL spezzati
+ * dall'estrazione del PDF vengono ricuciti. Il testo nel dataset resta com'e'.
  */
 export interface ExplanationBlock {
   lead: string | null;
@@ -13,9 +13,9 @@ export interface InlineSegment {
   text: string;
 }
 
-const BLOCK_START = /\s+(?=(?:Box \d+|Reference):)/;
+const BLOCK_START = /\s+(?=(?:Box \d+|Step \d+|Reference):)/;
 
-const LEAD = /^(Box \d+|Reference):\s*/;
+const LEAD = /^(Box \d+|Step \d+|Reference):\s*/;
 
 /** "Box 3: No - Reference: ..." -> il trattino restava appeso alla fine del box. */
 const TRAILING_DASH = /\s*[-–—]$/;
