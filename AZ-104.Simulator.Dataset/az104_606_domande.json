@@ -21376,7 +21376,8 @@
   "answer_text": "The average CPU percentage is calculated [answer choice] per day -> four times | ASP1 must be [answer choice] to optimize CPU usage -> scaled up",
   "images_question": [
    "q538_pre0.png",
-   "q538_pre1.png"
+   "q538_pre1.png",
+   "q538_pre2.png"
   ],
   "images_answer": [
    "q538_post0.png"
