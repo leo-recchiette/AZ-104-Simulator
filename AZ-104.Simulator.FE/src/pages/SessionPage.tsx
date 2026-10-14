@@ -9,7 +9,7 @@ import { getExam } from "../api/questions";
 import { ApiError } from "../api/client";
 import { QuestionCard } from "../components/session/QuestionCard";
 import { GroupNav } from "../components/session/GroupNav";
-import { QuestionNavigator } from "../components/session/QuestionNavigator";
+import { QuestionNavigator, type QuestionFilter } from "../components/session/QuestionNavigator";
 import { groupMembers, sessionUnits, unitsAnswered, unitsStarted } from "../utils/groups";
 import { isAnswerStarted, isRevealedWrong } from "../utils/questionShape";
 import { OptionsMenu } from "../components/OptionsMenu";
@@ -49,8 +49,9 @@ export function SessionPage() {
   const { theme, tokens: t } = useTheme();
   const [showConfirm, setShowConfirm] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
-  // null = chiuso. Aperto "unanswered" quando si arriva dal riepilogo cercando i buchi.
-  const [navFilter, setNavFilter] = useState<null | "all" | "unanswered">(null);
+  const [navOpen, setNavOpen] = useState(false);
+  // Separato da navOpen: il filtro scelto resta attivo alla riapertura del pannello.
+  const [navFilter, setNavFilter] = useState<QuestionFilter>("all");
   const [submitting, setSubmitting] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -227,7 +228,13 @@ export function SessionPage() {
   function goToQuestion(index: number) {
     dispatch({ type: "GO_TO", index });
     setShowConfirm(false);
-    setNavFilter(null);
+    setNavOpen(false);
+  }
+
+  // Dal riepilogo si apre il pannello gia' filtrato su cio' che resta da guardare.
+  function openNavigator(filter: QuestionFilter) {
+    setNavFilter(filter);
+    setNavOpen(true);
   }
 
   const flagCount = Object.values(state.flags).filter(Boolean).length;
@@ -430,7 +437,7 @@ export function SessionPage() {
                 </div>
                 {totalUnits - answeredCount > 0 && (
                   <button
-                    onClick={() => setNavFilter("unanswered")}
+                    onClick={() => openNavigator("unanswered")}
                     style={{
                       display: "block", width: "100%", padding: 13, borderRadius: 11, marginBottom: 12,
                       border: `1.5px solid ${t.erbd}`, background: t.erbg, color: t.er,
@@ -438,6 +445,18 @@ export function SessionPage() {
                     }}
                   >
                     Find the unanswered questions
+                  </button>
+                )}
+                {flagCount > 0 && (
+                  <button
+                    onClick={() => openNavigator("flagged")}
+                    style={{
+                      display: "block", width: "100%", padding: 13, borderRadius: 11, marginBottom: 12,
+                      border: `1.5px solid ${t.warnbd}`, background: t.warnbg, color: t.warn,
+                      fontSize: 14, fontWeight: 600,
+                    }}
+                  >
+                    Review the flagged questions
                   </button>
                 )}
                 <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
@@ -457,8 +476,9 @@ export function SessionPage() {
       </div>
 
       <QuestionNavigator
-        open={navFilter !== null}
-        focusUnanswered={navFilter === "unanswered"}
+        open={navOpen}
+        filter={navFilter}
+        onFilterChange={setNavFilter}
         questions={state.questions}
         units={units}
         unitAnswered={unitAnswered}
@@ -466,8 +486,8 @@ export function SessionPage() {
         flags={state.flags}
         wrong={wrong}
         currentIndex={state.currentIndex}
-        onOpen={() => setNavFilter("all")}
-        onClose={() => setNavFilter(null)}
+        onOpen={() => setNavOpen(true)}
+        onClose={() => setNavOpen(false)}
         onSelect={goToQuestion}
       />
 

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useTheme } from "../../theme/ThemeContext";
 import type { QuestionDto } from "../../types/question";
 import { isQuestionAnswered } from "../../utils/questionShape";
@@ -6,9 +6,13 @@ import { groupTypeLabel, type SessionUnits } from "../../utils/groups";
 import { NavigatorEntry, NavigatorFilter, NavigatorPanel } from "../NavigatorPanel";
 import { WrongBadge } from "./WrongBadge";
 
+export type QuestionFilter = "all" | "unanswered" | "flagged";
+
 interface QuestionNavigatorProps {
   open: boolean;
-  focusUnanswered: boolean;
+  /** Vive in SessionPage: deve sopravvivere a chiusura e riapertura del pannello. */
+  filter: QuestionFilter;
+  onFilterChange: (filter: QuestionFilter) => void;
   questions: QuestionDto[];
   units: SessionUnits;
   unitAnswered: boolean[];
@@ -24,17 +28,11 @@ interface QuestionNavigatorProps {
 
 /** Elenco delle domande per unita', con le sotto-domande annidate, per saltare ai buchi. */
 export function QuestionNavigator({
-  open, focusUnanswered, questions, units, unitAnswered, answers, flags, wrong, currentIndex,
+  open, filter, onFilterChange, questions, units, unitAnswered, answers, flags, wrong, currentIndex,
   onOpen, onClose, onSelect,
 }: QuestionNavigatorProps) {
   const { tokens: t } = useTheme();
-  const [onlyUnanswered, setOnlyUnanswered] = useState(false);
   const currentRef = useRef<HTMLButtonElement | null>(null);
-
-  // Il pannello resta montato da chiuso: il filtro va riallineato a ogni apertura.
-  useEffect(() => {
-    if (open) setOnlyUnanswered(focusUnanswered);
-  }, [open, focusUnanswered]);
 
   // Con 80 voci la domanda corrente sarebbe quasi sempre fuori schermo all'apertura.
   useEffect(() => {
@@ -46,10 +44,17 @@ export function QuestionNavigator({
   const missing = totalUnits - answeredUnits;
   const unitWrong = units.members.map((memberIndexes) => memberIndexes.some((i) => !!wrong?.[i]));
   const wrongUnits = unitWrong.filter(Boolean).length;
+  // Un gruppo compare tra le flaggate se lo e' almeno una sua parte.
+  const unitFlagged = units.members.map((memberIndexes) => memberIndexes.some((i) => !!flags[i]));
 
   const visibleUnits = units.members
     .map((memberIndexes, unit) => ({ unit, memberIndexes }))
-    .filter(({ unit }) => !onlyUnanswered || !unitAnswered[unit]);
+    .filter(({ unit }) =>
+      filter === "unanswered" ? !unitAnswered[unit] : filter === "flagged" ? unitFlagged[unit] : true,
+    );
+
+  // Ripremere il filtro attivo lo spegne.
+  const toggle = (next: QuestionFilter) => onFilterChange(filter === next ? "all" : next);
 
   return (
     <NavigatorPanel
@@ -60,7 +65,10 @@ export function QuestionNavigator({
       title="All questions"
       subtitle={`${answeredUnits} of ${totalUnits} answered${missing > 0 ? ` · ${missing} left` : ""}${wrongUnits > 0 ? ` · ${wrongUnits} wrong` : ""}`}
       filter={
-        <NavigatorFilter active={onlyUnanswered} onClick={() => setOnlyUnanswered((v) => !v)} label="Only unanswered" />
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <NavigatorFilter active={filter === "unanswered"} onClick={() => toggle("unanswered")} label="Only unanswered" />
+          <NavigatorFilter active={filter === "flagged"} onClick={() => toggle("flagged")} label="Only flagged" />
+        </div>
       }
       tabBadge={
         missing > 0 ? (
@@ -77,7 +85,7 @@ export function QuestionNavigator({
     >
       {visibleUnits.length === 0 && (
         <p style={{ margin: "10px 2px", fontSize: 13.5, color: t.mu, lineHeight: 1.55 }}>
-          Every question has an answer.
+          {filter === "flagged" ? "No question is flagged for review." : "Every question has an answer."}
         </p>
       )}
 
@@ -109,9 +117,11 @@ export function QuestionNavigator({
           isQuestionAnswered(questions[i], answers[questions[i].number] ?? []),
         ).length;
         const groupCurrent = memberIndexes.includes(currentIndex);
-        // Porta alla prima sotto-domanda senza risposta, non alla prima in assoluto.
+        // Porta alla prima sotto-domanda flaggata (col filtro flagged) o senza risposta, non alla prima in assoluto.
         const entryIndex =
-          memberIndexes.find((i) => !isQuestionAnswered(questions[i], answers[questions[i].number] ?? [])) ??
+          (filter === "flagged"
+            ? memberIndexes.find((i) => !!flags[i])
+            : memberIndexes.find((i) => !isQuestionAnswered(questions[i], answers[questions[i].number] ?? []))) ??
           memberIndexes[0];
 
         return (
