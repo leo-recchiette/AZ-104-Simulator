@@ -81,9 +81,11 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     getActiveSession()
       .then((dto) => {
         if (cancelled || !dto || dto.questions.length === 0) return;
+        // Prima di segnarla come presente: se fromDto fallisse, la pulizia qui sotto la cancellerebbe.
+        const restored = fromDto(dto);
         hadSessionRef.current = true;
         savedOnceRef.current = true;
-        dispatch({ type: "RESTORE_SESSION", state: fromDto(dto) });
+        dispatch({ type: "RESTORE_SESSION", state: restored });
       })
       .catch((err) => console.error("Impossibile recuperare la sessione in corso:", err))
       .finally(() => {
