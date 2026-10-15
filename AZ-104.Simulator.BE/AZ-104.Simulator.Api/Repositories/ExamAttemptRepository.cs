@@ -37,8 +37,8 @@ public sealed class ExamAttemptRepository : IExamAttemptRepository
         {
             // Dapper esegue la INSERT una volta per elemento, dentro la transazione.
             const string insertOne = """
-                INSERT INTO exam_attempt_answers (attempt_id, ord, question_number, user_answers)
-                VALUES (@AttemptId, @Ord, @QuestionNumber, @UserAnswers)
+                INSERT INTO exam_attempt_answers (attempt_id, ord, question_number, user_answers, study_later)
+                VALUES (@AttemptId, @Ord, @QuestionNumber, @UserAnswers, @StudyLater)
                 """;
             var rows = answers
                 .Select((answer, index) => new
@@ -47,6 +47,7 @@ public sealed class ExamAttemptRepository : IExamAttemptRepository
                     Ord = index,
                     answer.QuestionNumber,
                     UserAnswers = answer.UserAnswers.ToArray(),
+                    answer.StudyLater,
                 })
                 .ToList();
             await connection.ExecuteAsync(new CommandDefinition(insertOne, rows, transaction, cancellationToken: cancellationToken));
@@ -78,7 +79,7 @@ public sealed class ExamAttemptRepository : IExamAttemptRepository
             WHERE id = @id
             """;
         const string answersSql = """
-            SELECT question_number AS "QuestionNumber", user_answers AS "UserAnswers"
+            SELECT question_number AS "QuestionNumber", user_answers AS "UserAnswers", study_later AS "StudyLater"
             FROM exam_attempt_answers
             WHERE attempt_id = @id
             ORDER BY ord ASC

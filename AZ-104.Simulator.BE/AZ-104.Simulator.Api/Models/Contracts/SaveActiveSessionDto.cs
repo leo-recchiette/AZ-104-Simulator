@@ -18,4 +18,5 @@ public sealed record SaveActiveSessionDto(
     bool LiveScore,
     DateTimeOffset StartedAt,
     DateTimeOffset SavedAt,
-    string DrawMode = DrawModeMapper.Default);
+    string DrawMode = DrawModeMapper.Default,
+    IReadOnlyList<int>? StudyLaterQuestions = null);

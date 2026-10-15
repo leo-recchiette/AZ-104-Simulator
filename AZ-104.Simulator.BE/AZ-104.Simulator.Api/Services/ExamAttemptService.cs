@@ -28,12 +28,14 @@ public sealed class ExamAttemptService : IExamAttemptService
             StartTime = request.StartTime,
             EndTime = request.EndTime,
         };
+        var studyLater = (request.StudyLaterQuestions ?? []).ToHashSet();
         // Ordine di presentazione: per i gruppi non coincide con quello dei numeri.
         var answers = (request.Answers ?? [])
             .Select(a => new ExamAttemptAnswer
             {
                 QuestionNumber = a.QuestionNumber,
                 UserAnswers = a.UserAnswers ?? [],
+                StudyLater = studyLater.Contains(a.QuestionNumber),
             })
             .ToList();
 
@@ -56,9 +58,12 @@ public sealed class ExamAttemptService : IExamAttemptService
         var submissions = detail.Answers
             .Select(a => new AnswerSubmissionDto(a.QuestionNumber, a.UserAnswers))
             .ToList();
+        // ReviewAsync risponde nell'ordine delle submission: il segno da studiare si riprende per posizione.
         IReadOnlyList<AttemptAnswerDto> answers = submissions.Count == 0
             ? []
-            : await _examResultService.ReviewAsync(submissions, cancellationToken);
+            : (await _examResultService.ReviewAsync(submissions, cancellationToken))
+                .Zip(detail.Answers, (reviewed, saved) => reviewed with { StudyLater = saved.StudyLater })
+                .ToList();
 
         return new ExamAttemptDetailDto(detail.Attempt.ToDto(), answers);
     }

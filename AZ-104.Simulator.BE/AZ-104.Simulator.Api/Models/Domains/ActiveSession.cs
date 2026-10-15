@@ -14,6 +14,9 @@ public sealed record ActiveSession
     /// <summary>Indici in QuestionNumbers.</summary>
     public required IReadOnlyList<int> FlaggedIndexes { get; init; }
 
+    /// <summary>Numeri di domanda, non indici.</summary>
+    public IReadOnlyList<int> StudyLaterQuestions { get; init; } = [];
+
     public required int CurrentIndex { get; init; }
     public int? TimeLimitSeconds { get; init; }
     public required bool AutoReveal { get; init; }

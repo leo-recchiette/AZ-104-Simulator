@@ -8,6 +8,8 @@ export interface SaveActiveSessionDto {
   answers: Record<number, string[]>;
   /** Indici (in questionNumbers) delle domande marcate per la revisione. */
   flaggedIndexes: number[];
+  /** Numeri di domanda, non indici: passano nello storico, dove gli indici cambiano. */
+  studyLaterQuestions: number[];
   currentIndex: number;
   timeLimitSeconds: number | null;
   autoReveal: boolean;

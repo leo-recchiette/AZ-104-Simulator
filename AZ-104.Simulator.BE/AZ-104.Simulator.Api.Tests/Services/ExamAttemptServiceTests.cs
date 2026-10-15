@@ -76,6 +76,22 @@ public sealed class ExamAttemptServiceTests
     }
 
     [TestMethod]
+    public async Task Should_Mark_Only_The_Answers_Named_In_StudyLaterQuestions()
+    {
+        IReadOnlyList<ExamAttemptAnswer>? inserted = null;
+        var repository = Substitute.For<IExamAttemptRepository>();
+        repository
+            .InsertAsync(Arg.Any<ExamAttempt>(), Arg.Do<IReadOnlyList<ExamAttemptAnswer>>(answers => inserted = answers), Arg.Any<CancellationToken>())
+            .Returns(Saved());
+        var sut = Sut(repository);
+
+        // 99 non e' fra le risposte: si ignora.
+        await sut.SaveAttemptAsync(SaveRequest() with { StudyLaterQuestions = [3, 99] }, CancellationToken.None);
+
+        inserted!.Select(a => (a.QuestionNumber, a.StudyLater)).Should().Equal((7, false), (3, true));
+    }
+
+    [TestMethod]
     public async Task Should_Save_An_Attempt_That_Carries_No_Answers()
     {
         IReadOnlyList<ExamAttemptAnswer>? inserted = null;
@@ -198,6 +214,27 @@ public sealed class ExamAttemptServiceTests
             options => options.WithStrictOrdering());
         actual!.Attempt.Id.Should().Be(42);
         actual.Answers.Select(a => a.QuestionNumber).Should().Equal(7, 3);
+    }
+
+    [TestMethod]
+    public async Task Should_Carry_The_Study_Later_Marks_Into_The_Detail()
+    {
+        var savedAnswers = new[]
+        {
+            new ExamAttemptAnswer { QuestionNumber = 7, UserAnswers = ["C"] },
+            new ExamAttemptAnswer { QuestionNumber = 3, UserAnswers = [], StudyLater = true },
+        };
+        var repository = Substitute.For<IExamAttemptRepository>();
+        repository.GetDetailAsync(42, Arg.Any<CancellationToken>()).Returns(new ExamAttemptDetail(Saved(), savedAnswers));
+        var examResultService = Substitute.For<IExamResultService>();
+        examResultService
+            .ReviewAsync(Arg.Any<IReadOnlyList<AnswerSubmissionDto>>(), Arg.Any<CancellationToken>())
+            .Returns([ReviewedAnswer(7, ["C"]), ReviewedAnswer(3, [])]);
+        var sut = new ExamAttemptService(repository, examResultService);
+
+        var actual = await sut.GetAttemptDetailAsync(42, CancellationToken.None);
+
+        actual!.Answers.Select(a => (a.QuestionNumber, a.StudyLater)).Should().Equal((7, false), (3, true));
     }
 
     [TestMethod]

@@ -13,6 +13,7 @@ import { ExplanationText } from "../ExplanationText";
 import { ExamNotice } from "./ExamNotice";
 import { QuestionBody } from "../QuestionBody";
 import { splitPreamble } from "../../utils/preamble";
+import { BookmarkIcon } from "../StudyLaterMark";
 
 interface QuestionCardProps {
   question: QuestionDto;
@@ -20,6 +21,8 @@ interface QuestionCardProps {
   onChange: (next: string[]) => void;
   flagged: boolean;
   onToggleFlag: () => void;
+  studyLater: boolean;
+  onToggleStudyLater: () => void;
   isPractice: boolean;
   autoReveal: boolean;
   checkResult?: AnswerCheckResultDto;
@@ -27,7 +30,7 @@ interface QuestionCardProps {
   onRequestExit: () => void;
 }
 
-export function QuestionCard({ question, value, onChange, flagged, onToggleFlag, isPractice, autoReveal, checkResult, onReveal, onRequestExit }: QuestionCardProps) {
+export function QuestionCard({ question, value, onChange, flagged, onToggleFlag, studyLater, onToggleStudyLater, isPractice, autoReveal, checkResult, onReveal, onRequestExit }: QuestionCardProps) {
   const { tokens: t } = useTheme();
   const { questionFontSize } = useDisplaySettings();
   const [panelOpen, setPanelOpen] = useState(false);
@@ -75,6 +78,19 @@ export function QuestionCard({ question, value, onChange, flagged, onToggleFlag,
           )}
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+          <button
+            onClick={onToggleStudyLater}
+            aria-pressed={studyLater}
+            title="Find it in the history after the session, under “To study”"
+            style={{
+              display: "flex", alignItems: "center", gap: 7, padding: "7px 13px", borderRadius: 9, fontSize: 13, fontWeight: 500,
+              border: `1px solid ${studyLater ? t.ac : t.bd3}`, background: studyLater ? t.acs : t.card,
+              color: studyLater ? t.ac : t.mu, whiteSpace: "nowrap", font: "inherit",
+            }}
+          >
+            <BookmarkIcon filled={studyLater} />
+            {studyLater ? "Saved to study later" : "Save to study later"}
+          </button>
           <button
             onClick={onToggleFlag}
             style={{

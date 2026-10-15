@@ -18,7 +18,8 @@ public sealed class ActiveSessionRepository : IActiveSessionRepository
     {
         const string sql = """
             SELECT mode AS "Mode", question_numbers AS "QuestionNumbers", answers::text AS "Answers",
-                   flagged_indexes AS "FlaggedIndexes", current_index AS "CurrentIndex",
+                   flagged_indexes AS "FlaggedIndexes", study_later_questions AS "StudyLaterQuestions",
+                   current_index AS "CurrentIndex",
                    time_limit_seconds AS "TimeLimitSeconds", auto_reveal AS "AutoReveal",
                    open_ended AS "OpenEnded", live_score AS "LiveScore", draw_mode AS "DrawMode",
                    started_at AS "StartedAt", saved_at AS "SavedAt"
@@ -39,6 +40,7 @@ public sealed class ActiveSessionRepository : IActiveSessionRepository
             QuestionNumbers = row.QuestionNumbers,
             Answers = answers,
             FlaggedIndexes = row.FlaggedIndexes,
+            StudyLaterQuestions = row.StudyLaterQuestions,
             CurrentIndex = row.CurrentIndex,
             TimeLimitSeconds = row.TimeLimitSeconds,
             AutoReveal = row.AutoReveal,
@@ -54,16 +56,17 @@ public sealed class ActiveSessionRepository : IActiveSessionRepository
     {
         const string sql = """
             INSERT INTO active_session (
-                id, mode, question_numbers, answers, flagged_indexes, current_index,
+                id, mode, question_numbers, answers, flagged_indexes, study_later_questions, current_index,
                 time_limit_seconds, auto_reveal, open_ended, live_score, draw_mode, started_at, saved_at, updated_at)
             VALUES (
-                1, @Mode, @QuestionNumbers, @Answers::jsonb, @FlaggedIndexes, @CurrentIndex,
+                1, @Mode, @QuestionNumbers, @Answers::jsonb, @FlaggedIndexes, @StudyLaterQuestions, @CurrentIndex,
                 @TimeLimitSeconds, @AutoReveal, @OpenEnded, @LiveScore, @DrawMode, @StartedAt, @SavedAt, now())
             ON CONFLICT (id) DO UPDATE SET
                 mode = EXCLUDED.mode,
                 question_numbers = EXCLUDED.question_numbers,
                 answers = EXCLUDED.answers,
                 flagged_indexes = EXCLUDED.flagged_indexes,
+                study_later_questions = EXCLUDED.study_later_questions,
                 current_index = EXCLUDED.current_index,
                 time_limit_seconds = EXCLUDED.time_limit_seconds,
                 auto_reveal = EXCLUDED.auto_reveal,
@@ -81,6 +84,7 @@ public sealed class ActiveSessionRepository : IActiveSessionRepository
             QuestionNumbers = session.QuestionNumbers.ToArray(),
             Answers = JsonSerializer.Serialize(session.Answers),
             FlaggedIndexes = session.FlaggedIndexes.ToArray(),
+            StudyLaterQuestions = session.StudyLaterQuestions.ToArray(),
             session.CurrentIndex,
             session.TimeLimitSeconds,
             session.AutoReveal,

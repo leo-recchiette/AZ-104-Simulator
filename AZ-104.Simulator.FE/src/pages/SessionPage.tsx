@@ -124,6 +124,7 @@ export function SessionPage() {
           startTime: startTime.toISOString(),
           endTime: endTime.toISOString(),
           answers: submissions,
+          studyLaterQuestions: scored.filter((q) => state.studyLater[q.number]).map((q) => q.number),
         }).catch((err) => {
           console.error("Impossibile salvare il tentativo nello storico:", err);
           dispatch({ type: "SET_HISTORY_OUTCOME", outcome: "failed" });
@@ -133,7 +134,7 @@ export function SessionPage() {
       setError(err instanceof ApiError ? err.message : "Impossibile calcolare il punteggio.");
       setSubmitting(false);
     }
-  }, [dispatch, navigate, scored, submissions, state.mode, state.drawMode, state.startedAt]);
+  }, [dispatch, navigate, scored, submissions, state.mode, state.drawMode, state.startedAt, state.studyLater]);
 
   const paused = state.pausedAt !== null;
   const elapsedMs = useElapsedTime(state.startedAt, state.pausedAt);
@@ -321,6 +322,8 @@ export function SessionPage() {
       onChange={(next) => dispatch({ type: "SET_ANSWER", questionNumber: question.number, answer: next })}
       flagged={flagged}
       onToggleFlag={() => dispatch({ type: "TOGGLE_FLAG", index: state.currentIndex })}
+      studyLater={!!state.studyLater[question.number]}
+      onToggleStudyLater={() => dispatch({ type: "TOGGLE_STUDY_LATER", questionNumber: question.number })}
       isPractice={isPractice}
       autoReveal={state.autoReveal}
       checkResult={state.checkResults[question.number]}
@@ -498,6 +501,7 @@ export function SessionPage() {
         unitAnswered={unitAnswered}
         answers={state.answers}
         flags={state.flags}
+        studyLater={state.studyLater}
         wrong={wrong}
         currentIndex={state.currentIndex}
         onOpen={() => setNavOpen(true)}

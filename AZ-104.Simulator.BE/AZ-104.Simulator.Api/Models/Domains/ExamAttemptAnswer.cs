@@ -7,4 +7,6 @@ public sealed record ExamAttemptAnswer
 
     /// <summary>Vuota se la domanda e' rimasta in bianco.</summary>
     public required IReadOnlyList<string> UserAnswers { get; init; }
+
+    public bool StudyLater { get; init; }
 }

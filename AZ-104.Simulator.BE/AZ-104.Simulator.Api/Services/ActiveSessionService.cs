@@ -42,7 +42,8 @@ public sealed class ActiveSessionService : IActiveSessionService
             session.LiveScore,
             session.DrawMode,
             session.StartedAt,
-            session.SavedAt);
+            session.SavedAt,
+            session.StudyLaterQuestions);
     }
 
     public Task SaveAsync(SaveActiveSessionDto request, CancellationToken cancellationToken)
@@ -58,6 +59,7 @@ public sealed class ActiveSessionService : IActiveSessionService
             QuestionNumbers = request.QuestionNumbers,
             Answers = request.Answers,
             FlaggedIndexes = request.FlaggedIndexes,
+            StudyLaterQuestions = request.StudyLaterQuestions ?? [],
             CurrentIndex = Math.Clamp(request.CurrentIndex, 0, Math.Max(0, request.QuestionNumbers.Count - 1)),
             TimeLimitSeconds = request.TimeLimitSeconds,
             AutoReveal = request.AutoReveal,

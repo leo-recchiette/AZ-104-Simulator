@@ -13,4 +13,5 @@ public sealed record ActiveSessionDto(
     bool LiveScore,
     string DrawMode,
     DateTimeOffset StartedAt,
-    DateTimeOffset SavedAt);
+    DateTimeOffset SavedAt,
+    IReadOnlyList<int> StudyLaterQuestions);

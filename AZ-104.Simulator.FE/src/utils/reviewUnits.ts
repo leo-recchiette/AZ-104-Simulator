@@ -11,6 +11,7 @@ export interface ReviewEntry {
   question: QuestionDto | null;
   submitted: string[];
   correct: QuestionAnswerDto | null;
+  studyLater?: boolean;
 }
 
 export interface ReviewGroupPart extends ReviewEntry {

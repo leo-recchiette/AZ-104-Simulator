@@ -26,6 +26,7 @@ public sealed class ActiveSessionServiceTests
         actual.OpenEnded.Should().BeTrue();
         actual.LiveScore.Should().BeTrue();
         actual.DrawMode.Should().Be("least_seen");
+        actual.StudyLaterQuestions.Should().Equal(9);
     }
 
     [TestMethod]
@@ -79,11 +80,25 @@ public sealed class ActiveSessionServiceTests
                 s.Mode == "practice"
                 && s.QuestionNumbers.SequenceEqual(new[] { 7, 3 })
                 && s.FlaggedIndexes.SequenceEqual(new[] { 1 })
+                && s.StudyLaterQuestions.SequenceEqual(new[] { 3 })
                 && s.AutoReveal
                 && s.OpenEnded
                 && s.LiveScore
                 && s.DrawMode == "least_seen"
                 && s.TimeLimitSeconds == 1800),
+            Arg.Any<CancellationToken>());
+    }
+
+    [TestMethod]
+    public async Task Should_Save_No_Study_Later_Marks_When_The_Client_Omits_Them()
+    {
+        var repository = Substitute.For<IActiveSessionRepository>();
+        var sut = new ActiveSessionService(repository, QuestionService());
+
+        await sut.SaveAsync(SaveRequest([7, 3], currentIndex: 0) with { StudyLaterQuestions = null }, CancellationToken.None);
+
+        await repository.Received(1).SaveAsync(
+            Arg.Is<ActiveSession>(s => s.StudyLaterQuestions.Count == 0),
             Arg.Any<CancellationToken>());
     }
 
@@ -168,6 +183,7 @@ public sealed class ActiveSessionServiceTests
         QuestionNumbers = numbers,
         Answers = new Dictionary<int, IReadOnlyList<string>> { [7] = ["A"] },
         FlaggedIndexes = [1],
+        StudyLaterQuestions = [9],
         CurrentIndex = 1,
         TimeLimitSeconds = 1800,
         AutoReveal = false,
@@ -194,7 +210,8 @@ public sealed class ActiveSessionServiceTests
             LiveScore: true,
             DateTimeOffset.UnixEpoch,
             DateTimeOffset.UnixEpoch.AddMinutes(5),
-            DrawMode: "least_seen");
+            DrawMode: "least_seen",
+            StudyLaterQuestions: [3]);
 
     #endregion
 }

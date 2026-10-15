@@ -108,6 +108,8 @@ CREATE TABLE exam_attempt_answers (
     question_number INTEGER NOT NULL,
     -- Forma di AnswerSubmissionDto; vuoto = domanda in bianco.
     user_answers    TEXT[]  NOT NULL,
+    -- Segnata con "Save to study later" durante la sessione, per ritrovarla nello storico.
+    study_later     BOOLEAN NOT NULL DEFAULT FALSE,
     CONSTRAINT exam_attempt_answers_ord_unique UNIQUE (attempt_id, ord)
 );
 
@@ -122,6 +124,8 @@ CREATE TABLE active_session (
     -- questionNumber -> risposta. jsonb: si riscrive per intero, non si interroga.
     answers             JSONB     NOT NULL DEFAULT '{}'::jsonb,
     flagged_indexes     INTEGER[] NOT NULL DEFAULT '{}',
+    -- Numeri, non indici come i flag: passano nello storico, dove gli indici cambiano.
+    study_later_questions INTEGER[] NOT NULL DEFAULT '{}',
     current_index       INTEGER   NOT NULL DEFAULT 0,
     time_limit_seconds  INTEGER,
     auto_reveal         BOOLEAN   NOT NULL DEFAULT FALSE,

@@ -99,7 +99,13 @@ export function ResultsPage() {
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {reviewUnits(
-              wrong.map((w) => ({ position: w.no, question: w.question, submitted: w.submitted, correct: w.correct })),
+              wrong.map((w) => ({
+                position: w.no,
+                question: w.question,
+                submitted: w.submitted,
+                correct: w.correct,
+                studyLater: !!state.studyLater[w.question.number],
+              })),
               state.questions,
             ).map((unit) =>
               unit.kind === "group" ? (
@@ -111,6 +117,7 @@ export function ResultsPage() {
                   question={unit.entry.question}
                   submitted={unit.entry.submitted}
                   correct={unit.entry.correct}
+                  studyLater={unit.entry.studyLater}
                 />
               ),
             )}

@@ -5,6 +5,7 @@ import { isQuestionAnswered } from "../../utils/questionShape";
 import { groupTypeLabel, type SessionUnits } from "../../utils/groups";
 import { NavigatorEntry, NavigatorFilter, NavigatorPanel } from "../NavigatorPanel";
 import { WrongBadge } from "./WrongBadge";
+import { StudyLaterMark } from "../StudyLaterMark";
 
 export type QuestionFilter = "all" | "unanswered" | "flagged";
 
@@ -18,6 +19,8 @@ interface QuestionNavigatorProps {
   unitAnswered: boolean[];
   answers: Record<number, string[]>;
   flags: Record<number, boolean>;
+  /** Per questionNumber. */
+  studyLater: Record<number, boolean>;
   /** Per indice in questions; null senza auto-reveal. */
   wrong: boolean[] | null;
   currentIndex: number;
@@ -28,7 +31,7 @@ interface QuestionNavigatorProps {
 
 /** Elenco delle domande per unita', con le sotto-domande annidate, per saltare ai buchi. */
 export function QuestionNavigator({
-  open, filter, onFilterChange, questions, units, unitAnswered, answers, flags, wrong, currentIndex,
+  open, filter, onFilterChange, questions, units, unitAnswered, answers, flags, studyLater, wrong, currentIndex,
   onOpen, onClose, onSelect,
 }: QuestionNavigatorProps) {
   const { tokens: t } = useTheme();
@@ -103,6 +106,7 @@ export function QuestionNavigator({
               current={current}
               marks={
                 <>
+                  {studyLater[questions[index].number] && <StudyLaterMark />}
                   <Flag flagged={!!flags[index]} />
                   {wrong?.[index] && <WrongBadge />}
                   <Dot answered={answered} />
@@ -161,6 +165,7 @@ export function QuestionNavigator({
                     current={current}
                     marks={
                       <>
+                        {studyLater[questions[index].number] && <StudyLaterMark />}
                         <Flag flagged={!!flags[index]} />
                         {wrong?.[index] && <WrongBadge />}
                         <Dot answered={isQuestionAnswered(questions[index], answers[questions[index].number] ?? [])} />

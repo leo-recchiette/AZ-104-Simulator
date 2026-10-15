@@ -63,6 +63,7 @@ public sealed class ResultsController : ControllerBase
             { Percentage: < 0 or > 100 } => "percentage deve essere fra 0 e 100.",
             { StartTime: var start, EndTime: var end } when end < start => "endTime non puo' precedere startTime.",
             { Answers.Count: > MaxCount } => $"non piu' di {MaxCount} risposte per tentativo.",
+            { StudyLaterQuestions.Count: > MaxCount } => $"non piu' di {MaxCount} domande da studiare per tentativo.",
             { Answers: { Count: > 0 } answers } when answers.All(a => a.IsBlank()) => "un tentativo senza nemmeno una risposta non viene registrato.",
             _ => null,
         };

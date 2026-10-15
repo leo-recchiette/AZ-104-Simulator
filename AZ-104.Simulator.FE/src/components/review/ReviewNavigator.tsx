@@ -2,6 +2,7 @@ import { useTheme } from "../../theme/ThemeContext";
 import { groupTypeLabel } from "../../utils/groups";
 import type { ReviewUnit } from "../../utils/reviewUnits";
 import { NavigatorEntry, NavigatorPanel } from "../NavigatorPanel";
+import { StudyLaterMark } from "../StudyLaterMark";
 
 /** "unknown" e' la domanda sparita dal question bank dopo il tentativo: non si puo' dire com'e' andata. */
 export type ReviewOutcome = "correct" | "wrong" | "unknown";
@@ -12,10 +13,11 @@ interface ReviewNavigatorProps {
   onClose: () => void;
   units: ReviewUnit[];
   outcomeOf: (position: number) => ReviewOutcome;
+  studyLaterOf: (position: number) => boolean;
   onSelect: (position: number) => void;
 }
 
-export function ReviewNavigator({ open, onOpen, onClose, units, outcomeOf, onSelect }: ReviewNavigatorProps) {
+export function ReviewNavigator({ open, onOpen, onClose, units, outcomeOf, studyLaterOf, onSelect }: ReviewNavigatorProps) {
   const { tokens: t } = useTheme();
 
   const positions = units.flatMap((unit) => (unit.kind === "single" ? [unit.entry.position] : unit.parts.map((p) => p.position)));
@@ -50,7 +52,12 @@ export function ReviewNavigator({ open, onOpen, onClose, units, outcomeOf, onSel
               key={unit.entry.position}
               label={`Question ${unit.entry.position}`}
               current={false}
-              marks={<Mark outcome={outcomeOf(unit.entry.position)} />}
+              marks={
+                <>
+                  {studyLaterOf(unit.entry.position) && <StudyLaterMark />}
+                  <Mark outcome={outcomeOf(unit.entry.position)} />
+                </>
+              }
               onClick={() => onSelect(unit.entry.position)}
             />
           );
@@ -83,6 +90,7 @@ export function ReviewNavigator({ open, onOpen, onClose, units, outcomeOf, onSel
                   {groupTypeLabel(unit.groupType)} · {correctParts}/{unit.totalParts} correct
                 </span>
               </span>
+              {unit.parts.some((part) => studyLaterOf(part.position)) && <StudyLaterMark />}
               <Mark outcome={groupOutcome} />
             </button>
 
@@ -92,7 +100,12 @@ export function ReviewNavigator({ open, onOpen, onClose, units, outcomeOf, onSel
                   key={part.position}
                   label={`Part ${part.partNumber}`}
                   current={false}
-                  marks={<Mark outcome={outcomeOf(part.position)} />}
+                  marks={
+                    <>
+                      {studyLaterOf(part.position) && <StudyLaterMark />}
+                      <Mark outcome={outcomeOf(part.position)} />
+                    </>
+                  }
                   onClick={() => onSelect(part.position)}
                 />
               ))}

@@ -27,6 +27,9 @@ function toSaveDto(state: SessionState): SaveActiveSessionDto | null {
     flaggedIndexes: Object.entries(state.flags)
       .filter(([, on]) => on)
       .map(([index]) => Number(index)),
+    studyLaterQuestions: Object.entries(state.studyLater)
+      .filter(([, on]) => on)
+      .map(([number]) => Number(number)),
     currentIndex: state.currentIndex,
     timeLimitSeconds: state.timeLimitSeconds,
     autoReveal: state.autoReveal,
@@ -42,6 +45,9 @@ function toSaveDto(state: SessionState): SaveActiveSessionDto | null {
 function fromDto(dto: ActiveSessionDto): SessionState {
   const flags: Record<number, boolean> = {};
   for (const index of dto.flaggedIndexes) flags[index] = true;
+  const studyLater: Record<number, boolean> = {};
+  // Un'API non ancora aggiornata non lo manda.
+  for (const number of dto.studyLaterQuestions ?? []) studyLater[number] = true;
 
   // savedAt - startedAt e' il tempo giocato: riancorato ad adesso, l'app chiusa non consuma tempo.
   const playedMs = Math.max(0, new Date(dto.savedAt).getTime() - new Date(dto.startedAt).getTime());
@@ -54,6 +60,7 @@ function fromDto(dto: ActiveSessionDto): SessionState {
     currentIndex: Math.min(dto.currentIndex, Math.max(0, dto.questions.length - 1)),
     answers: dto.answers,
     flags,
+    studyLater,
     timeLimitSeconds: dto.timeLimitSeconds,
     autoReveal: dto.autoReveal,
     openEnded: dto.openEnded,

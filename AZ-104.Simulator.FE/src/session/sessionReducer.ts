@@ -14,6 +14,8 @@ export interface SessionState {
   checkResults: Record<number, AnswerCheckResultDto>;
   /** Per indice in questions, non per questionNumber. */
   flags: Record<number, boolean>;
+  /** Per questionNumber: a differenza dei flag sopravvive all'invio e finisce nello storico. */
+  studyLater: Record<number, boolean>;
   timeLimitSeconds: number | null;
   /** Sempre false in Simulation. */
   autoReveal: boolean;
@@ -51,6 +53,7 @@ export type SessionAction =
   | { type: "SET_AUTO_REVEAL"; autoReveal: boolean }
   | { type: "SET_LIVE_SCORE"; liveScore: boolean }
   | { type: "TOGGLE_FLAG"; index: number }
+  | { type: "TOGGLE_STUDY_LATER"; questionNumber: number }
   | { type: "PAUSE" }
   | { type: "RESUME" }
   /** questions: quelle valutate. A oltranza sono meno di quelle proposte. */
@@ -65,6 +68,7 @@ export const initialSessionState: SessionState = {
   answers: {},
   checkResults: {},
   flags: {},
+  studyLater: {},
   timeLimitSeconds: null,
   autoReveal: false,
   openEnded: false,
@@ -166,6 +170,12 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
       return {
         ...state,
         flags: { ...state.flags, [action.index]: !state.flags[action.index] },
+      };
+
+    case "TOGGLE_STUDY_LATER":
+      return {
+        ...state,
+        studyLater: { ...state.studyLater, [action.questionNumber]: !state.studyLater[action.questionNumber] },
       };
 
     case "PAUSE":

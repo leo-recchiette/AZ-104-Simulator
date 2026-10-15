@@ -7,6 +7,7 @@ internal sealed record ActiveSessionRow
     public required int[] QuestionNumbers { get; init; }
     public required string Answers { get; init; }
     public required int[] FlaggedIndexes { get; init; }
+    public required int[] StudyLaterQuestions { get; init; }
     public required int CurrentIndex { get; init; }
     public int? TimeLimitSeconds { get; init; }
     public required bool AutoReveal { get; init; }

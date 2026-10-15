@@ -5,4 +5,5 @@ public sealed record AttemptAnswerDto(
     int QuestionNumber,
     IReadOnlyList<string> UserAnswers,
     QuestionDto? Question,
-    QuestionAnswerDto? CorrectAnswer);
+    QuestionAnswerDto? CorrectAnswer,
+    bool StudyLater = false);

@@ -15,6 +15,8 @@ import { formatDateTime, formatDuration } from "../utils/format";
 import { PASS_MARK_PERCENT } from "../constants";
 import { HEADER_GRADIENT } from "../theme/tokens";
 
+type AttemptFilter = "all" | "wrong" | "studyLater";
+
 /** Rilettura di un tentativo dello storico, domanda per domanda. */
 export function AttemptDetailPage() {
   const navigate = useNavigate();
@@ -23,7 +25,7 @@ export function AttemptDetailPage() {
   const headerGradient = theme === "dark" ? HEADER_GRADIENT.dark : HEADER_GRADIENT.light;
   const [detail, setDetail] = useState<ExamAttemptDetailDto | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [onlyWrong, setOnlyWrong] = useState(false);
+  const [filter, setFilter] = useState<AttemptFilter>("all");
   const [navOpen, setNavOpen] = useState(false);
   /** Domanda da raggiungere appena il filtro l'ha rimessa in pagina (vedi goToQuestion). */
   const [pendingScroll, setPendingScroll] = useState<number | null>(null);
@@ -61,19 +63,28 @@ export function AttemptDetailPage() {
     return byPosition;
   }, [graded]);
   const outcomeOf = useCallback((position: number) => outcomes.get(position) ?? "unknown", [outcomes]);
+  const studyLaterPositions = useMemo(
+    () => new Set(graded.filter((g) => g.answer.studyLater).map((g) => g.position)),
+    [graded],
+  );
+  const studyLaterOf = useCallback((position: number) => studyLaterPositions.has(position), [studyLaterPositions]);
 
   const lostCount = graded.filter((g) => g.lostPoints).length;
-  const shown = onlyWrong ? graded.filter((g) => g.lostPoints) : graded;
+  const shown =
+    filter === "wrong" ? graded.filter((g) => g.lostPoints)
+    : filter === "studyLater" ? graded.filter((g) => g.answer.studyLater)
+    : graded;
   const allQuestions = graded.flatMap((g) => (g.answer.question ? [g.answer.question] : []));
   const toEntry = (g: (typeof graded)[number]) => ({
     position: g.position,
     question: g.answer.question,
     submitted: g.answer.userAnswers,
     correct: g.answer.correctAnswer,
+    studyLater: g.answer.studyLater,
   });
   // Il pannello elenca tutto il tentativo, anche cio' che il filtro nasconde.
   const allUnits = reviewUnits(graded.map(toEntry), allQuestions);
-  const units = onlyWrong ? reviewUnits(shown.map(toEntry), allQuestions) : allUnits;
+  const units = filter === "all" ? allUnits : reviewUnits(shown.map(toEntry), allQuestions);
 
   function scrollToQuestion(position: number) {
     document.getElementById(reviewAnchorId(position))?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -82,8 +93,8 @@ export function AttemptDetailPage() {
   function goToQuestion(position: number) {
     setNavOpen(false);
     // La card puo' essere nascosta dal filtro: lo si toglie e si scorre al render successivo.
-    if (onlyWrong && outcomeOf(position) !== "wrong") {
-      setOnlyWrong(false);
+    if (!shown.some((g) => g.position === position)) {
+      setFilter("all");
       setPendingScroll(position);
       return;
     }
@@ -144,8 +155,9 @@ export function AttemptDetailPage() {
             ) : (
               <>
                 <div style={{ display: "flex", gap: 8, marginBottom: 18, flexWrap: "wrap" }}>
-                  <FilterPill active={!onlyWrong} onClick={() => setOnlyWrong(false)} label="All questions" />
-                  <FilterPill active={onlyWrong} onClick={() => setOnlyWrong(true)} label={`Incorrectly answered (${lostCount})`} />
+                  <FilterPill active={filter === "all"} onClick={() => setFilter("all")} label="All questions" />
+                  <FilterPill active={filter === "wrong"} onClick={() => setFilter("wrong")} label={`Incorrectly answered (${lostCount})`} />
+                  <FilterPill active={filter === "studyLater"} onClick={() => setFilter("studyLater")} label={`To study (${studyLaterPositions.size})`} />
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                   {units.map((unit) =>
@@ -158,10 +170,19 @@ export function AttemptDetailPage() {
                         question={unit.entry.question}
                         submitted={unit.entry.submitted}
                         correct={unit.entry.correct}
+                        studyLater={unit.entry.studyLater}
                       />
                     ),
                   )}
-                  {shown.length === 0 && (
+                  {shown.length === 0 && filter === "studyLater" && (
+                    <div style={{ background: t.card, border: `1px solid ${t.bd}`, borderRadius: 14, padding: 40, textAlign: "center" }}>
+                      <div style={{ fontSize: 17, fontWeight: 600, marginBottom: 6 }}>Nothing saved to study</div>
+                      <div style={{ fontSize: 14, color: t.mu }}>
+                        Use “Save to study later” on a question during a session to find it here afterwards.
+                      </div>
+                    </div>
+                  )}
+                  {shown.length === 0 && filter === "wrong" && (
                     <div style={{ background: t.card, border: `1px solid ${t.okbd}`, borderRadius: 14, padding: 40, textAlign: "center" }}>
                       <div style={{ fontSize: 17, fontWeight: 600, marginBottom: 6 }}>Nothing to review</div>
                       <div style={{ fontSize: 14, color: t.mu }}>Every component was answered correctly in this session.</div>
@@ -181,6 +202,7 @@ export function AttemptDetailPage() {
           onClose={() => setNavOpen(false)}
           units={allUnits}
           outcomeOf={outcomeOf}
+          studyLaterOf={studyLaterOf}
           onSelect={goToQuestion}
         />
       )}

@@ -65,6 +65,7 @@ export function ReviewGroupCard({ unit }: ReviewGroupCardProps) {
           question={part.question}
           submitted={part.submitted}
           correct={part.correct}
+          studyLater={part.studyLater}
           asPart={{ number: part.partNumber, body: part.body }}
         />
       ))}

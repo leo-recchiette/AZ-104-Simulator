@@ -10,17 +10,19 @@ import { QuestionBody } from "../QuestionBody";
 import { ImageStack } from "../session/ImageStack";
 import { PlaceholderText } from "../PlaceholderText";
 import { ExplanationText } from "../ExplanationText";
+import { StudyLaterMark } from "../StudyLaterMark";
 
 interface ReviewQuestionCardProps {
   position: number;
   question: QuestionDto | null;
   submitted: string[];
   correct: QuestionAnswerDto | null;
+  studyLater?: boolean;
 
   asPart?: { number: number; body: string };
 }
 
-export function ReviewQuestionCard({ position, question, submitted, correct, asPart }: ReviewQuestionCardProps) {
+export function ReviewQuestionCard({ position, question, submitted, correct, studyLater, asPart }: ReviewQuestionCardProps) {
   const { tokens: t } = useTheme();
   const { questionFontSize } = useDisplaySettings();
 
@@ -32,7 +34,10 @@ export function ReviewQuestionCard({ position, question, submitted, correct, asP
   if (!question || !correct) {
     return (
       <div id={reviewAnchorId(position)} style={{ ...frame, padding: asPart ? "20px 0 0" : "22px 26px", scrollMarginTop: 80 }}>
-        <div style={{ fontSize: 12, fontWeight: 600, color: t.fa, marginBottom: 8 }}>{label}</div>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, fontWeight: 600, color: t.fa, marginBottom: 8 }}>
+          {label}
+          {studyLater && <StudyLaterMark />}
+        </div>
         <div style={{ fontSize: 14, color: t.mu, lineHeight: 1.5 }}>
           This question is no longer in the question bank, so its text and solution cannot be shown.
         </div>
@@ -61,6 +66,7 @@ export function ReviewQuestionCard({ position, question, submitted, correct, asP
         <span style={{ fontSize: 11, letterSpacing: ".08em", textTransform: "uppercase", fontWeight: 600, padding: "3px 8px", borderRadius: 6, background: t.bg, color: t.mu }}>
           {questionTypeLabel(question, shape)}
         </span>
+        {studyLater && <StudyLaterMark />}
         <span style={{ fontSize: 12, color: allCorrect ? t.ok : t.fa2, marginLeft: "auto", fontVariantNumeric: "tabular-nums" }}>
           {earned} / {pointsTotal} points
         </span>

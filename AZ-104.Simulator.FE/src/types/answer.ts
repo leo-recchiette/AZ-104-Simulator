@@ -42,6 +42,8 @@ export interface SaveExamAttemptDto {
   endTime: string;
   /** Tutte le domande, in ordine, anche quelle lasciate in bianco. */
   answers: AnswerSubmissionDto[];
+  /** Numeri di domanda. */
+  studyLaterQuestions: number[];
 }
 
 export interface ExamAttemptDto {
@@ -62,6 +64,7 @@ export interface AttemptAnswerDto {
   userAnswers: string[];
   question: QuestionDto | null;
   correctAnswer: QuestionAnswerDto | null;
+  studyLater: boolean;
 }
 
 export interface ExamAttemptDetailDto {
