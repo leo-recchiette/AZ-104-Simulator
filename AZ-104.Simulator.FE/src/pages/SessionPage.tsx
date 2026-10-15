@@ -58,6 +58,8 @@ export function SessionPage() {
   const firedRef = useRef(false);
   // Evita di ricreare handleFinish a ogni tick.
   const elapsedSecRef = useRef(0);
+  // Riassegnato a ogni render: il listener registrato una volta vede sempre handleNext aggiornato.
+  const arrowKeysRef = useRef<(e: KeyboardEvent) => void>(() => {});
 
   const question = state.questions[state.currentIndex];
   const value = useMemo(
@@ -157,6 +159,12 @@ export function SessionPage() {
   useEffect(() => {
     if (!question) navigate("/", { replace: true });
   }, [question, navigate]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => arrowKeysRef.current(e);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   // SET_ANSWER cancella il checkResult, quindi cambiare risposta rilancia l'auto-reveal.
   useEffect(() => {
@@ -268,6 +276,18 @@ export function SessionPage() {
     }
     dispatch({ type: "GO_NEXT" });
   }
+
+  // Frecce come Previous/Next, solo con la domanda a schermo: non dal riepilogo, dai modali o in pausa.
+  // Alt/Cmd+freccia sono avanti/indietro del browser; tenendo premuto si salterebbero domande.
+  arrowKeysRef.current = (e) => {
+    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+    if (e.altKey || e.metaKey || e.ctrlKey || e.shiftKey || e.repeat || e.defaultPrevented) return;
+    if (showConfirm || showExitConfirm || navOpen || paused || loadingMore) return;
+    if ((e.target as HTMLElement | null)?.closest("input, textarea, select, [contenteditable]")) return;
+    e.preventDefault();
+    if (e.key === "ArrowRight") handleNext();
+    else dispatch({ type: "GO_PREVIOUS" });
+  };
 
   let nextLabel = "Next →";
   if (loadingMore) nextLabel = "Loading...";
@@ -558,6 +578,8 @@ export function SessionPage() {
             <button
               onClick={() => dispatch({ type: "GO_PREVIOUS" })}
               disabled={state.currentIndex === 0}
+              title="Keyboard shortcut: ←"
+              aria-keyshortcuts="ArrowLeft"
               style={{
                 display: "flex", alignItems: "center", gap: 8, padding: "12px 20px", borderRadius: 10,
                 border: `1px solid ${t.bd3}`, background: t.card, fontSize: 14.5, fontWeight: 500, font: "inherit",
@@ -572,6 +594,8 @@ export function SessionPage() {
             <button
               onClick={handleNext}
               disabled={loadingMore}
+              title="Keyboard shortcut: →"
+              aria-keyshortcuts="ArrowRight"
               style={{ ...primaryButtonStyle(t.ac), opacity: loadingMore ? 0.8 : 1 }}
             >
               {nextLabel}
