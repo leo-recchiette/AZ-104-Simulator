@@ -1,6 +1,6 @@
 import type { DrawMode, QuestionDto } from "./question";
 
-/** Cio' che il client manda a PUT /api/sessions/current: la sessione in corso, senza il testo delle domande. */
+/** La sessione in corso come la salva il client: i numeri delle domande, non il testo. */
 export interface SaveActiveSessionDto {
   mode: "practice" | "exam";
   /** Nell'ordine di presentazione: per i gruppi non coincide con l'ordine dei numeri. */

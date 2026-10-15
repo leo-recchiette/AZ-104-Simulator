@@ -21,10 +21,7 @@ export interface SessionState {
   openEnded: boolean;
   /** Le domande ancora da proporre a oltranza. null dopo un ripristino: non si salva, va ripescato. */
   pool: QuestionDto[] | null;
-  /**
-   * Percentuale che darebbe l'invio adesso, nell'header. Solo con autoReveal: senza, svelerebbe le
-   * risposte prima della soluzione. Sempre false in Simulation.
-   */
+  /** Punteggio live nell'header. Solo con autoReveal (svelerebbe le risposte), mai in Simulation. */
   liveScore: boolean;
   /** Scelto nel setup; la Practice a oltranza lo riusa per ripescare il bank dopo un ripristino. */
   drawMode: DrawMode;

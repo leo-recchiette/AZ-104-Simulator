@@ -18,7 +18,7 @@ export function formatDuration(startIso: string, endIso: string): string {
   return `${s}s`;
 }
 
-/** Solo giorno e mese ("10 Sept"), per le etichette dell'asse temporale del grafico dei progressi. */
+/** Solo giorno e mese ("10 Sept"), per l'asse del grafico dei progressi. */
 const DATE_SHORT = new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short" });
 
 export function formatDateShort(iso: string): string {

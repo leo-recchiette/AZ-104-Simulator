@@ -24,7 +24,7 @@ public sealed record ActiveSession
     /// <summary>Practice: percentuale dell'esame aggiornata a ogni risposta.</summary>
     public required bool LiveScore { get; init; }
 
-    /// <summary>"random" | "least_seen": serve a ripescare il bank della Practice a oltranza dopo un ripristino.</summary>
+    /// <summary>"random" | "least_seen": per ripescare il bank a oltranza dopo un ripristino.</summary>
     public required string DrawMode { get; init; }
 
     /// <summary>Orologio del client: la differenza e' il tempo giocato.</summary>

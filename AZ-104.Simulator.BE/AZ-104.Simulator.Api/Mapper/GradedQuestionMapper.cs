@@ -3,7 +3,6 @@ using Simulator.Api.Models.Domains;
 
 namespace Simulator.Api.Mapper;
 
-/// <summary>Traduce una GradedQuestion nella risposta corretta esposta dall'API (QuestionAnswerDto).</summary>
 internal static class GradedQuestionMapper
 {
     private const string AnswerImageKind = "answer";

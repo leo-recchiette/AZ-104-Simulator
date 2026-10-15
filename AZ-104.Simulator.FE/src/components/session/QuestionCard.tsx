@@ -40,9 +40,8 @@ export function QuestionCard({ question, value, onChange, flagged, onToggleFlag,
   // Con l'auto-reveal le righe si correggono una alla volta; il pannello si apre a domanda completa.
   const rowsPreview = autoReveal && !revealed ? correct?.answerRows : undefined;
 
-  // Vista la correzione la risposta non si cambia piu' (solo Practice). Ricalcolato a ogni render,
-  // non in stato locale, che si perderebbe al rimontaggio della card. Le righe si bloccano una per
-  // una, quando si colorano; il resto a risposta completa.
+  // Vista la correzione la risposta si blocca (solo Practice): le righe una per una, quando si
+  // colorano, il resto a risposta completa. Derivato, non stato locale: regge al rimontaggio.
   const answerLocked = isPractice && !!correct && (revealed || isAnswerComplete(question, value, correct));
   const lockedRows =
     isPractice && !!correct

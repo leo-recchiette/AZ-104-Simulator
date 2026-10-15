@@ -97,9 +97,8 @@ export function formatYourAnswer(question: QuestionDto, submitted: string[]): st
 }
 
 /**
- * Esito di ogni riga della soluzione, nello stesso ordine di correctAnswerLines. Null quando le
- * righe del testo non corrispondono una a una ai componenti valutati: meglio il pallino neutro
- * che una spunta sulla riga sbagliata.
+ * Esito di ogni riga della soluzione, nell'ordine di correctAnswerLines. Null se le righe non
+ * corrispondono una a una ai componenti: meglio il pallino neutro che una spunta sbagliata.
  */
 export function correctLineOutcomes(
   question: QuestionDto,

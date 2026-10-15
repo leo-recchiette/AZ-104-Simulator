@@ -7,8 +7,7 @@ const LIVE_SCORE_DELAY_MS = 400;
 
 /**
  * La percentuale che darebbe l'invio adesso: stessa getScore e stesse submission di handleFinish,
- * cosi' non puo' divergere dal risultato finale. null = niente da valutare o disattivato. Dato
- * derivato, non stato di sessione: fuori dal SessionContext e mai salvato.
+ * cosi' non puo' divergere. null = niente da valutare o disattivato. Mai nel SessionContext.
  */
 export function useLiveScore(submissions: AnswerSubmissionDto[] | null): number | null {
   const [percentage, setPercentage] = useState<number | null>(null);

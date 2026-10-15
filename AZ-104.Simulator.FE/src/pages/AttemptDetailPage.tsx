@@ -15,7 +15,7 @@ import { formatDateTime, formatDuration } from "../utils/format";
 import { PASS_MARK_PERCENT } from "../constants";
 import { HEADER_GRADIENT } from "../theme/tokens";
 
-/** Rilettura di un tentativo dello storico: le domande di quella sessione con quanto era stato risposto. */
+/** Rilettura di un tentativo dello storico, domanda per domanda. */
 export function AttemptDetailPage() {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -136,7 +136,7 @@ export function AttemptDetailPage() {
             </div>
 
             {detail.answers.length === 0 ? (
-              // Tentativi registrati prima che il dettaglio venisse salvato: c'e' il punteggio, non le domande.
+              // Tentativo salvato prima del dettaglio: c'e' solo il punteggio.
               <div style={{ background: t.card, border: `1px solid ${t.bd}`, borderRadius: 14, padding: 40, textAlign: "center" }}>
                 <div style={{ fontSize: 17, fontWeight: 600, marginBottom: 6 }}>No question detail for this session</div>
                 <div style={{ fontSize: 14, color: t.mu }}>It was recorded before answers started being saved, so only its score is available.</div>

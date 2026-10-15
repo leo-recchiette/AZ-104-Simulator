@@ -5,7 +5,6 @@ using Npgsql;
 
 namespace Simulator.Api.Repositories;
 
-/// <summary>Implementazione su Postgres via Dapper.</summary>
 public sealed class QuestionRepository : IQuestionRepository
 {
     private readonly NpgsqlDataSource _dataSource;

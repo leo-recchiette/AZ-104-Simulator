@@ -16,7 +16,7 @@ import { OptionsMenu } from "../components/OptionsMenu";
 import { HEADER_GRADIENT } from "../theme/tokens";
 import { MAX_QUESTION_COUNT, PASS_MARK_PERCENT } from "../constants";
 
-// Non token del tema: stanno sul banner blu, uguale in light e dark.
+// Fuori dal tema: stanno sul banner blu, uguale in light e dark.
 const CLOCK_OK = "#3ddc84";
 const CLOCK_WARN = "#ffd23f";
 const CLOCK_DANGER = "#ff6b6b";
@@ -25,10 +25,10 @@ const WARN_FRACTION = 1 / 3;
 const DANGER_FRACTION = 0.1;
 // Debounce: le hotspot si compilano una riga alla volta.
 const AUTO_REVEAL_DELAY_MS = 400;
-// Riferimento stabile: un [] nuovo a ogni render rilancerebbe l'effetto dell'auto-reveal.
+// Riferimento stabile: un [] nuovo a ogni render rilancerebbe l'auto-reveal.
 const NO_ANSWER: string[] = [];
 
-/** Fasce del punteggio live: verde dalla soglia di superamento, poi giallo, arancione e rosso. */
+/** Verde dalla soglia di superamento, poi giallo, arancione e rosso. */
 function scoreColor(percentage: number | null): string {
   if (percentage === null) return "#ffffff";
   if (percentage >= PASS_MARK_PERCENT) return CLOCK_OK;
@@ -50,7 +50,6 @@ export function SessionPage() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
-  // Separato da navOpen: il filtro scelto resta attivo alla riapertura del pannello.
   const [navFilter, setNavFilter] = useState<QuestionFilter>("all");
   const [submitting, setSubmitting] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -58,7 +57,7 @@ export function SessionPage() {
   const firedRef = useRef(false);
   // Evita di ricreare handleFinish a ogni tick.
   const elapsedSecRef = useRef(0);
-  // Riassegnato a ogni render: il listener registrato una volta vede sempre handleNext aggiornato.
+  // Riassegnato a ogni render: il listener, registrato una volta, vede l'handleNext corrente.
   const arrowKeysRef = useRef<(e: KeyboardEvent) => void>(() => {});
 
   const question = state.questions[state.currentIndex];
@@ -69,7 +68,7 @@ export function SessionPage() {
   const total = state.questions.length;
   const isPractice = state.mode === "practice";
 
-  // I conteggi mostrati vanno per unita': un gruppo di sotto-domande conta come una.
+  // Si conta per unita': un gruppo vale una domanda.
   const units = useMemo(() => sessionUnits(state.questions), [state.questions]);
   const unitAnswered = useMemo(
     () => unitsAnswered(state.questions, units, state.answers),
@@ -80,10 +79,8 @@ export function SessionPage() {
     [state.questions, units, state.answers],
   );
 
-  // A numero fisso tutte, anche senza risposta: quelle omesse non conterebbero nel denominatore.
-  // A oltranza solo le domande cominciate, anche dentro un gruppo: le sotto-domande saltate restano
-  // fuori come le domande singole, altrimenti la prima risposta a un gruppo abbasserebbe il punteggio.
-  // Le stesse per l'invio e per il punteggio live, che cosi' mostra proprio cio' che l'invio darebbe.
+  // A numero fisso tutte, anche vuote: le omesse uscirebbero dal denominatore. A oltranza solo le
+  // cominciate, sotto-domande comprese. Le stesse per l'invio e per il punteggio live.
   const scored = useMemo(
     () =>
       state.openEnded
@@ -97,7 +94,7 @@ export function SessionPage() {
   );
 
   const handleFinish = useCallback(async () => {
-    // A oltranza senza risposte non c'e' niente da valutare: la sessione si scarta.
+    // Niente da valutare: la sessione si scarta.
     if (scored.length === 0) {
       dispatch({ type: "RESET" });
       navigate("/");
@@ -111,14 +108,13 @@ export function SessionPage() {
       dispatch({ type: "FINISH_SESSION", score, timeUsedSeconds: elapsedSecRef.current, questions: scored });
       navigate("/results");
 
-      
       const answeredAnything = submissions.some((s) => s.userAnswers.some((a) => a && a.trim() !== ""));
 
       if (!answeredAnything) {
         dispatch({ type: "SET_HISTORY_OUTCOME", outcome: "discarded" });
       } else if (state.mode && state.startedAt) {
         const endTime = new Date();
-        // Dal tempo giocato, non da startedAt: le pause non devono allungare la durata.
+        // Dal tempo giocato, non da startedAt: le pause non contano.
         const startTime = new Date(endTime.getTime() - elapsedSecRef.current * 1000);
         saveAttempt({
           mode: state.mode,
@@ -184,7 +180,7 @@ export function SessionPage() {
   }, [isPractice, state.autoReveal, state.checkResults, question, value, dispatch]);
 
   const autoRevealOn = isPractice && state.autoReveal;
-  // Per indice. Solo con l'auto-reveal, l'unico caso in cui la correzione e' gia' sullo schermo.
+  // Per indice. Solo con l'auto-reveal, che e' quando la correzione e' gia' a schermo.
   const wrong = useMemo(
     () =>
       autoRevealOn
@@ -196,8 +192,8 @@ export function SessionPage() {
     [autoRevealOn, state.questions, state.checkResults, state.answers],
   );
 
-  // Le correzioni stanno solo in memoria: dopo un ripristino, o lasciando una domanda prima del
-  // debounce, mancano. Si recuperano in blocco; la corrente ha gia' il suo auto-reveal.
+  // Correzioni perse con un ripristino o lasciando una domanda prima del debounce. Esclusa la
+  // corrente: ha gia' il suo auto-reveal.
   const missingChecks = useMemo(
     () =>
       autoRevealOn
@@ -232,14 +228,13 @@ export function SessionPage() {
   const totalUnits = units.members.length;
   const currentUnit = units.unitOf[state.currentIndex] ?? 0;
   const answeredCount = unitAnswered.filter(Boolean).length;
-  // Chiude anche il riepilogo, altrimenti il salto non si vedrebbe.
+  // Chiude anche il riepilogo, che coprirebbe la domanda.
   function goToQuestion(index: number) {
     dispatch({ type: "GO_TO", index });
     setShowConfirm(false);
     setNavOpen(false);
   }
 
-  // Dal riepilogo si apre il pannello gia' filtrato su cio' che resta da guardare.
   function openNavigator(filter: QuestionFilter) {
     setNavFilter(filter);
     setNavOpen(true);
@@ -261,7 +256,7 @@ export function SessionPage() {
       setShowConfirm(true);
       return;
     }
-    // Il pool non si salva: dopo un ripristino si ripesca il bank, il reducer scarta le domande gia' viste.
+    // Il pool non si salva: dopo un ripristino si ripesca il bank.
     if (state.pool === null) {
       setError(null);
       setLoadingMore(true);
@@ -277,8 +272,7 @@ export function SessionPage() {
     dispatch({ type: "GO_NEXT" });
   }
 
-  // Frecce come Previous/Next, solo con la domanda a schermo: non dal riepilogo, dai modali o in pausa.
-  // Alt/Cmd+freccia sono avanti/indietro del browser; tenendo premuto si salterebbero domande.
+  // Alt/Cmd+freccia restano al browser; repeat ignorato per non scorrere domande tenendo premuto.
   arrowKeysRef.current = (e) => {
     if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
     if (e.altKey || e.metaKey || e.ctrlKey || e.shiftKey || e.repeat || e.defaultPrevented) return;
@@ -302,14 +296,14 @@ export function SessionPage() {
 
   const timerCaption = limit ? "Time remaining" : "Elapsed";
   const timeLabel = fmt(limit ? remaining : elapsedSec);
-  // Soglie in frazione del limite, non minuti fissi, per valere con qualunque durata.
+  // In frazione del limite, per valere con qualunque durata.
   let clockColor = CLOCK_OK;
   if (limit) {
     if (remaining <= limit * DANGER_FRACTION) clockColor = CLOCK_DANGER;
     else if (remaining <= limit * WARN_FRACTION) clockColor = CLOCK_WARN;
   }
   const timeColor = clockColor === CLOCK_OK ? "#ffffff" : clockColor;
-  // A oltranza non c'e' un totale verso cui avanzare: senza limite di tempo la barra resta vuota.
+  // A oltranza non c'e' un totale: senza limite di tempo la barra resta vuota.
   let timePct = 0;
   if (limit) timePct = (elapsedSec / limit) * 100;
   else if (!state.openEnded) timePct = (answeredCount / totalUnits) * 100;
@@ -331,7 +325,7 @@ export function SessionPage() {
       autoReveal={state.autoReveal}
       checkResult={state.checkResults[question.number]}
       onReveal={handleReveal}
-      // A oltranza uscire e' il modo normale di finire: si passa dal riepilogo, non dall'avviso.
+      // A oltranza uscire e' il modo normale di finire: riepilogo, non avviso.
       onRequestExit={() => (state.openEnded ? setShowConfirm(true) : setShowExitConfirm(true))}
     />
   );
@@ -356,7 +350,7 @@ export function SessionPage() {
 
   return (
     <div style={{ height: "100dvh", display: "flex", flexDirection: "column", overflow: "hidden" }}>
-      {/* zIndex: il popover di Options deve uscire sopra l'area che scorre. */}
+      {/* zIndex: il popover di Options sta sopra l'area che scorre. */}
       <div style={{ flexShrink: 0, position: "relative", zIndex: 5, background: headerGradient, backdropFilter: "blur(8px)", borderBottom: "1px solid rgba(255,255,255,.18)" }}>
         <div style={{ maxWidth: 1000, margin: "0 auto", padding: "14px 24px 12px", display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>

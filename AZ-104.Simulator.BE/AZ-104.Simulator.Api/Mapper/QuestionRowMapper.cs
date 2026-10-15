@@ -2,7 +2,6 @@ using Simulator.Api.Models.Domains;
 
 namespace Simulator.Api.Mapper;
 
-/// <summary>Traduce la riga grezza di Dapper </summary>
 internal static class QuestionRowMapper
 {
     internal static Question ToQuestion(this QuestionRow row) => new()

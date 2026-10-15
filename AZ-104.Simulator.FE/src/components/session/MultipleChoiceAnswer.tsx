@@ -14,9 +14,8 @@ interface MultipleChoiceAnswerProps {
 }
 
 /**
- * Al massimo selectCount scelte: senza tetto, scegliere tutte le opzioni prenderebbe sempre ogni
- * punto, perche' le lettere in piu' non tolgono nulla. Oltre il tetto la nuova scelta sostituisce
- * la piu' vecchia: value e' in ordine di selezione.
+ * Al massimo selectCount scelte, altrimenti sceglierle tutte prenderebbe sempre ogni punto. Oltre il
+ * tetto la nuova scelta sostituisce la piu' vecchia: value e' in ordine di selezione.
  */
 export function MultipleChoiceAnswer({ options, selectCount, value, onChange, correctLetters, locked }: MultipleChoiceAnswerProps) {
   const { tokens: t } = useTheme();

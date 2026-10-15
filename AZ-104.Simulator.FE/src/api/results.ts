@@ -33,7 +33,7 @@ export function getAllAttempts(): Promise<ExamAttemptDto[]> {
   return request<ExamAttemptDto[]>("/api/results/getAllAttempts");
 }
 
-/** Un tentativo dello storico con domande, risposte date e soluzioni: tutto quello che serve per rileggerlo. */
+/** Un tentativo dello storico con domande, risposte date e soluzioni. */
 export function getAttempt(id: number): Promise<ExamAttemptDetailDto> {
   return request<ExamAttemptDetailDto>(`/api/results/getAttempt/${id}`);
 }

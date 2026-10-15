@@ -12,9 +12,8 @@ const ZOOM_STEP = 0.25;
 const ZOOM_DEFAULT = 0.75;
 
 /**
- * Screenshot della domanda o della spiegazione. A 1x le immagini seguono gli stili di fit (altezza
- * max 78vh); fuori da 1x lo zoom moltiplica la larghezza di fit misurata dal DOM, cosi' ingrandisce
- * esattamente cio' che si vede.
+ * Screenshot della domanda o della spiegazione. Fuori da 1x lo zoom moltiplica la larghezza di fit
+ * misurata dal DOM, cosi' ingrandisce esattamente cio' che si vede.
  */
 export function ImageStack({ filenames }: ImageStackProps) {
   const { tokens: t } = useTheme();

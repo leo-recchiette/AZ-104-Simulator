@@ -20,7 +20,7 @@ services:
       timeout: 3s
       retries: 20
 
-  # Import una tantum del question bank
+  # Import del question bank: si lancia a mano, col profilo setup.
   importer:
     build:
       context: .
@@ -68,20 +68,14 @@ services:
       - api
     restart: unless-stopped
 
-  # Client SQL via browser su http://localhost:8081, niente da installare.
-  #   docker compose --profile dev up -d pgweb
-  # ATTENZIONE: essendo dietro profilo, un 'docker compose stop' o 'down' NUDO
-  # (senza --profile dev) lo ignora del tutto e lo lascia acceso. Per fermarlo
-  # o rimuoverlo va nominato esplicitamente o richiamato lo stesso profilo:
-  #   docker compose stop pgweb            (nominarlo basta, anche senza --profile)
-  #   docker compose --profile dev down    (per una pulizia completa)
+  # Client SQL su http://localhost:8081: docker compose --profile dev up -d pgweb.
+  # Un down/stop senza --profile dev lo ignora: va nominato (stop pgweb) o ripetuto il profilo.
   pgweb:
     image: sosedoff/pgweb:latest
     profiles: ["dev"]
     environment:
       PGWEB_DATABASE_URL: postgresql://simulator:simulator@db:5432/simulator?sslmode=disable
-    # --lock-session aggancia la sessione del browser alla connessione aperta
-    # all'avvio, cosi' la UI non chiede le credenziali.
+    # --lock-session: la UI usa la connessione aperta all'avvio e non chiede credenziali.
     command: ["--bind=0.0.0.0", "--listen=8081", "--lock-session"]
     ports:
       - "8081:8081"

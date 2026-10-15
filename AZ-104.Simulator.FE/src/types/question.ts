@@ -27,7 +27,7 @@ export interface QuestionDto {
   /** Lunghezza della sequenza da comporre; 0 se non e' una sequenza. */
   sequenceLength: number;
   prompts: PromptOptionsDto[];
-  /** Screenshot da mostrare PRIMA di rispondere (nomi file nudi, risolti con utils/images.ts#imageUrl). */
+  /** Screenshot da mostrare prima di rispondere: nomi file nudi, vedi utils/images.ts. */
   images: string[];
   /** "ss01".."ss24"; null per le domande sciolte. */
   groupId: string | null;

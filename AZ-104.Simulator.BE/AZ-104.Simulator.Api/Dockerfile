@@ -8,12 +8,8 @@ RUN dotnet restore AZ-104.Simulator.BE/AZ-104.Simulator.Api/AZ-104.Simulator.Api
 COPY AZ-104.Simulator.BE/AZ-104.Simulator.Api/ AZ-104.Simulator.BE/AZ-104.Simulator.Api/
 RUN dotnet publish AZ-104.Simulator.BE/AZ-104.Simulator.Api/AZ-104.Simulator.Api.csproj -c Release -o /app --no-restore
 
-# Screenshot delle domande hotspot/drag_and_drop/hotspot_yes_no/alcune
-# multiple_choice, serviti da app.UseStaticFiles() su /images/<file>. Nel repo
-# resta solo lo zip (817 PNG sciolti gonfierebbero troppo la git history): si
-# scompatta qui, in una fase di build usa-e-getta - lo zip non arriva mai
-# nell'immagine finale ne' viene mai scritto sciolto sull'host. Un rebuild va
-# rilanciato dopo un aggiornamento dello zip.
+# Screenshot delle domande, serviti su /images/<file>. Nel repo c'e' solo lo zip, scompattato in
+# questa fase usa-e-getta: dopo un aggiornamento dello zip va ricostruita l'immagine.
 RUN apt-get update && apt-get install -y --no-install-recommends unzip && rm -rf /var/lib/apt/lists/*
 COPY AZ-104.Simulator.Dataset/az104_Dataset_Images.zip /tmp/images.zip
 RUN mkdir -p /images && unzip -q -j /tmp/images.zip -d /images && rm /tmp/images.zip

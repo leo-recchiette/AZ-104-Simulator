@@ -9,7 +9,7 @@ import { formatDateTime, formatDuration } from "../utils/format";
 import { PASS_MARK_PERCENT } from "../constants";
 import { HEADER_GRADIENT } from "../theme/tokens";
 
-/** Elenco dei tentativi conclusi, dal piu' recente: da qui se ne apre uno per rileggerlo domanda per domanda. */
+/** Elenco dei tentativi conclusi; da qui se ne apre uno per rileggerlo. */
 export function HistoryPage() {
   const navigate = useNavigate();
   const { theme, tokens: t } = useTheme();

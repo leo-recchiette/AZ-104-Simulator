@@ -117,7 +117,7 @@ export function QuestionNavigator({
           isQuestionAnswered(questions[i], answers[questions[i].number] ?? []),
         ).length;
         const groupCurrent = memberIndexes.includes(currentIndex);
-        // Porta alla prima sotto-domanda flaggata (col filtro flagged) o senza risposta, non alla prima in assoluto.
+        // Secondo il filtro, la prima sotto-domanda flaggata o senza risposta, non la prima del gruppo.
         const entryIndex =
           (filter === "flagged"
             ? memberIndexes.find((i) => !!flags[i])

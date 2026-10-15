@@ -46,7 +46,7 @@ export function PracticeSetupPage() {
     setError(null);
     setLoading(true);
     try {
-      // A oltranza serve l'intero bank, nell'ordine di estrazione: le domande si propongono un'unita' alla volta.
+      // A oltranza serve l'intero bank: si propone un'unita' alla volta.
       const questions = await getExam(openEnded ? MAX_QUESTION_COUNT : count, drawMode);
       // 200 con []: question bank vuoto, non un errore dell'API.
       if (questions.length === 0) {

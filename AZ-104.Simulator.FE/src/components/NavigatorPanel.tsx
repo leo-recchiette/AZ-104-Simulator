@@ -81,7 +81,7 @@ export function NavigatorPanel({ id, open, onOpen, onClose, title, subtitle, fil
             {filter}
           </div>
 
-          {/* minHeight 0: senza, il flex item non scende sotto l'altezza del contenuto e la lista non scrolla. */}
+          {/* minHeight 0: altrimenti la lista non scrolla. */}
           <div style={{ flex: 1, minHeight: 0, overflowY: "auto", padding: "12px 14px 20px", display: "flex", flexDirection: "column", gap: 7 }}>
             {children}
           </div>

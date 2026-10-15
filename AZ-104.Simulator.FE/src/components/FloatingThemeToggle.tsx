@@ -1,6 +1,6 @@
 import { useTheme } from "../theme/ThemeContext";
 
-/** Bottone tema flottante per le schermate mode/config (mockup: showFloatToggle). */
+/** Bottone tema flottante della home e dei setup. */
 export function FloatingThemeToggle() {
   const { theme, tokens: t, toggleTheme } = useTheme();
   const dark = theme === "dark";

@@ -1,7 +1,6 @@
 /**
- * Spiegazioni del dataset, impaginate in fase di render: ogni "Box N:" (una riga di risposta),
- * "Step N:" (un passo di una sequenza) e il "Reference:" finale aprono un blocco, e gli URL spezzati
- * dall'estrazione del PDF vengono ricuciti. Il testo nel dataset resta com'e'.
+ * Spiegazioni impaginate al render: "Box N:" (una riga di risposta), "Step N:" (un passo) e il
+ * "Reference:" finale aprono un blocco; gli URL spezzati dal PDF si ricuciono. Il dataset non cambia.
  */
 export interface ExplanationBlock {
   lead: string | null;
