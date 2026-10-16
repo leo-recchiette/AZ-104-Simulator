@@ -5933,7 +5933,7 @@ You have Azure virtual machines that run Windows Server 2019 and are configured 
 ## Domanda 379
 *Tipo: hotspot · fonte: manual_vision*
 
-You have an Azure virtual network named VNet1 that connects to your on-premises network by using a site-to-site VPN. VNet1 contains one subnet namedSunet1. Subnet1 is associated to a network security group (NSG) named NSG1. Subnet1 contains a basic internal load balancer named ILB1. ILB1 has three Azure virtual machines in the backend pool. You need to collect data about the IP addresses that connects to ILB1. You must be able to run interactive queries from the Azure portal against the collected data. What should you do? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
+You have an Azure virtual network named VNet1 that connects to your on-premises network by using a site-to-site VPN. VNet1 contains one subnet named Subnet1. Subnet1 is associated to a network security group (NSG) named NSG1. Subnet1 contains a basic internal load balancer named ILB1. ILB1 has three Azure virtual machines in the backend pool. You need to collect data about the IP addresses that connects to ILB1. You must be able to run interactive queries from the Azure portal against the collected data. What should you do? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
 
 **Risposta corretta:** Resource to create -> An Azure Log Analytics workspace | Resource on which to enable diagnostics -> NSG1
 > Immagini: q379_post0.png
