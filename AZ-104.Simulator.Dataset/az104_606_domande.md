@@ -7449,10 +7449,10 @@ IPv4: 10.0.1.0/24
 
 You need to move DC1 to VNET1. The solution must ensure that the member servers in contoso.com can resolve AD DS DNS names. How should you configure DC1? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
 
-**Risposta corretta:** IP address -> Use 10.0.1.3 | Name resolution -> Configure VNET1 to use a custom DNS server
+**Risposta corretta:** IP address -> Obtain an IP address automatically | Name resolution -> Configure VNET1 to use a custom DNS server
 > Esibito: q480_pre0.png, q480_pre1.png
 
-**Spiegazione:** Box 1: Use 10.0.1.3 - Once DC1 is in Subnet1 (10.0.1.0/24) it needs an address from that range that does not change, such as 10.0.1.3, set as a static private IP on its network interface in Azure. Box 2: Configure VNET1 to use a custom DNS server - AD DS relies on DNS records (SRV and others) that domain controllers register dynamically, and an Azure Private DNS zone does not accept dynamic updates from domain controllers. The member servers must therefore use DC1 itself as their DNS server, which you do by configuring VNET1 with a custom DNS server pointing to DC1's IP address. Reference: https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-name-resolution-for-vms-and-role-instances
+**Spiegazione:** Box 1: Obtain an IP address automatically - Inside the guest operating system the network adapter stays on DHCP: Microsoft recommends never setting the IP address manually within an Azure VM's operating system. DC1 still needs an address that does not change, so you set its private IP to static on the Azure network interface, and the Azure DHCP server always hands it that address. None of the fixed addresses would work: 10.0.1.3 is one of the five addresses Azure reserves in every subnet (the first four, .0 to .3, and the last one), 10.0.2.1 is outside Subnet1, and 192.168.2.1 is outside VNET1. Box 2: Configure VNET1 to use a custom DNS server - AD DS relies on DNS records (SRV and others) that domain controllers register dynamically, and an Azure Private DNS zone does not accept dynamic updates from domain controllers. The member servers must therefore use DC1 itself as their DNS server, which you do by configuring VNET1 with a custom DNS server pointing to DC1's IP address. Reference: https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/virtual-network-network-interface-addresses https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-name-resolution-for-vms-and-role-instances
 
 ---
 
