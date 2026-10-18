@@ -1,0 +1,15 @@
+# Nome diverso da quello del compose principale (az-104-simulator): il teardown fa `down -v`,
+# che con lo stesso nome cancellerebbe il volume del database e lo storico delle sessioni.
+name: az-104-simulator-pipeline
+
+services:
+  build:
+    container_name: az-104-simulator-pipeline
+    tty: true
+    build:
+      context: .
+      dockerfile: pipeline.dockerfile
+    volumes:
+      - .:/work
+      # node_modules in un volume anonimo, cosi' npm ci non lo scrive sull'host.
+      - /work/AZ-104.Simulator.FE/node_modules

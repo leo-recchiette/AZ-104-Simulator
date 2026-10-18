@@ -132,18 +132,31 @@ dotnet test
 
 No local Postgres is required: the repositories are substituted, never hit against a real database.
 
-Without a local .NET SDK, the same suite runs in a container:
-
-```bash
-docker run --rm -v "$PWD/AZ-104.Simulator.BE:/src" -w /src/AZ-104.Simulator.Api.Tests \
-  mcr.microsoft.com/dotnet/sdk:10.0 dotnet test
-```
+Without a local .NET SDK, use the [build pipeline](#build-pipeline), which only needs Docker.
 
 For the frontend, once `web` is up:
 
 ```bash
 docker compose exec web npx tsc -b --noEmit   # type check only
 docker compose exec web npm run lint
+```
+
+## Build pipeline
+
+Build and tests run in a container with the .NET 10 SDK and Node, created at the start and removed at the end.
+GitHub Actions runs the same Makefile targets.
+
+| File | What it does |
+|---|---|
+| `pipeline.dockerfile` | build image: .NET 10 SDK on Alpine, plus Node and npm |
+| `docker-compose.pipeline.yml` | starts the build container `az-104-simulator-pipeline`, with the repo mounted on `/work` |
+| `Makefile` | pipeline targets, each one runs commands in the container: `build` compiles the backend and builds the frontend, `test` runs the .NET tests and the frontend lint |
+| `.github/workflows/ci.yml` | GitHub Actions pipeline, on every push and pull request: `setup` → `build` → `test` (no `teardown`: the GitHub machine is destroyed at the end of the run) |
+
+To run the whole pipeline locally:
+
+```bash
+make setup build test teardown
 ```
 
 ## Handy commands
