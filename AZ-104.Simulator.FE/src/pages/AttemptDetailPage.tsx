@@ -8,6 +8,7 @@ import { OptionsMenu } from "../components/OptionsMenu";
 import { ReviewQuestionCard } from "../components/review/ReviewQuestionCard";
 import { ReviewGroupCard } from "../components/review/ReviewGroupCard";
 import { ReviewNavigator, type ReviewOutcome } from "../components/review/ReviewNavigator";
+import { FilterPill } from "../components/FilterPill";
 import { getAnswerShape } from "../utils/questionShape";
 import { pointsEarned } from "../utils/grading";
 import { reviewAnchorId, reviewUnits } from "../utils/reviewUnits";
@@ -15,7 +16,7 @@ import { formatDateTime, formatDuration } from "../utils/format";
 import { PASS_MARK_PERCENT } from "../constants";
 import { HEADER_GRADIENT } from "../theme/tokens";
 
-type AttemptFilter = "all" | "wrong" | "studyLater";
+type AttemptFilter = "all" | "wrong" | "studyLater" | "studyLaterOrWrong";
 
 /** Rilettura di un tentativo dello storico, domanda per domanda. */
 export function AttemptDetailPage() {
@@ -70,9 +71,13 @@ export function AttemptDetailPage() {
   const studyLaterOf = useCallback((position: number) => studyLaterPositions.has(position), [studyLaterPositions]);
 
   const lostCount = graded.filter((g) => g.lostPoints).length;
+  const studyLaterWrongCount = graded.filter((g) => g.answer.studyLater && g.lostPoints).length;
+  const studyLaterCorrectCount = studyLaterPositions.size - studyLaterWrongCount;
+  const studyLaterOrWrongCount = graded.filter((g) => g.answer.studyLater || g.lostPoints).length;
   const shown =
     filter === "wrong" ? graded.filter((g) => g.lostPoints)
     : filter === "studyLater" ? graded.filter((g) => g.answer.studyLater)
+    : filter === "studyLaterOrWrong" ? graded.filter((g) => g.answer.studyLater || g.lostPoints)
     : graded;
   const allQuestions = graded.flatMap((g) => (g.answer.question ? [g.answer.question] : []));
   const toEntry = (g: (typeof graded)[number]) => ({
@@ -158,7 +163,19 @@ export function AttemptDetailPage() {
                   <FilterPill active={filter === "all"} onClick={() => setFilter("all")} label="All questions" />
                   <FilterPill active={filter === "wrong"} onClick={() => setFilter("wrong")} label={`Incorrectly answered (${lostCount})`} />
                   <FilterPill active={filter === "studyLater"} onClick={() => setFilter("studyLater")} label={`To study (${studyLaterPositions.size})`} />
+                  <FilterPill
+                    active={filter === "studyLaterOrWrong"}
+                    onClick={() => setFilter("studyLaterOrWrong")}
+                    label={`To study + wrong (${studyLaterOrWrongCount})`}
+                  />
                 </div>
+                {filter.startsWith("studyLater") && studyLaterPositions.size > 0 && (
+                  <p style={{ margin: "0 0 18px", fontSize: 14, color: t.mu }}>
+                    Of the {studyLaterPositions.size} saved to study,{" "}
+                    <strong style={{ color: t.ok }}>{studyLaterCorrectCount} answered correctly</strong> and{" "}
+                    <strong style={{ color: studyLaterWrongCount ? t.er : t.tx2 }}>{studyLaterWrongCount} lost points</strong>.
+                  </p>
+                )}
                 <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                   {units.map((unit) =>
                     unit.kind === "group" ? (
@@ -182,7 +199,7 @@ export function AttemptDetailPage() {
                       </div>
                     </div>
                   )}
-                  {shown.length === 0 && filter === "wrong" && (
+                  {shown.length === 0 && (filter === "wrong" || filter === "studyLaterOrWrong") && (
                     <div style={{ background: t.card, border: `1px solid ${t.okbd}`, borderRadius: 14, padding: 40, textAlign: "center" }}>
                       <div style={{ fontSize: 17, fontWeight: 600, marginBottom: 6 }}>Nothing to review</div>
                       <div style={{ fontSize: 14, color: t.mu }}>Every component was answered correctly in this session.</div>
@@ -207,21 +224,5 @@ export function AttemptDetailPage() {
         />
       )}
     </div>
-  );
-}
-
-function FilterPill({ active, onClick, label }: { active: boolean; onClick: () => void; label: string }) {
-  const { tokens: t } = useTheme();
-  return (
-    <button
-      onClick={onClick}
-      style={{
-        padding: "8px 15px", borderRadius: 999, font: "inherit", fontSize: 13.5, fontWeight: 600,
-        border: `1px solid ${active ? "transparent" : t.bd3}`,
-        background: active ? t.ac : t.card, color: active ? "#fff" : t.tx2,
-      }}
-    >
-      {label}
-    </button>
   );
 }

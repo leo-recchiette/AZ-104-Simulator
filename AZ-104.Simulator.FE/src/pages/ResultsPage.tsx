@@ -12,15 +12,20 @@ import { OptionsMenu } from "../components/OptionsMenu";
 import { ReviewQuestionCard } from "../components/review/ReviewQuestionCard";
 import { ReviewGroupCard } from "../components/review/ReviewGroupCard";
 import { reviewUnits } from "../utils/reviewUnits";
+import { FilterPill } from "../components/FilterPill";
 import { PASS_MARK_PERCENT } from "../constants";
 import { HEADER_GRADIENT } from "../theme/tokens";
 
-interface WrongEntry {
+interface GradedEntry {
   no: number;
   question: QuestionDto;
   submitted: string[];
   correct: QuestionAnswerDto;
+  lostPoints: boolean;
+  studyLater: boolean;
 }
+
+type ReviewFilter = "wrong" | "studyLater";
 
 function fmt(totalSeconds: number): string {
   const m = Math.floor(totalSeconds / 60);
@@ -36,6 +41,7 @@ export function ResultsPage() {
   const [review, setReview] = useState<AnswerCheckResultDto[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showReview, setShowReview] = useState(false);
+  const [reviewFilter, setReviewFilter] = useState<ReviewFilter>("wrong");
 
   useEffect(() => {
     if (state.questions.length === 0) return;
@@ -60,22 +66,31 @@ export function ResultsPage() {
   const isPractice = state.mode === "practice";
   const modeLabel = isPractice ? "Practice" : "Simulation";
 
-  const wrong: WrongEntry[] = [];
-  let fullyCorrectCount = 0;
+  const graded: GradedEntry[] = [];
   if (review) {
     state.questions.forEach((q, i) => {
-      const result = review[i];
-      const correct = result?.correctAnswer;
+      const correct = review[i]?.correctAnswer;
       if (!correct) return;
-      const shape = getAnswerShape(q);
       const submitted = state.answers[q.number] ?? [];
-      const [earned, pointsTotal] = pointsEarned(shape, submitted, correct, q.options.map((o) => o.letter));
-      if (earned >= pointsTotal) {
-        fullyCorrectCount++;
-        return;
-      }
-      wrong.push({ no: i + 1, question: q, submitted, correct });
+      const [earned, pointsTotal] = pointsEarned(getAnswerShape(q), submitted, correct, q.options.map((o) => o.letter));
+      graded.push({
+        no: i + 1, question: q, submitted, correct,
+        lostPoints: earned < pointsTotal,
+        studyLater: !!state.studyLater[q.number],
+      });
     });
+  }
+  const wrong = graded.filter((g) => g.lostPoints);
+  const fullyCorrectCount = graded.length - wrong.length;
+  const toStudy = graded.filter((g) => g.studyLater);
+  const toStudyWrong = toStudy.filter((g) => g.lostPoints).length;
+  const toStudyCorrect = toStudy.length - toStudyWrong;
+  const shown = reviewFilter === "studyLater" ? toStudy : wrong;
+
+  // Senza errori si apre direttamente su cio' che si e' salvato da studiare.
+  function openReview() {
+    setReviewFilter(wrong.length === 0 && toStudy.length > 0 ? "studyLater" : "wrong");
+    setShowReview(true);
   }
 
   if (showReview) {
@@ -88,23 +103,35 @@ export function ResultsPage() {
             </button>
             <div style={{ flex: 1 }} />
             <span style={{ fontSize: 13.5, color: "#e4e7ee" }}>
-              {wrong.length} of {state.questions.length} questions lost points
+              {reviewFilter === "studyLater"
+                ? `${toStudy.length} of ${state.questions.length} saved to study later`
+                : `${wrong.length} of ${state.questions.length} questions lost points`}
             </span>
             <OptionsMenu variant="onDark" />
           </div>
         </div>
         <div style={{ maxWidth: 1000, margin: "0 auto", padding: "32px 24px 80px" }}>
-          <h2 style={{ fontFamily: "'Source Serif 4', Georgia, serif", fontWeight: 600, fontSize: 30, margin: "0 0 26px" }}>
-            What you got wrong
+          <h2 style={{ fontFamily: "'Source Serif 4', Georgia, serif", fontWeight: 600, fontSize: 30, margin: "0 0 18px" }}>
+            {reviewFilter === "studyLater" ? "Saved to study later" : "What you got wrong"}
           </h2>
+          <div style={{ display: "flex", gap: 8, marginBottom: 18, flexWrap: "wrap" }}>
+            <FilterPill active={reviewFilter === "wrong"} onClick={() => setReviewFilter("wrong")} label={`Incorrectly answered (${wrong.length})`} />
+            <FilterPill active={reviewFilter === "studyLater"} onClick={() => setReviewFilter("studyLater")} label={`To study (${toStudy.length})`} />
+          </div>
+          {reviewFilter === "studyLater" && toStudy.length > 0 && (
+            <p style={{ margin: "0 0 18px", fontSize: 14, color: t.mu }}>
+              Of these, <strong style={{ color: t.ok }}>{toStudyCorrect} answered correctly</strong> and{" "}
+              <strong style={{ color: toStudyWrong ? t.er : t.tx2 }}>{toStudyWrong} lost points</strong>.
+            </p>
+          )}
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {reviewUnits(
-              wrong.map((w) => ({
-                position: w.no,
-                question: w.question,
-                submitted: w.submitted,
-                correct: w.correct,
-                studyLater: !!state.studyLater[w.question.number],
+              shown.map((g) => ({
+                position: g.no,
+                question: g.question,
+                submitted: g.submitted,
+                correct: g.correct,
+                studyLater: g.studyLater,
               })),
               state.questions,
             ).map((unit) =>
@@ -121,7 +148,13 @@ export function ResultsPage() {
                 />
               ),
             )}
-            {review && wrong.length === 0 && (
+            {review && reviewFilter === "studyLater" && toStudy.length === 0 && (
+              <div style={{ background: t.card, border: `1px solid ${t.bd}`, borderRadius: 14, padding: 40, textAlign: "center" }}>
+                <div style={{ fontSize: 17, fontWeight: 600, marginBottom: 6 }}>Nothing saved to study</div>
+                <div style={{ fontSize: 14, color: t.mu }}>No question was saved with “Save to study later” in this session.</div>
+              </div>
+            )}
+            {review && reviewFilter === "wrong" && wrong.length === 0 && (
               <div style={{ background: t.card, border: `1px solid ${t.okbd}`, borderRadius: 14, padding: 40, textAlign: "center" }}>
                 <div style={{ fontSize: 17, fontWeight: 600, marginBottom: 6 }}>Nothing to review</div>
                 <div style={{ fontSize: 14, color: t.mu }}>Every component was answered correctly.</div>
@@ -169,9 +202,16 @@ export function ResultsPage() {
             <SummaryRow label="Questions" value={String(state.questions.length)} fg={t.tx} />
             <SummaryRow label="Fully correct" value={String(fullyCorrectCount)} fg={t.ok} />
             <SummaryRow label="Lost points" value={String(wrong.length)} fg={wrong.length ? t.er : t.tx} />
+            {toStudy.length > 0 && (
+              <SummaryRow
+                label="Saved to study later"
+                value={`${toStudy.length} · ${toStudyCorrect} correct · ${toStudyWrong} wrong`}
+                fg={t.ac}
+              />
+            )}
           </div>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <button onClick={() => setShowReview(true)} disabled={!review} style={wideButtonStyle("none", t.ac, "#fff")}>
+            <button onClick={openReview} disabled={!review} style={wideButtonStyle("none", t.ac, "#fff")}>
               {wrong.length ? `Review ${wrong.length} questions` : "Review answers"}
             </button>
             <button onClick={handleRestart} style={wideButtonStyle(`1px solid ${t.bd3}`, t.card, t.tx2)}>
