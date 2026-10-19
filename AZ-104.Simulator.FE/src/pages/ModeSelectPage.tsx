@@ -8,12 +8,16 @@ import { ResumeSessionBanner } from "../components/ResumeSessionBanner";
 import { ProgressChart } from "../components/ProgressChart";
 import { EXAM_QUESTION_COUNT, EXAM_TIME_LIMIT_MINUTES, PASS_MARK_PERCENT } from "../constants";
 import { MODE_BG_GRADIENT } from "../theme/tokens";
+import { formatDateShort } from "../utils/format";
 import badgeUrl from "../assets/microsoft-certified-associate-badge.png";
 
 export function ModeSelectPage() {
   const navigate = useNavigate();
   const { theme, tokens: t } = useTheme();
   const [history, setHistory] = useState<ExamAttemptDto[]>([]);
+  // Zoom del grafico: null = tutto. Il periodo vale anche per le tre statistiche, la scala Y no.
+  const [range, setRange] = useState<[number, number] | null>(null);
+  const [yDomain, setYDomain] = useState<[number, number] | null>(null);
 
   useEffect(() => {
     // Pannello "best effort": se lo storico non si carica, la pagina resta comunque utilizzabile.
@@ -24,14 +28,16 @@ export function ModeSelectPage() {
 
   const modeBgGrad = theme === "dark" ? MODE_BG_GRADIENT.dark : MODE_BG_GRADIENT.light;
 
+  const shown = useMemo(() => (range ? history.slice(range[0], range[1] + 1) : history), [history, range]);
+
   const progress = useMemo(() => {
-    if (history.length === 0) return null;
-    const scores = history.map((h) => h.percentage);
+    if (shown.length === 0) return null;
+    const scores = shown.map((h) => h.percentage);
     const worst = Math.min(...scores);
     const best = Math.max(...scores);
     const gain = Math.round((scores[scores.length - 1] - scores[0]) * 10) / 10;
     return { worst, best, gain, gainColor: gain > 0 ? t.ok : gain < 0 ? t.er : t.mu };
-  }, [history, t.ok, t.er, t.mu]);
+  }, [shown, t.ok, t.er, t.mu]);
 
   return (
     <>
@@ -135,6 +141,25 @@ export function ModeSelectPage() {
                   View history ({history.length})
                 </button>
               </div>
+              {(range || yDomain) && (
+                <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", margin: "-4px 0 14px", fontSize: 12.5, color: t.mu }}>
+                  {range && (
+                    <span>
+                      Sessions {range[0] + 1}–{range[1] + 1} of {history.length} · {formatDateShort(shown[0].endTime)} –{" "}
+                      {formatDateShort(shown[shown.length - 1].endTime)}
+                    </span>
+                  )}
+                  <button
+                    onClick={() => {
+                      setRange(null);
+                      setYDomain(null);
+                    }}
+                    style={{ background: "none", border: "none", padding: 0, color: t.ac, font: "inherit", fontSize: 12.5, fontWeight: 600 }}
+                  >
+                    Reset zoom
+                  </button>
+                </div>
+              )}
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, marginBottom: 22 }}>
                 <div>
                   <div style={{ fontSize: 11.5, color: t.mu, marginBottom: 4 }}>Worst score</div>
@@ -151,7 +176,13 @@ export function ModeSelectPage() {
                   </div>
                 </div>
               </div>
-              <ProgressChart attempts={history} />
+              <ProgressChart
+                attempts={history}
+                range={range}
+                onRangeChange={setRange}
+                yDomain={yDomain}
+                onYDomainChange={setYDomain}
+              />
             </div>
           )}
         </div>
