@@ -11,6 +11,9 @@ import { MODE_BG_GRADIENT } from "../theme/tokens";
 import { formatDateShort } from "../utils/format";
 import badgeUrl from "../assets/microsoft-certified-associate-badge.png";
 
+/** Sessioni recenti: la loro media dice dove sei adesso. */
+const RECENT_COUNT = 5;
+
 export function ModeSelectPage() {
   const navigate = useNavigate();
   const { theme, tokens: t } = useTheme();
@@ -30,14 +33,21 @@ export function ModeSelectPage() {
 
   const shown = useMemo(() => (range ? history.slice(range[0], range[1] + 1) : history), [history, range]);
 
-  const progress = useMemo(() => {
-    if (shown.length === 0) return null;
-    const scores = shown.map((h) => h.percentage);
-    const worst = Math.min(...scores);
-    const best = Math.max(...scores);
-    const gain = Math.round((scores[scores.length - 1] - scores[0]) * 10) / 10;
-    return { worst, best, gain, gainColor: gain > 0 ? t.ok : gain < 0 ? t.er : t.mu };
-  }, [shown, t.ok, t.er, t.mu]);
+  // Solo le Simulation: in Practice le soluzioni sono a portata di mano e il numero di domande varia.
+  const stats = useMemo(() => {
+    const scores = shown.filter((h) => h.mode === "exam").map((h) => h.percentage);
+    if (scores.length === 0) return null;
+    const recentCount = Math.min(RECENT_COUNT, scores.length);
+    let streak = 0;
+    for (let i = scores.length - 1; i >= 0 && scores[i] >= PASS_MARK_PERCENT; i--) streak++;
+    return {
+      worst: Math.min(...scores),
+      best: Math.max(...scores),
+      recent: round1(average(scores.slice(-recentCount))),
+      recentCount,
+      streak,
+    };
+  }, [shown]);
 
   return (
     <>
@@ -125,7 +135,7 @@ export function ModeSelectPage() {
             Passing score {PASS_MARK_PERCENT}%. One point per correct component, no deductions for wrong answers.
           </p>
 
-          {progress && (
+          {history.length > 0 && (
             <div style={{ marginTop: 32, background: t.card, border: `1px solid ${t.bd}`, borderRadius: 14, padding: "24px 26px", boxShadow: `0 1px 2px ${t.sh}` }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
                 <div style={{ fontSize: 11, letterSpacing: ".1em", textTransform: "uppercase", fontWeight: 600, color: t.fa }}>
@@ -160,21 +170,24 @@ export function ModeSelectPage() {
                   </button>
                 </div>
               )}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, marginBottom: 22 }}>
-                <div>
-                  <div style={{ fontSize: 11.5, color: t.mu, marginBottom: 4 }}>Worst score</div>
-                  <div style={{ fontSize: 24, fontWeight: 600, color: t.er }}>{progress.worst}%</div>
-                </div>
-                <div>
-                  <div style={{ fontSize: 11.5, color: t.mu, marginBottom: 4 }}>Best score</div>
-                  <div style={{ fontSize: 24, fontWeight: 600, color: t.ok }}>{progress.best}%</div>
-                </div>
-                <div>
-                  <div style={{ fontSize: 11.5, color: t.mu, marginBottom: 4 }}>Gain</div>
-                  <div style={{ fontSize: 24, fontWeight: 600, color: progress.gainColor }}>
-                    {progress.gain > 0 ? "+" : ""}{progress.gain}%
-                  </div>
-                </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(118px, 1fr))", gap: 14, marginBottom: 10 }}>
+                <StatTile label="Worst score" value={stats ? `${stats.worst}%` : "—"} color={t.er} />
+                <StatTile label="Best score" value={stats ? `${stats.best}%` : "—"} color={t.ok} />
+                <StatTile
+                  label={`Last ${stats?.recentCount ?? RECENT_COUNT} average`}
+                  title={`Average of the last ${stats?.recentCount ?? RECENT_COUNT} Simulations`}
+                  value={stats ? `${stats.recent}%` : "—"}
+                  color={stats && stats.recent >= PASS_MARK_PERCENT ? t.ok : t.er}
+                />
+                <StatTile
+                  label="Passed in a row"
+                  title={`Consecutive Simulations at or above ${PASS_MARK_PERCENT}%, up to the latest`}
+                  value={stats ? String(stats.streak) : "—"}
+                  color={stats?.streak ? t.ok : t.mu}
+                />
+              </div>
+              <div style={{ fontSize: 11.5, color: t.fa, marginBottom: 22 }}>
+                {stats ? "Simulation sessions only · the chart shows every session" : "No Simulation in this period · the chart shows every session"}
               </div>
               <ProgressChart
                 attempts={history}
@@ -190,3 +203,16 @@ export function ModeSelectPage() {
     </>
   );
 }
+
+function StatTile({ label, value, color, title }: { label: string; value: string; color: string; title?: string }) {
+  const { tokens: t } = useTheme();
+  return (
+    <div title={title}>
+      <div style={{ fontSize: 11.5, color: t.mu, marginBottom: 4 }}>{label}</div>
+      <div style={{ fontSize: 24, fontWeight: 600, color, fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap" }}>{value}</div>
+    </div>
+  );
+}
+
+const average = (xs: number[]) => xs.reduce((sum, x) => sum + x, 0) / xs.length;
+const round1 = (x: number) => Math.round(x * 10) / 10;

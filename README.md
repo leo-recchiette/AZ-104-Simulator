@@ -6,12 +6,14 @@ to be installed locally except Docker itself.
 
 ## Screenshots
 
-Home screen: pick a mode and see how your scores are trending across the sessions you have already sat.
+Home screen: pick a mode and see where your Simulations stand — worst and best score, the average of the last five
+and how many you have passed in a row. The chart of every session can be zoomed on a period and on the score axis.
 
 ![Home screen](docs/screenshots/home.png)
 
 A question during a practice session, with its attached screenshot (*exhibit*) open and the solution available on
-demand. This one belongs to a scenario series, so its linked questions are listed alongside.
+demand. This one belongs to a scenario series, so its linked questions are listed alongside. *Save to study later*
+marks it for after the session; *Flag for review* is for coming back to it before submitting.
 
 ![A question during a session](docs/screenshots/question.png)
 
@@ -19,17 +21,28 @@ History of submitted sessions: open any past attempt to go through its questions
 
 ![Session history](docs/screenshots/history.png)
 
+Inside a past attempt: every question with your answer, the solution and its explanation, filtered here to the
+questions you saved to study later together with the ones you got wrong.
+
+![A past attempt, filtered](docs/screenshots/attempt.png)
+
 ## What it does
 
 - **Two modes.** *Practice* lets you choose how many questions you want — or go open-ended and stop whenever you
   like, scoring only what you answered — whether to run a clock, and whether the solution should appear on its own
   as soon as you answer. *Simulation* is a fixed timed set under exam conditions.
 - **Microsoft's own partial credit rule**: one point per correctly answered component, nothing deducted for wrong
-  ones, so a single mistake never zeroes out a multi-part question.
+  ones, so a single mistake never zeroes out a multi-part question. Drag-and-drop sequences are scored by position,
+  while the few that ask *which* objects to pick are scored as a set, in any order.
+- **Moving around a session**: Previous/Next or the ← → keys, a question panel that can show only the unanswered or
+  the flagged questions, and *Flag for review* for the ones to check again before submitting.
 - **Exhibits**: the screenshots that come with a question are shown inline and can be zoomed in and out, since many
   of them are small and dense.
-- **History and progress**: every submitted session is kept with its questions and answers, and the home screen
-  charts your scores over time.
+- **History and progress**: every submitted session is kept with its questions and answers. The home screen charts
+  them all — zoomable on a period and on the score range — and sums up your Simulations: worst, best, average of the
+  last five and passes in a row.
+- **Study later**: mark any question during a session with *Save to study later*, then find it in the review at the
+  end of the session and in the history, where it can also be listed together with the questions you got wrong.
 - **Sessions survive an interruption.** The session in progress is saved as you go, so a reload, a closed tab or a
   laptop lid coming down doesn't cost you your answers — and the clock stops while the app is away.
 
