@@ -5,6 +5,8 @@ import type { AnswerRowDto } from "../../types/answer";
 interface SequenceAnswerProps {
   draggableItems: string[];
   sequenceLength: number;
+  /** Un insieme, non una sequenza: niente numeri ne' frecce, e un elemento giusto vale in ogni posizione. */
+  unordered?: boolean;
   value: string[];
   onChange: (next: string[]) => void;
   /** Solo dopo la rivelazione. */
@@ -13,7 +15,7 @@ interface SequenceAnswerProps {
 }
 
 /** Click per aggiungere e frecce per riordinare, come nel mockup: niente drag reale. */
-export function SequenceAnswer({ draggableItems, sequenceLength, value, onChange, answerRows, locked }: SequenceAnswerProps) {
+export function SequenceAnswer({ draggableItems, sequenceLength, unordered, value, onChange, answerRows, locked }: SequenceAnswerProps) {
   const { tokens: t } = useTheme();
   const revealed = answerRows !== undefined;
   const chosen = value;
@@ -68,27 +70,35 @@ export function SequenceAnswer({ draggableItems, sequenceLength, value, onChange
       </div>
       <div>
         <div style={{ fontSize: 11, letterSpacing: ".1em", textTransform: "uppercase", fontWeight: 600, color: t.fa, marginBottom: 10 }}>
-          Your sequence ({chosen.length} of {slots})
+          {unordered ? "Your answer" : "Your sequence"} ({chosen.length} of {slots})
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 8, minHeight: 60 }}>
           {chosen.map((label, i) => {
             let bd = t.bd;
             let bg = t.card;
             if (revealed) {
-              const ok = answerRows[i]?.answer === label;
+              const ok = unordered ? answerRows.some((row) => row.answer === label) : answerRows[i]?.answer === label;
               bd = ok ? t.ok : t.er;
               bg = ok ? t.okbg : t.erbg;
             }
             return (
               <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 12px", borderRadius: 10, border: `1.5px solid ${bd}`, background: bg }}>
-                <span style={{ flex: "none", width: 22, height: 22, borderRadius: "50%", background: t.tx, color: t.card, display: "grid", placeItems: "center", fontSize: 11.5, fontWeight: 700 }}>
-                  {i + 1}
-                </span>
+                {unordered ? (
+                  <span aria-hidden style={{ flex: "none", width: 22, textAlign: "center", color: t.mu }}>•</span>
+                ) : (
+                  <span style={{ flex: "none", width: 22, height: 22, borderRadius: "50%", background: t.tx, color: t.card, display: "grid", placeItems: "center", fontSize: 11.5, fontWeight: 700 }}>
+                    {i + 1}
+                  </span>
+                )}
                 <span style={{ fontSize: 13.5, lineHeight: 1.4, flex: 1 }}>{label}</span>
                 {!locked && (
                   <span style={{ display: "flex", gap: 3 }}>
-                    <button onClick={() => moveUp(i)} style={arrowButtonStyle(t.bd, t.card, t.mu)}>↑</button>
-                    <button onClick={() => moveDown(i)} style={arrowButtonStyle(t.bd, t.card, t.mu)}>↓</button>
+                    {!unordered && (
+                      <>
+                        <button onClick={() => moveUp(i)} style={arrowButtonStyle(t.bd, t.card, t.mu)}>↑</button>
+                        <button onClick={() => moveDown(i)} style={arrowButtonStyle(t.bd, t.card, t.mu)}>↓</button>
+                      </>
+                    )}
                     <button onClick={() => remove(i)} style={arrowButtonStyle(t.bd, t.card, t.mu)}>✕</button>
                   </span>
                 )}
@@ -97,7 +107,7 @@ export function SequenceAnswer({ draggableItems, sequenceLength, value, onChange
           })}
           {chosen.length === 0 && (
             <div style={{ padding: "18px 14px", border: `1px dashed ${t.bd3}`, borderRadius: 10, fontSize: 13, color: t.fa2, textAlign: "center" }}>
-              Select items on the left to build the sequence
+              {unordered ? "Select items on the left to add them to your answer" : "Select items on the left to build the sequence"}
             </div>
           )}
         </div>

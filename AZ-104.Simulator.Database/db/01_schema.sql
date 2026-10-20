@@ -32,10 +32,15 @@ CREATE TABLE questions (
     -- 'v01'..'v17': stesso testo, opzioni o esibito diversi. Al contrario dei gruppi, una sessione
     -- ne propone un membro solo.
     variant_group TEXT,
+    -- Solo per ordered_answer: la risposta e' un insieme ("which objects should you create"), non una
+    -- sequenza, e si valuta senza guardare la posizione.
+    unordered_answer BOOLEAN    NOT NULL DEFAULT FALSE,
     CONSTRAINT questions_group_both_or_neither
         CHECK ((group_id IS NULL) = (group_type IS NULL)),
     CONSTRAINT questions_group_or_variant
-        CHECK (group_id IS NULL OR variant_group IS NULL)
+        CHECK (group_id IS NULL OR variant_group IS NULL),
+    CONSTRAINT questions_unordered_is_ordered_answer
+        CHECK (NOT unordered_answer OR answer_layout = 'ordered_answer')
 );
 
 CREATE INDEX questions_group_id_idx ON questions (group_id) WHERE group_id IS NOT NULL;

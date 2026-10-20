@@ -17,7 +17,8 @@ public sealed class QuestionRepository : IQuestionRepository
     private const string SelectColumns = """
         id, number, type, answer_layout AS "AnswerLayout", question AS "Text",
         explanation, answer_text AS "AnswerText", note, source,
-        group_id AS "GroupId", group_type AS "GroupType", variant_group AS "VariantGroup"
+        group_id AS "GroupId", group_type AS "GroupType", variant_group AS "VariantGroup",
+        unordered_answer AS "UnorderedAnswer"
         """;
 
     /// <summary>

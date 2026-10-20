@@ -25,6 +25,7 @@ export function ReviewGroupCard({ unit }: ReviewGroupCardProps) {
         part.submitted,
         part.correct!,
         part.question!.options.map((o) => o.letter),
+        part.question!.unorderedAnswer,
       );
       return [sumEarned + partEarned, sumTotal + partTotal];
     },

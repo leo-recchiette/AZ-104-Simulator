@@ -72,7 +72,7 @@ export function ResultsPage() {
       const correct = review[i]?.correctAnswer;
       if (!correct) return;
       const submitted = state.answers[q.number] ?? [];
-      const [earned, pointsTotal] = pointsEarned(getAnswerShape(q), submitted, correct, q.options.map((o) => o.letter));
+      const [earned, pointsTotal] = pointsEarned(getAnswerShape(q), submitted, correct, q.options.map((o) => o.letter), q.unorderedAnswer);
       graded.push({
         no: i + 1, question: q, submitted, correct,
         lostPoints: earned < pointsTotal,

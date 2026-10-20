@@ -39,6 +39,7 @@ public static class QuestionMapper
             Images: images.Where(i => i.Kind == QuestionImageKind).OrderBy(i => i.Ord).Select(i => i.Filename).ToList(),
             GroupId: question.GroupId,
             GroupType: question.GroupType,
-            VariantGroup: question.VariantGroup);
+            VariantGroup: question.VariantGroup,
+            UnorderedAnswer: isOrderedAnswer && question.UnorderedAnswer);
     }
 }

@@ -29,7 +29,7 @@ public sealed class ExamResultService : IExamResultService
             if (!graded.TryGetValue(submission.QuestionNumber, out var question))
                 continue;
 
-            var (earned, total) = _scorer.Score(question.Type, question.Options, question.AnswerRows, submission.UserAnswers ?? []);
+            var (earned, total) = _scorer.Score(question.Type, question.Options, question.AnswerRows, submission.UserAnswers ?? [], question.UnorderedAnswer);
             earnedTotal += earned;
             pointsTotal += total;
         }

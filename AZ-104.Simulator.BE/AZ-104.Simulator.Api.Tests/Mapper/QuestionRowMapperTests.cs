@@ -43,7 +43,8 @@ public sealed class QuestionRowMapperTests
         Source: "manual_vision",
         GroupId: "ss01",
         GroupType: "scenario_series",
-        VariantGroup: null);
+        VariantGroup: null,
+        UnorderedAnswer: true);
 
     private static Question Question() => new()
     {
@@ -58,6 +59,7 @@ public sealed class QuestionRowMapperTests
         Source = "manual_vision",
         GroupId = "ss01",
         GroupType = "scenario_series",
+        UnorderedAnswer = true,
     };
 
     #endregion

@@ -291,14 +291,14 @@ Your company has an Azure subscription. You need to deploy a number of Azure vir
 ---
 
 ## Domanda 20
-*Tipo: drag_and_drop · fonte: manual_vision*
+*Tipo: drag_and_drop · insieme, ordine libero · fonte: manual_vision*
 
 You have downloaded an Azure Resource Manager (ARM) template to deploy numerous virtual machines (VMs). The ARM template is based on a current VM, but must be adapted to reference an administrative password. You need to make sure that the password cannot be stored in plain text. You are preparing to create the necessary components to achieve your goal. Which of the following should you create to achieve your goal? Answer by dragging the correct option from the list to the answer area.
 
-**Risposta corretta:** 1. An Azure Key Vault -> 2. An access policy
+**Risposta corretta:** An Azure Key Vault | An access policy
 > Immagini: q020_post0.png
 
-**Spiegazione:** You can use a template that allows you to deploy a simple Windows VM by retrieving the password that is stored in a Key Vault, so the password is never put in plain text in the template parameter file. Step 1: An Azure Key Vault - It stores the password. Step 2: An access policy - It grants the deployment access to the password in the Key Vault.
+**Spiegazione:** You can deploy the VMs with a template that retrieves the administrative password from a Key Vault, so the password is never put in plain text in the template parameter file. The answer is a set of objects, not a sequence: an Azure Key Vault, which stores the password, and an access policy, which grants the deployment access to the password in the Key Vault. Reference: https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/key-vault-parameter
 
 ---
 
@@ -335,14 +335,14 @@ Your company has an Azure Active Directory (Azure AD) tenant that is configured 
 ---
 
 ## Domanda 23
-*Tipo: drag_and_drop · fonte: manual_vision*
+*Tipo: drag_and_drop · insieme, ordine libero · fonte: manual_vision*
 
 Your company has an Azure subscription that includes a number of Azure virtual machines (VMs), which are all part of the same virtual network. Your company also has an on-premises Hyper-V server that hosts a VM, named VM1, which must be replicated to Azure. Which of the following objects that must be created to achieve this goal? Answer by dragging the correct option from the list to the answer area.
 
-**Risposta corretta:** 1. Hyper-V site -> 2. Azure Recovery Services Vault -> 3. Replication policy
+**Risposta corretta:** Hyper-V site | Azure Recovery Services Vault | Replication policy
 > Immagini: q023_post0.png
 
-**Spiegazione:** To replicate an on-premises Hyper-V VM that is not managed by System Center VMM, Azure Site Recovery needs three objects. Step 1: Hyper-V site - It groups the Hyper-V hosts (registered to it through the Site Recovery provider). Step 2: Azure Recovery Services Vault - It holds the replication data and settings. Step 3: Replication policy - Recovery point retention and app-consistent snapshot frequency, associated with the Hyper-V site. Reference: https://learn.microsoft.com/en-us/azure/site-recovery/hyper-v-azure-tutorial
+**Spiegazione:** To replicate an on-premises Hyper-V VM that is not managed by System Center VMM, Azure Site Recovery needs three objects; the answer is the set, not a sequence: a Hyper-V site, which groups the Hyper-V hosts registered to it through the Site Recovery provider; an Azure Recovery Services vault, which holds the replication data and settings; and a replication policy, which sets recovery point retention and app-consistent snapshot frequency and is associated with the Hyper-V site. Reference: https://learn.microsoft.com/en-us/azure/site-recovery/hyper-v-azure-tutorial
 
 ---
 
@@ -2789,14 +2789,14 @@ You have an Azure subscription named Subscription1. You have 5 TB of data that y
 ---
 
 ## Domanda 183
-*Tipo: drag_and_drop · fonte: manual_vision*
+*Tipo: drag_and_drop · insieme, ordine libero · fonte: manual_vision*
 
 You have an Azure subscription that contains an Azure file share. You have an on-premises server named Server1 that runs Windows Server 2016. You plan to set up Azure File Sync between Server1 and the Azure file share. You need to prepare the subscription for the planned Azure File Sync. Which two actions should you perform in the Azure subscription? To answer, drag the appropriate actions to the correct targets. Each action may be used once, more than once, or not at all. You may need to drag the split bar between panes or scroll to view content. NOTE: Each correct selection is worth one point.
 
-**Risposta corretta:** 1. Create a Storage Sync Service -> 2. Create a sync group
+**Risposta corretta:** Create a Storage Sync Service | Create a sync group
 > Immagini: q183_post0.png
 
-**Spiegazione:** In the Azure subscription you prepare two objects; installing the Azure File Sync agent and running Server Registration are done on Server1 itself, not in the subscription. Step 1: Create a Storage Sync Service - It is the top-level resource that servers register to. Step 2: Create a sync group - It lives inside the Storage Sync Service and holds the cloud endpoint (the Azure file share) and later the server endpoints. Reference: https://learn.microsoft.com/en-us/azure/storage/file-sync/file-sync-deployment-guide
+**Spiegazione:** In the Azure subscription you prepare two objects; the answer is the set, not a sequence: a Storage Sync Service, the top-level resource that servers register to, and a sync group, which lives inside the Storage Sync Service and holds the cloud endpoint (the Azure file share) and later the server endpoints. Installing the Azure File Sync agent and running Server Registration are done on Server1 itself, not in the subscription. Reference: https://learn.microsoft.com/en-us/azure/storage/file-sync/file-sync-deployment-guide
 
 ---
 

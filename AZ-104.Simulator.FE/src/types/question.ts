@@ -35,4 +35,6 @@ export interface QuestionDto {
   groupType: string | null;
   /** "v01".."v17": varianti della stessa domanda, una sola per sessione; null altrimenti. */
   variantGroup: string | null;
+  /** Solo per le sequenze: gli elementi formano un insieme e l'ordine non conta (domande 20, 23, 183). */
+  unorderedAnswer: boolean;
 }

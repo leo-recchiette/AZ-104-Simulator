@@ -26,4 +26,7 @@ public sealed record Question
 
     /// <summary>'v01'..'v17': varianti della stessa domanda, una sola per sessione. Mai insieme a GroupId.</summary>
     public string? VariantGroup { get; init; }
+
+    /// <summary>Solo per 'ordered_answer': la risposta e' un insieme, valutato senza guardare la posizione.</summary>
+    public bool UnorderedAnswer { get; init; }
 }

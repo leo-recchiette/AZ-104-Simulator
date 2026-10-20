@@ -46,8 +46,9 @@ def insert_question(cur: psycopg.Cursor, q: dict) -> int:
     cur.execute(
         """
         INSERT INTO questions (number, type, answer_layout, question, explanation,
-                               answer_text, note, source, group_id, group_type, variant_group)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                               answer_text, note, source, group_id, group_type, variant_group,
+                               unordered_answer)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         RETURNING id
         """,
         (
@@ -62,6 +63,7 @@ def insert_question(cur: psycopg.Cursor, q: dict) -> int:
             q.get("group_id"),
             q.get("group_type"),
             q.get("variant_group"),
+            q.get("unordered_answer", False),
         ),
     )
     return cur.fetchone()[0]

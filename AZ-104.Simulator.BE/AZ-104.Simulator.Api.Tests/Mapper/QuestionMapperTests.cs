@@ -90,6 +90,16 @@ public sealed class QuestionMapperTests
     }
 
     [TestMethod]
+    public void Should_Expose_UnorderedAnswer_Only_For_An_Ordered_Answer()
+    {
+        var sequence = Question(type: QuestionType.DragAndDrop, answerLayout: "ordered_answer") with { UnorderedAnswer = true };
+        var hotspot = Question(type: QuestionType.Hotspot, answerLayout: "selection") with { UnorderedAnswer = true };
+
+        sequence.ToQuestionDto([], [], NoRowOptions(), NoImages()).UnorderedAnswer.Should().BeTrue();
+        hotspot.ToQuestionDto([], [], NoRowOptions(), NoImages()).UnorderedAnswer.Should().BeFalse();
+    }
+
+    [TestMethod]
     public void Should_Map_Selection_Into_Prompts_With_Their_Own_Options()
     {
         var input = Question(type: QuestionType.Hotspot, answerLayout: "selection");

@@ -54,6 +54,18 @@ public sealed class ScoreServiceTests
     }
 
     [TestMethod]
+    public void Should_Score_An_Unordered_Answer_Regardless_Of_Position()
+    {
+        // Domanda 23: gli oggetti da creare sono un insieme, l'ordine in cui si trascinano non conta.
+        var answerRows = new[] { Row(ord: 0, answer: "Hyper-V site"), Row(ord: 1, answer: "Recovery Services vault"), Row(ord: 2, answer: "Replication policy") };
+        var submitted = new[] { "Replication policy", "Hyper-V site", "Endpoint" };
+        var sut = new ScoreService();
+
+        sut.Score(QuestionType.DragAndDrop, [], answerRows, submitted, unordered: true).Should().Be((Earned: 2, Total: 3));
+        sut.Score(QuestionType.DragAndDrop, [], answerRows, submitted, unordered: false).Should().Be((Earned: 0, Total: 3));
+    }
+
+    [TestMethod]
     public void Should_Not_Throw_When_A_Row_Was_Never_Answered()
     {
         // Regressione: una riga mai toccata arriva come null e mandava in 500 l'intera submission.

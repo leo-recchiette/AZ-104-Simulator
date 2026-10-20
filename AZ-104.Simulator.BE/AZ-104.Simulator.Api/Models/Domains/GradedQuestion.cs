@@ -5,6 +5,7 @@ internal sealed record GradedQuestion(Question Source, IReadOnlyList<Option> Opt
 {
     public int Number => Source.Number;
     public QuestionType Type => Source.Type;
+    public bool UnorderedAnswer => Source.UnorderedAnswer;
     public string Explanation => Source.Explanation;
     public string AnswerText => Source.AnswerText;
     public string? Note => Source.Note;

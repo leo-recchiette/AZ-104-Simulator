@@ -50,7 +50,7 @@ export function AttemptDetailPage() {
     return detail.answers.map((a, index) => {
       if (!a.question || !a.correctAnswer) return { answer: a, position: index + 1, lostPoints: false };
       const shape = getAnswerShape(a.question);
-      const [earned, total] = pointsEarned(shape, a.userAnswers, a.correctAnswer, a.question.options.map((o) => o.letter));
+      const [earned, total] = pointsEarned(shape, a.userAnswers, a.correctAnswer, a.question.options.map((o) => o.letter), a.question.unorderedAnswer);
       return { answer: a, position: index + 1, lostPoints: earned < total };
     });
   }, [detail]);

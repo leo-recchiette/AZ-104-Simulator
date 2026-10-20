@@ -49,7 +49,7 @@ export function ReviewQuestionCard({ position, question, submitted, correct, stu
   }
 
   const shape = getAnswerShape(question);
-  const [earned, pointsTotal] = pointsEarned(shape, submitted, correct, question.options.map((o) => o.letter));
+  const [earned, pointsTotal] = pointsEarned(shape, submitted, correct, question.options.map((o) => o.letter), question.unorderedAnswer);
   const allCorrect = earned >= pointsTotal;
   
   const sameAsCorrect =

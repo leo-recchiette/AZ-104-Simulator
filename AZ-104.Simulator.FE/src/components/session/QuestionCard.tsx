@@ -122,7 +122,7 @@ export function QuestionCard({ question, value, onChange, flagged, onToggleFlag,
           <MultipleChoiceAnswer options={question.options} selectCount={question.selectCount} value={value} onChange={onChange} correctLetters={revealed ? correct?.correctLetters : undefined} locked={answerLocked} />
         )}
         {shape === "draggable" && (
-          <SequenceAnswer draggableItems={question.draggableItems} sequenceLength={question.sequenceLength} value={value} onChange={onChange} answerRows={revealed ? correct?.answerRows : undefined} locked={answerLocked} />
+          <SequenceAnswer draggableItems={question.draggableItems} sequenceLength={question.sequenceLength} unordered={question.unorderedAnswer} value={value} onChange={onChange} answerRows={revealed ? correct?.answerRows : undefined} locked={answerLocked} />
         )}
         {shape === "prompts" && (
           <RowSelectAnswer

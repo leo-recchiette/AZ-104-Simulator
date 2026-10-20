@@ -1,6 +1,6 @@
 import type { QuestionDto } from "../types/question";
 import type { QuestionAnswerDto } from "../types/answer";
-import { gradeMultipleChoice, gradeRows, parseMultiValueAnswer, pointsEarned } from "./grading";
+import { gradeMultipleChoice, gradeRows, gradeUnordered, parseMultiValueAnswer, pointsEarned } from "./grading";
 
 export type AnswerShape = "options" | "draggable" | "prompts";
 
@@ -42,13 +42,13 @@ export function isAnswerComplete(question: QuestionDto, value: string[], correct
 /** Come la review: basta un punto perso. Mai prima che l'auto-reveal mostri la soluzione. */
 export function isRevealedWrong(question: QuestionDto, value: string[], correct: QuestionAnswerDto): boolean {
   if (!isAnswerComplete(question, value, correct)) return false;
-  const [earned, total] = pointsEarned(getAnswerShape(question), value, correct, question.options.map((o) => o.letter));
+  const [earned, total] = pointsEarned(getAnswerShape(question), value, correct, question.options.map((o) => o.letter), question.unorderedAnswer);
   return earned < total;
 }
 
 export function questionTypeLabel(question: QuestionDto, shape: AnswerShape = getAnswerShape(question)): string {
   if (shape === "options") return "Multiple choice";
-  if (shape === "draggable") return "Drag and drop · sequence";
+  if (shape === "draggable") return question.unorderedAnswer ? "Drag and drop" : "Drag and drop · sequence";
   return question.type === "hotspot_yes_no" ? "Hotspot · Yes/No" : "Hotspot";
 }
 
@@ -91,7 +91,7 @@ export function formatYourAnswer(question: QuestionDto, submitted: string[]): st
       .map((letter) => `${letter} — ${question.options.find((o) => o.letter === letter)?.text ?? "?"}`);
   }
   if (shape === "draggable") {
-    return submitted.map((v, i) => `${i + 1}. ${v}`);
+    return question.unorderedAnswer ? submitted.slice() : submitted.map((v, i) => `${i + 1}. ${v}`);
   }
   return question.prompts.map((_, i) => (submitted[i] ? submitted[i].split("\n").join(", ") : "—"));
 }
@@ -115,6 +115,7 @@ export function correctLineOutcomes(
     });
     return outcomes.every((o) => o !== null) ? (outcomes as boolean[]) : null;
   }
-  const grades = gradeRows(submitted, correct.answerRows);
+  const grades =
+    shape === "draggable" && question.unorderedAnswer ? gradeUnordered(submitted, correct.answerRows) : gradeRows(submitted, correct.answerRows);
   return grades.length === lines.length ? grades.map((g) => g.isCorrect) : null;
 }

@@ -52,13 +52,30 @@ export function gradeRows(submitted: string[], answerRows: AnswerRowDto[]): RowG
   });
 }
 
-export function pointsEarned(shape: "options" | "draggable" | "prompts", submitted: string[], correct: { correctLetters: string[]; answerRows: AnswerRowDto[] }, allLetters: string[]): [number, number] {
+/** Sequenze senza ordine: un elemento della soluzione vale in qualunque posizione. Allineato a ScoreService. */
+export function gradeUnordered(submitted: string[], answerRows: AnswerRowDto[]): RowGrade[] {
+  const given = new Set(submitted.filter(Boolean).map((s) => s.trim().toLowerCase()));
+  return answerRows.map((row, index) => ({
+    index,
+    submitted: submitted[index] ?? null,
+    correctAnswer: row.answer,
+    isCorrect: given.has(row.answer.trim().toLowerCase()),
+  }));
+}
+
+export function pointsEarned(
+  shape: "options" | "draggable" | "prompts",
+  submitted: string[],
+  correct: { correctLetters: string[]; answerRows: AnswerRowDto[] },
+  allLetters: string[],
+  unordered: boolean,
+): [number, number] {
   if (shape === "options") {
     const grades = gradeMultipleChoice(submitted, correct.correctLetters, allLetters);
     const correctCount = grades.filter((g) => g.correct).length;
     const earned = grades.filter((g) => g.correct && g.selected).length;
     return [earned, correctCount];
   }
-  const grades = gradeRows(submitted, correct.answerRows);
+  const grades = shape === "draggable" && unordered ? gradeUnordered(submitted, correct.answerRows) : gradeRows(submitted, correct.answerRows);
   return [grades.filter((g) => g.isCorrect).length, grades.length];
 }
