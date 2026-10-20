@@ -1,0 +1,22 @@
+﻿[
+  {
+    id: 2,
+    mode: exam,
+    drawMode: least_seen,
+    questionCount: 7,
+    percentage: 53.8,
+    startTime: DateTimeOffset_1,
+    endTime: DateTimeOffset_2,
+    completedAt: DateTimeOffset_3
+  },
+  {
+    id: 1,
+    mode: exam,
+    drawMode: least_seen,
+    questionCount: 7,
+    percentage: 53.8,
+    startTime: DateTimeOffset_4,
+    endTime: DateTimeOffset_5,
+    completedAt: DateTimeOffset_6
+  }
+]

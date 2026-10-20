@@ -1,0 +1,149 @@
+﻿[
+  {
+    questionNumber: 1,
+    userAnswers: [
+      A,
+      B
+    ],
+    correctAnswer: {
+      number: 1,
+      explanation: Azure Files and Azure Blob storage both store files that several virtual machines can reach.,
+      answerText: A. Azure Files | C. Azure Blob storage,
+      note: null,
+      correctLetters: [
+        A,
+        C
+      ],
+      images: [
+        q001_post0.png
+      ]
+    }
+  },
+  {
+    questionNumber: 2,
+    userAnswers: [
+      Step one,
+      Step three,
+      Step two
+    ],
+    correctAnswer: {
+      number: 2,
+      explanation: Step 1: Step one - It comes first. Step 2: Step two - It comes next. Step 3: Step three - It comes last.,
+      answerText: 1. Step one -> 2. Step two -> 3. Step three,
+      note: null,
+      answerRows: [
+        {
+          prompt: null,
+          answer: Step one
+        },
+        {
+          prompt: null,
+          answer: Step two
+        },
+        {
+          prompt: null,
+          answer: Step three
+        }
+      ]
+    }
+  },
+  {
+    questionNumber: 3,
+    userAnswers: [
+      Access policy,
+      Key vault
+    ],
+    correctAnswer: {
+      number: 3,
+      explanation: The answer is a set, not a sequence: a key vault and an access policy.,
+      answerText: Key vault | Access policy,
+      note: null,
+      answerRows: [
+        {
+          prompt: null,
+          answer: Key vault
+        },
+        {
+          prompt: null,
+          answer: Access policy
+        }
+      ]
+    }
+  },
+  {
+    questionNumber: 4,
+    userAnswers: [
+      Reader,
+      Reader
+    ],
+    correctAnswer: {
+      number: 4,
+      explanation: Box 1: Reader - User1 only reads. Box 2: Owner - User2 assigns roles.,
+      answerText: User1 -> Reader | User2 -> Owner,
+      note: null,
+      answerRows: [
+        {
+          prompt: User1,
+          answer: Reader
+        },
+        {
+          prompt: User2,
+          answer: Owner
+        }
+      ]
+    }
+  },
+  {
+    questionNumber: 5,
+    userAnswers: [
+      Yes,
+      Yes
+    ],
+    correctAnswer: {
+      number: 5,
+      explanation: Box 1: Yes - It is true. Box 2: No - It is false.,
+      answerText: VM1 can reach VM2. -> Yes | VM2 can reach VM3. -> No,
+      note: null,
+      answerRows: [
+        {
+          prompt: VM1 can reach VM2.,
+          answer: Yes
+        },
+        {
+          prompt: VM2 can reach VM3.,
+          answer: No
+        }
+      ]
+    }
+  },
+  {
+    questionNumber: 6,
+    userAnswers: [
+      A
+    ],
+    correctAnswer: {
+      number: 6,
+      explanation: The Deployments blade lists every deployment of the resource group.,
+      answerText: A. Yes,
+      note: null,
+      correctLetters: [
+        A
+      ]
+    }
+  },
+  {
+    questionNumber: 7,
+    userAnswers: [
+      A
+    ],
+    correctAnswer: {
+      number: 7,
+      explanation: Tags do not show deployments.,
+      answerText: B. No,
+      note: null,
+      correctLetters: [
+        B
+      ]
+    }
+  }
+]

@@ -1,0 +1,102 @@
+﻿{
+  mode: practice,
+  questions: [
+    {
+      number: 6,
+      type: multiple_choice,
+      text: You need to view the deployments of RG1. Solution: From the RG1 blade, you click Deployments. Does this meet the goal?,
+      options: [
+        {
+          letter: A,
+          text: Yes
+        },
+        {
+          letter: B,
+          text: No
+        }
+      ],
+      selectCount: 1,
+      sequenceLength: 0,
+      groupId: ss01,
+      groupType: scenario_series,
+      variantGroup: null,
+      unorderedAnswer: false
+    },
+    {
+      number: 7,
+      type: multiple_choice,
+      text: You need to view the deployments of RG1. Solution: From the RG1 blade, you click Tags. Does this meet the goal?,
+      options: [
+        {
+          letter: A,
+          text: Yes
+        },
+        {
+          letter: B,
+          text: No
+        }
+      ],
+      selectCount: 1,
+      sequenceLength: 0,
+      groupId: ss01,
+      groupType: scenario_series,
+      variantGroup: null,
+      unorderedAnswer: false
+    },
+    {
+      number: 1,
+      type: multiple_choice,
+      text: You need to store files that VM1 and VM2 can share. Which two services should you use? Each correct answer presents a complete solution.,
+      options: [
+        {
+          letter: A,
+          text: Azure Files
+        },
+        {
+          letter: B,
+          text: Azure Queue storage
+        },
+        {
+          letter: C,
+          text: Azure Blob storage
+        },
+        {
+          letter: D,
+          text: Azure Table storage
+        }
+      ],
+      selectCount: 2,
+      sequenceLength: 0,
+      images: [
+        q001_pre0.png
+      ],
+      groupId: null,
+      groupType: null,
+      variantGroup: null,
+      unorderedAnswer: false
+    }
+  ],
+  answers: {
+    1: [
+      A,
+      C
+    ],
+    6: [
+      A
+    ]
+  },
+  flaggedIndexes: [
+    2
+  ],
+  currentIndex: 1,
+  timeLimitSeconds: null,
+  autoReveal: true,
+  openEnded: false,
+  liveScore: true,
+  drawMode: least_seen,
+  startedAt: DateTimeOffset_1,
+  savedAt: DateTimeOffset_2,
+  studyLaterQuestions: [
+    7
+  ]
+}

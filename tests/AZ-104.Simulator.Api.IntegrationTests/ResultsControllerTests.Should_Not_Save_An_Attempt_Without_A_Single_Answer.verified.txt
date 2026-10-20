@@ -1,0 +1,4 @@
+﻿{
+  StatusCode: BadRequest,
+  Body: un tentativo senza nemmeno una risposta non viene registrato.
+}

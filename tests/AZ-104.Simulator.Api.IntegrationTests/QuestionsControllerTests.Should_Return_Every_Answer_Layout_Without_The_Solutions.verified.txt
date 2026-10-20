@@ -1,0 +1,168 @@
+﻿[
+  {
+    number: 1,
+    type: multiple_choice,
+    text: You need to store files that VM1 and VM2 can share. Which two services should you use? Each correct answer presents a complete solution.,
+    options: [
+      {
+        letter: A,
+        text: Azure Files
+      },
+      {
+        letter: B,
+        text: Azure Queue storage
+      },
+      {
+        letter: C,
+        text: Azure Blob storage
+      },
+      {
+        letter: D,
+        text: Azure Table storage
+      }
+    ],
+    selectCount: 2,
+    sequenceLength: 0,
+    images: [
+      q001_pre0.png
+    ],
+    groupId: null,
+    groupType: null,
+    variantGroup: null,
+    unorderedAnswer: false
+  },
+  {
+    number: 2,
+    type: drag_and_drop,
+    text: You need to replicate VM1 to Azure. Which three actions should you perform in sequence?,
+    selectCount: 0,
+    draggableItems: [
+      Step two,
+      Distractor,
+      Step three,
+      Step one
+    ],
+    sequenceLength: 3,
+    groupId: null,
+    groupType: null,
+    variantGroup: null,
+    unorderedAnswer: false
+  },
+  {
+    number: 3,
+    type: drag_and_drop,
+    text: You need to keep the template password out of plain text. Which of the following should you create?,
+    selectCount: 0,
+    draggableItems: [
+      Storage account,
+      Access policy,
+      Key vault
+    ],
+    sequenceLength: 2,
+    groupId: null,
+    groupType: null,
+    variantGroup: null,
+    unorderedAnswer: true
+  },
+  {
+    number: 4,
+    type: hotspot,
+    text: You need to assign the least privileged role to each user. What should you assign?,
+    selectCount: 0,
+    sequenceLength: 0,
+    prompts: [
+      {
+        prompt: User1,
+        options: [
+          Owner,
+          Reader,
+          Contributor
+        ],
+        selectCount: 1
+      },
+      {
+        prompt: User2,
+        options: [
+          Owner,
+          Reader
+        ],
+        selectCount: 1
+      }
+    ],
+    groupId: null,
+    groupType: null,
+    variantGroup: null,
+    unorderedAnswer: false
+  },
+  {
+    number: 5,
+    type: hotspot_yes_no,
+    text: For each of the following statements, select Yes if the statement is true. Otherwise, select No.,
+    selectCount: 0,
+    sequenceLength: 0,
+    prompts: [
+      {
+        prompt: VM1 can reach VM2.,
+        options: [
+          Yes,
+          No
+        ],
+        selectCount: 1
+      },
+      {
+        prompt: VM2 can reach VM3.,
+        options: [
+          Yes,
+          No
+        ],
+        selectCount: 1
+      }
+    ],
+    groupId: null,
+    groupType: null,
+    variantGroup: null,
+    unorderedAnswer: false
+  },
+  {
+    number: 6,
+    type: multiple_choice,
+    text: You need to view the deployments of RG1. Solution: From the RG1 blade, you click Deployments. Does this meet the goal?,
+    options: [
+      {
+        letter: A,
+        text: Yes
+      },
+      {
+        letter: B,
+        text: No
+      }
+    ],
+    selectCount: 1,
+    sequenceLength: 0,
+    groupId: ss01,
+    groupType: scenario_series,
+    variantGroup: null,
+    unorderedAnswer: false
+  },
+  {
+    number: 7,
+    type: multiple_choice,
+    text: You need to view the deployments of RG1. Solution: From the RG1 blade, you click Tags. Does this meet the goal?,
+    options: [
+      {
+        letter: A,
+        text: Yes
+      },
+      {
+        letter: B,
+        text: No
+      }
+    ],
+    selectCount: 1,
+    sequenceLength: 0,
+    groupId: ss01,
+    groupType: scenario_series,
+    variantGroup: null,
+    unorderedAnswer: false
+  }
+]

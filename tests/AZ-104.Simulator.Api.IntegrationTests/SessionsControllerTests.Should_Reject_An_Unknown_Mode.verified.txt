@@ -1,0 +1,4 @@
+﻿{
+  StatusCode: BadRequest,
+  Body: mode deve essere uno tra: practice, exam.
+}

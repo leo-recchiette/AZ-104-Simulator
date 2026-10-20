@@ -150,9 +150,22 @@ docker compose up -d
 dotnet test AZ-104.Simulator.sln
 ```
 
-No local Postgres is required: the repositories are substituted, never hit against a real database.
+Two test projects:
 
-Without a local .NET SDK, use the [build pipeline](#build-pipeline), which only needs Docker.
+- `tests/AZ-104.Simulator.Api.Tests` — unit tests: the repositories are substituted, no database needed.
+- `tests/AZ-104.Simulator.Api.IntegrationTests` — the API is started in memory (`WebApplicationFactory`) and called
+  over HTTP, route by route, against a real Postgres seeded with a small question bank (`Data/seed.sql`). Responses
+  are compared with approved [Verify](https://github.com/VerifyTests/Verify) snapshots, the `*.verified.txt` files
+  next to the tests: when a response changes on purpose, review the `*.received.txt` Verify writes and rename it
+  to `.verified.txt`.
+
+The integration tests empty the database before every test, so they only run against a database named
+`simulator_tests` — the one the [build pipeline](#build-pipeline) starts — and are skipped against anything else,
+the development database included. The simplest way to run everything is therefore:
+
+```bash
+make setup build test teardown
+```
 
 For the frontend, once `web` is up:
 
@@ -169,8 +182,8 @@ GitHub Actions runs the same Makefile targets.
 | File | What it does |
 |---|---|
 | `pipeline.dockerfile` | build image: .NET 10 SDK on Alpine, plus Node and npm |
-| `docker-compose.pipeline.yml` | starts the build container `az-104-simulator-pipeline`, with the repo mounted on `/work` |
-| `Makefile` | pipeline targets, each one runs commands in the container: `build` compiles the backend and builds the frontend, `test` runs the .NET tests and the frontend lint |
+| `docker-compose.pipeline.yml` | starts the build container `az-104-simulator-pipeline`, with the repo mounted on `/work`, and a throwaway Postgres (`simulator_tests`, no published port) for the integration tests |
+| `Makefile` | pipeline targets, each one runs commands in the container: `build` compiles the backend and builds the frontend, `test` runs the .NET unit and integration tests and the frontend lint |
 | `.github/workflows/ci.yml` | GitHub Actions pipeline, on every push and pull request: `setup` → `build` → `test` (no `teardown`: the GitHub machine is destroyed at the end of the run) |
 
 To run the whole pipeline locally:

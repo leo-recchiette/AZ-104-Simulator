@@ -1,0 +1,4 @@
+﻿{
+  StatusCode: BadRequest,
+  Body: draw deve essere uno tra: random, least_seen.
+}

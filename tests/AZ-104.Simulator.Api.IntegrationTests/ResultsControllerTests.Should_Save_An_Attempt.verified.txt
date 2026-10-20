@@ -1,0 +1,10 @@
+﻿{
+  id: 1,
+  mode: exam,
+  drawMode: least_seen,
+  questionCount: 7,
+  percentage: 53.8,
+  startTime: DateTimeOffset_1,
+  endTime: DateTimeOffset_2,
+  completedAt: DateTimeOffset_3
+}

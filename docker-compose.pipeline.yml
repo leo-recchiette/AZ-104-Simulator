@@ -13,3 +13,22 @@ services:
       - .:/work
       # node_modules in un volume anonimo, cosi' npm ci non lo scrive sull'host.
       - /work/src/AZ-104.Simulator.Web/node_modules
+    environment:
+      ConnectionStrings__Default: Host=db;Port=5432;Database=simulator_tests;Username=simulator;Password=simulator
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # Database dei test di integrazione: nessuna porta esposta, per non toccare il 5432 di sviluppo.
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: simulator
+      POSTGRES_PASSWORD: simulator
+      POSTGRES_DB: simulator_tests
+    volumes:
+      - ./db/01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U simulator -d simulator_tests"]
+      interval: 2s
+      retries: 30

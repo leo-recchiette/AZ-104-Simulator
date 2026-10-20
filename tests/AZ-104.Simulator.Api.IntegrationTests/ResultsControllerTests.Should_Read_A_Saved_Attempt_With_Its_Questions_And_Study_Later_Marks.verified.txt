@@ -1,0 +1,334 @@
+﻿{
+  attempt: {
+    id: 1,
+    mode: exam,
+    drawMode: least_seen,
+    questionCount: 7,
+    percentage: 53.8,
+    startTime: DateTimeOffset_1,
+    endTime: DateTimeOffset_2,
+    completedAt: DateTimeOffset_3
+  },
+  answers: [
+    {
+      questionNumber: 1,
+      userAnswers: [
+        A,
+        B
+      ],
+      question: {
+        number: 1,
+        type: multiple_choice,
+        text: You need to store files that VM1 and VM2 can share. Which two services should you use? Each correct answer presents a complete solution.,
+        options: [
+          {
+            letter: A,
+            text: Azure Files
+          },
+          {
+            letter: B,
+            text: Azure Queue storage
+          },
+          {
+            letter: C,
+            text: Azure Blob storage
+          },
+          {
+            letter: D,
+            text: Azure Table storage
+          }
+        ],
+        selectCount: 2,
+        sequenceLength: 0,
+        images: [
+          q001_pre0.png
+        ],
+        groupId: null,
+        groupType: null,
+        variantGroup: null,
+        unorderedAnswer: false
+      },
+      correctAnswer: {
+        number: 1,
+        explanation: Azure Files and Azure Blob storage both store files that several virtual machines can reach.,
+        answerText: A. Azure Files | C. Azure Blob storage,
+        note: null,
+        correctLetters: [
+          A,
+          C
+        ],
+        images: [
+          q001_post0.png
+        ]
+      },
+      studyLater: false
+    },
+    {
+      questionNumber: 2,
+      userAnswers: [
+        Step one,
+        Step three,
+        Step two
+      ],
+      question: {
+        number: 2,
+        type: drag_and_drop,
+        text: You need to replicate VM1 to Azure. Which three actions should you perform in sequence?,
+        selectCount: 0,
+        draggableItems: [
+          Step two,
+          Distractor,
+          Step three,
+          Step one
+        ],
+        sequenceLength: 3,
+        groupId: null,
+        groupType: null,
+        variantGroup: null,
+        unorderedAnswer: false
+      },
+      correctAnswer: {
+        number: 2,
+        explanation: Step 1: Step one - It comes first. Step 2: Step two - It comes next. Step 3: Step three - It comes last.,
+        answerText: 1. Step one -> 2. Step two -> 3. Step three,
+        note: null,
+        answerRows: [
+          {
+            prompt: null,
+            answer: Step one
+          },
+          {
+            prompt: null,
+            answer: Step two
+          },
+          {
+            prompt: null,
+            answer: Step three
+          }
+        ]
+      },
+      studyLater: false
+    },
+    {
+      questionNumber: 3,
+      userAnswers: [
+        Access policy,
+        Key vault
+      ],
+      question: {
+        number: 3,
+        type: drag_and_drop,
+        text: You need to keep the template password out of plain text. Which of the following should you create?,
+        selectCount: 0,
+        draggableItems: [
+          Storage account,
+          Access policy,
+          Key vault
+        ],
+        sequenceLength: 2,
+        groupId: null,
+        groupType: null,
+        variantGroup: null,
+        unorderedAnswer: true
+      },
+      correctAnswer: {
+        number: 3,
+        explanation: The answer is a set, not a sequence: a key vault and an access policy.,
+        answerText: Key vault | Access policy,
+        note: null,
+        answerRows: [
+          {
+            prompt: null,
+            answer: Key vault
+          },
+          {
+            prompt: null,
+            answer: Access policy
+          }
+        ]
+      },
+      studyLater: true
+    },
+    {
+      questionNumber: 4,
+      userAnswers: [
+        Reader,
+        Reader
+      ],
+      question: {
+        number: 4,
+        type: hotspot,
+        text: You need to assign the least privileged role to each user. What should you assign?,
+        selectCount: 0,
+        sequenceLength: 0,
+        prompts: [
+          {
+            prompt: User1,
+            options: [
+              Owner,
+              Reader,
+              Contributor
+            ],
+            selectCount: 1
+          },
+          {
+            prompt: User2,
+            options: [
+              Owner,
+              Reader
+            ],
+            selectCount: 1
+          }
+        ],
+        groupId: null,
+        groupType: null,
+        variantGroup: null,
+        unorderedAnswer: false
+      },
+      correctAnswer: {
+        number: 4,
+        explanation: Box 1: Reader - User1 only reads. Box 2: Owner - User2 assigns roles.,
+        answerText: User1 -> Reader | User2 -> Owner,
+        note: null,
+        answerRows: [
+          {
+            prompt: User1,
+            answer: Reader
+          },
+          {
+            prompt: User2,
+            answer: Owner
+          }
+        ]
+      },
+      studyLater: true
+    },
+    {
+      questionNumber: 5,
+      userAnswers: [
+        Yes,
+        Yes
+      ],
+      question: {
+        number: 5,
+        type: hotspot_yes_no,
+        text: For each of the following statements, select Yes if the statement is true. Otherwise, select No.,
+        selectCount: 0,
+        sequenceLength: 0,
+        prompts: [
+          {
+            prompt: VM1 can reach VM2.,
+            options: [
+              Yes,
+              No
+            ],
+            selectCount: 1
+          },
+          {
+            prompt: VM2 can reach VM3.,
+            options: [
+              Yes,
+              No
+            ],
+            selectCount: 1
+          }
+        ],
+        groupId: null,
+        groupType: null,
+        variantGroup: null,
+        unorderedAnswer: false
+      },
+      correctAnswer: {
+        number: 5,
+        explanation: Box 1: Yes - It is true. Box 2: No - It is false.,
+        answerText: VM1 can reach VM2. -> Yes | VM2 can reach VM3. -> No,
+        note: null,
+        answerRows: [
+          {
+            prompt: VM1 can reach VM2.,
+            answer: Yes
+          },
+          {
+            prompt: VM2 can reach VM3.,
+            answer: No
+          }
+        ]
+      },
+      studyLater: false
+    },
+    {
+      questionNumber: 6,
+      userAnswers: [
+        A
+      ],
+      question: {
+        number: 6,
+        type: multiple_choice,
+        text: You need to view the deployments of RG1. Solution: From the RG1 blade, you click Deployments. Does this meet the goal?,
+        options: [
+          {
+            letter: A,
+            text: Yes
+          },
+          {
+            letter: B,
+            text: No
+          }
+        ],
+        selectCount: 1,
+        sequenceLength: 0,
+        groupId: ss01,
+        groupType: scenario_series,
+        variantGroup: null,
+        unorderedAnswer: false
+      },
+      correctAnswer: {
+        number: 6,
+        explanation: The Deployments blade lists every deployment of the resource group.,
+        answerText: A. Yes,
+        note: null,
+        correctLetters: [
+          A
+        ]
+      },
+      studyLater: false
+    },
+    {
+      questionNumber: 7,
+      userAnswers: [
+        A
+      ],
+      question: {
+        number: 7,
+        type: multiple_choice,
+        text: You need to view the deployments of RG1. Solution: From the RG1 blade, you click Tags. Does this meet the goal?,
+        options: [
+          {
+            letter: A,
+            text: Yes
+          },
+          {
+            letter: B,
+            text: No
+          }
+        ],
+        selectCount: 1,
+        sequenceLength: 0,
+        groupId: ss01,
+        groupType: scenario_series,
+        variantGroup: null,
+        unorderedAnswer: false
+      },
+      correctAnswer: {
+        number: 7,
+        explanation: Tags do not show deployments.,
+        answerText: B. No,
+        note: null,
+        correctLetters: [
+          B
+        ]
+      },
+      studyLater: false
+    }
+  ]
+}
