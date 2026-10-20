@@ -1061,7 +1061,7 @@ You have an Azure Active Directory (Azure AD) tenant named adatum.com. Adatum.co
 **Risposta corretta:** User1 -> Group1 only | User2 -> Group1 and Group2 only
 > Immagini: q071_post0.png
 
-**Spiegazione:** Box 1: Group 1 only - First rule applies - Box 2: Group1 and Group2 only - Both membership rules apply. Reference: https://docs.microsoft.com/en-us/sccm/core/clients/manage/collections/create-collections
+**Spiegazione:** Dynamic membership rules are evaluated on user attributes, and string comparisons ignore case; Group3 has assigned membership, so a new user joins it only when added manually. Box 1: Group1 only - User1's city, Montreal, starts with "m", so the Group1 rule applies; the department is Human resources, which -notIn ["human resources"] excludes from Group2. Box 2: Group1 and Group2 only - User2's city, Melbourne, also starts with "m", and the department, Marketing, is not human resources, so both dynamic rules apply. The Office 365 license plays no part in either rule. Reference: https://learn.microsoft.com/en-us/entra/identity/users/groups-dynamic-membership
 
 ---
 
@@ -2368,7 +2368,7 @@ You have a Microsoft Entra tenant configured as shown in the following exhibit. 
 ## Domanda 154
 *Tipo: multiple_choice · fonte: text_layer*
 
-You have an Azure subscription that contains a storage account named storage. The storage account contains a blob that stores images. Client access to storage1 is granted by using a shared access signature (SAS). You need to ensure that users receive a warning message when they generate a SAS that exceeds a seven-day time period. What should you do for storage?
+You have an Azure subscription that contains a storage account named storage1. The storage account contains a blob that stores images. Client access to storage1 is granted by using a shared access signature (SAS). You need to ensure that users receive a warning message when they generate a SAS that exceeds a seven-day time period. What should you do for storage1?
 
 - **A.** Enable a read-only lock.
 - **B.** Configure an alert rule.
@@ -2759,7 +2759,7 @@ You have an Azure subscription that contains an Azure Storage account. You plan 
 ## Domanda 181
 *Tipo: multiple_choice · fonte: text_layer*
 
-You have an app named App1 that runs on two Azure virtual machines named VM1 and VM2. You plan to implement an Azure Availability Set for App1. The solution must ensure that App1 is available during planned maintenance of the hardware hostingVM1 and VM2. What should you include in the Availability Set?
+You have an app named App1 that runs on two Azure virtual machines named VM1 and VM2. You plan to implement an Azure Availability Set for App1. The solution must ensure that App1 is available during planned maintenance of the hardware hosting VM1 and VM2. What should you include in the Availability Set?
 
 - **A.** one update domain
 - **B.** two fault domains
@@ -3303,7 +3303,7 @@ You have an Azure subscription named Subscription1. You have 5 TB of data that y
 ## Domanda 218
 *Tipo: hotspot · fonte: manual_vision*
 
-You have an Azure subscription that contains a storage account named storage1. The storage1 account contains a container named container1. You create a blob lifecycle rule named rule1. You need to configure rule1 to automatically move blobs that were NOT updated for 45 days from contained to the Cool access tier. How should you complete the rule? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
+You have an Azure subscription that contains a storage account named storage1. The storage1 account contains a container named container1. You create a blob lifecycle rule named rule1. You need to configure rule1 to automatically move blobs that were NOT updated for 45 days from container1 to the Cool access tier. How should you complete the rule? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
 
 **Risposta corretta:** "tierToCool" (box 1) -> "daysAfterModificationGreaterThan" | "blobTypes" (box 2) -> "Blockblob"
 > Immagini: q218_post0.png
@@ -4037,7 +4037,7 @@ You have the App Service plans shown in the following table. You plan to create 
 **Risposta corretta:** WebApp1 -> ASP1 and ASP3 only | WebApp2 -> ASP1 only
 > Immagini: q259_post0.png
 
-**Spiegazione:** Box 1: ASP1 ASP3 - Asp1, ASP3: ASP.NET Core apps can be hosted both on Windows or Linux. Not ASP2: The region in which your app runs is the region of the App Service plan it's in. Box 2: ASP1 - ASP.NET apps can be hosted on Windows only. Reference: https://docs.microsoft.com/en-us/azure/app-service/quickstart-dotnetcore?pivots=platform-linux https://docs.microsoft.com/en-us/azure/app-service/app-service-plan-manage#
+**Spiegazione:** An app runs in the region and on the operating system of its App Service plan. Box 1: ASP1 and ASP3 only - WebApp1 uses .NET Core 3.0, which runs on both Windows and Linux, so it can use ASP1 (Windows) and ASP3 (Linux), both in West US; ASP2 is in Central US. Box 2: ASP1 only - WebApp2 uses ASP.NET 4.7, which runs only on Windows, and ASP1 is the only Windows plan in West US. Reference: https://learn.microsoft.com/en-us/azure/app-service/overview-hosting-plans
 
 ---
 
@@ -5200,7 +5200,7 @@ You are creating an Azure Kubernetes Services (AKS) cluster as shown in the foll
 You have an Azure subscription that contains an Azure Kubernetes Service (AKS) cluster named Cluster1. Cluster1 hosts a node pool named Pool1 that has four nodes. You need to perform a coordinated upgrade of Cluster1. The solution must meet the following requirements: Deploy two new nodes to perform the upgrade. Minimize costs. How should you complete the command? To answer, select the appropriate options in the answer area. NOTE: Each correct selection is worth one point.
 
 **Risposta corretta:** az aks nodepool [box 1] -> updates | -n pool1 -g RG1 --cluster-name cluster1 [box 2] -> --max-surge 2
-> Nota: Comando completo: az aks nodepool updates -n pool1 -g RG1 --cluster-name cluster1 --max-surge 2
+> Nota: Comando completo: az aks nodepool update -n pool1 -g RG1 --cluster-name cluster1 --max-surge 2 (nel menu dell'esame l'opzione è scritta "updates")
 > Immagini: q335_post0.png
 
 **Spiegazione:** A coordinated node pool upgrade can add temporary surge nodes, so workloads move to new nodes before the old ones are drained. Box 1: updates - The command is az aks nodepool update. Box 2: --max-surge 2 - It sets the surge to exactly two extra nodes during the upgrade, the number required; a higher surge would cost more, and --node-count or --max-count change the permanent size or the autoscaler limit instead. Reference: https://learn.microsoft.com/en-us/azure/aks/upgrade-aks-cluster
@@ -5352,7 +5352,7 @@ You plan to create the Azure web apps shown in the following table. What is the 
 **Risposta corretta:** B
 > Esibito: q346_pre0.png
 
-**Spiegazione:** To determine the minimum number of App Service plans needed for the web apps, the key factor to consider is whether the runtime stack requires a Windows or Linux environment. Python 3.11 only runs on Linux, while ASP.NET V4.8 requires a Windows environment. The other runtimes,.NET 6 (LTS) and PHP 8.1, can run on either platform but will have to be placed on the appropriate platform to accommodate the needs of Python and ASP.NET. Therefore, at least two App Service plans are needed: one for Linux to support Python 3.11, and one for Windows to support ASP.NET V4.8. The.NET and PHP applications can share these plans. Thus, the correct answer is two App Service plans.
+**Spiegazione:** Web apps can share an App Service plan only if they run on the same operating system. ASP.NET V4.8 runs only on Windows, Python 3.11 runs only on Linux, PHP 8.1 runs only on Linux too (App Service supports PHP only on Linux since November 2022), and .NET 6 (LTS) runs on either. A Windows plan for WebApp2 and a Linux plan shared by WebApp1, WebApp3 and WebApp4 are the minimum: 2 App Service plans. Reference: https://learn.microsoft.com/en-us/azure/app-service/overview-hosting-plans
 
 ---
 
@@ -6577,7 +6577,7 @@ You have an Azure subscription that contains the Azure virtual machines shown in
 **Risposta corretta:** VM1 connects to 193.77.134.10 for DNS queries. -> Yes | VM2 connects to 193.77.134.10 for DNS queries. -> No | VM3 connects to 192.168.10.15 for DNS queries. -> Yes
 > Immagini: q421_post0.png
 
-**Spiegazione:** Box 1: Yes - You can specify DNS server IP addresses in the VNet settings. The setting is applied as the default DNS server(s) for all VMs in the VNet. Box 2: No - You can set DNS servers per VM or cloud service to override the default network settings. Box 3: Yes - You can set DNS servers per VM or cloud service to override the default network settings. Reference: https://docs.microsoft.com/en-us/azure/virtual-network/virtual-networks-faq#name-resolution-dns
+**Spiegazione:** DNS servers set on a network interface override those of its virtual network; an interface with none inherits the virtual network's. Box 1: Yes - VM1's network interface has no DNS server configured, so it uses VNET1's custom DNS server, 193.77.134.10. Box 2: No - VM2's network interface specifies 192.168.10.15, which overrides VNET1's setting, so VM2 doesn't query 193.77.134.10. Box 3: Yes - VM3's network interface also specifies 192.168.10.15. Reference: https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-name-resolution-for-vms-and-role-instances
 
 ---
 
@@ -7433,7 +7433,7 @@ You have an Azure subscription that contains 20 virtual machines, a network secu
 
 **Risposta corretta:** B
 
-**Spiegazione:** To enable inbound access to virtual machines via Azure Bastion, you should configure the network security group (NSG) to allow traffic on port 443. Azure Bastion uses HTTPS (port 443) to securely access the virtual machines through its web interface. This port is crucial for establishing the secure connections needed for remote desktop and SSH sessions to the VMs. Other ports like 22, 389, and 8080 are not used for this purpose by Azure Bastion.
+**Spiegazione:** Read as the NSG that protects AzureBastionSubnet, NSG1 must allow inbound TCP 443 from the Internet service tag: users open the RDP or SSH session in the browser over HTTPS, and the Bastion host then reaches the virtual machines over their private IP addresses. The other ports play a different role: 22 (SSH) and 3389 (RDP) must be allowed on the NSG of the virtual machines' subnet, with AzureBastionSubnet as the source, and 8080 (together with 5701) carries Bastion's internal data-plane traffic from VirtualNetwork to VirtualNetwork; 389 is LDAP, which Bastion doesn't use. Reference: https://learn.microsoft.com/en-us/azure/bastion/bastion-nsg
 
 ---
 
@@ -7486,7 +7486,7 @@ You have an Azure subscription that contains the virtual networks shown in the f
 **Risposta corretta:** C
 > Esibito: q482_pre0.png
 
-**Spiegazione:** An Azure Firewall can only be deployed within the same virtual network (VNet) and resource group as specified in the Azure subscription configuration. Given that the firewall is required to be deployed to RG1 in the West US region, the only VNet that fits these criteria is VNET1. VNET1 is the only virtual network that is located in the West US region and also within the RG1 resource group.
+**Spiegazione:** Azure Firewall must be deployed in the same region and in the same resource group as its virtual network (only the public IP address can be in another resource group). AF1 goes to RG1 in West US, and VNET1 is the only virtual network that is in both: VNET2 is in RG1 but in Central US, VNET4 is in West US but in RG2, and VNET3 matches neither. Reference: https://learn.microsoft.com/en-us/azure/firewall/firewall-faq
 
 ---
 
@@ -9036,10 +9036,9 @@ You have an Azure subscription. The subscription contains 10 virtual machines th
 
 You have an Azure subscription that contains two storage accounts named contoso101 and contoso102. The subscription contains the virtual machines shown in the following table. VNet1 has service endpoints configured as shown in the Service endpoints exhibit. (Click the Service endpoints tab.) The Microsoft.Storage service endpoint has the service endpoint policy shown in the Microsoft.Storage exhibit. (Click the Microsoft.Storage tab.) For each of the following statements, select Yes if the statement is true. Otherwise, select No. NOTE: Each correct selection is worth one point.
 
-**Risposta corretta:** VM1 can access contoso102. -> No | VM2 can access contoso101. -> No | VM2 uses a private IP address to access Azure AD. -> Yes
-> Immagini: q582_post0.png
+**Risposta corretta:** VM1 can access contoso102. -> No | VM2 can access contoso101. -> Yes | VM2 uses a private IP address to access Azure AD. -> Yes
 
-**Spiegazione:** Box 1: No - Subnet1 has the Microsoft.Storage service endpoint with Policy1, a service endpoint policy that allows only contoso101, so VM1 cannot reach contoso102 through the endpoint. Box 2: No - The expected answer says VM2 cannot access contoso101, which holds only if the storage account's firewall admits just the Subnet1 endpoint - Subnet2 has no storage endpoint, so VM2 would otherwise reach the account over the internet. Box 3: Yes - Subnet2 has the Microsoft.AzureActiveDirectory service endpoint, so VM2 reaches Azure AD from its private IP address over the backbone. Reference: https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-service-endpoint-policies-overview
+**Spiegazione:** Box 1: No - Subnet1 has the Microsoft.Storage service endpoint with Policy1, a service endpoint policy that allows only contoso101, so VM1 cannot reach contoso102 through the endpoint. Box 2: Yes - A service endpoint policy filters only the traffic that leaves its own subnet through the Microsoft.Storage endpoint. Subnet2 has no storage endpoint and nothing restricts contoso101 to selected networks, so VM2 reaches it over the account's public endpoint (VM2 even has a Standard public IP address). The original answer key marks No, which would hold only if contoso101's firewall admitted just Subnet1. Box 3: Yes - Subnet2 has the Microsoft.AzureActiveDirectory service endpoint, so VM2 reaches Azure AD from its private IP address over the backbone. Reference: https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-service-endpoint-policies-overview
 
 ---
 
