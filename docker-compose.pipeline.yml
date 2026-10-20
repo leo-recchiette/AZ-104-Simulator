@@ -12,4 +12,4 @@ services:
     volumes:
       - .:/work
       # node_modules in un volume anonimo, cosi' npm ci non lo scrive sull'host.
-      - /work/AZ-104.Simulator.FE/node_modules
+      - /work/src/AZ-104.Simulator.Web/node_modules

@@ -6,10 +6,10 @@ ENV PYTHONUNBUFFERED=1 \
 
 WORKDIR /app
 
-COPY AZ-104.Simulator.Database/database-importer/requirements.txt ./
+COPY src/AZ-104.Simulator.Importer/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY AZ-104.Simulator.Database/database-importer/import_questions.py ./
-COPY AZ-104.Simulator.Dataset/az104_606_domande.json /data/questions.json
+COPY src/AZ-104.Simulator.Importer/import_questions.py ./
+COPY dataset/az104_606_domande.json /data/questions.json
 
 ENTRYPOINT ["python", "import_questions.py"]

@@ -61,8 +61,11 @@ public sealed class ScoreServiceTests
         var submitted = new[] { "Replication policy", "Hyper-V site", "Endpoint" };
         var sut = new ScoreService();
 
-        sut.Score(QuestionType.DragAndDrop, [], answerRows, submitted, unordered: true).Should().Be((Earned: 2, Total: 3));
-        sut.Score(QuestionType.DragAndDrop, [], answerRows, submitted, unordered: false).Should().Be((Earned: 0, Total: 3));
+        var asSet = (Earned: 2, Total: 3);
+        var byPosition = (Earned: 0, Total: 3);
+
+        sut.Score(QuestionType.DragAndDrop, [], answerRows, submitted, unordered: true).Should().Be(asSet);
+        sut.Score(QuestionType.DragAndDrop, [], answerRows, submitted, unordered: false).Should().Be(byPosition);
     }
 
     [TestMethod]

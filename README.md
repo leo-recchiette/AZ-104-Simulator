@@ -49,12 +49,20 @@ questions you saved to study later together with the ones you got wrong.
 ## Project layout
 
 ```
-AZ-104.Simulator.BE/          .NET backend (API + test project)
-AZ-104.Simulator.FE/          React + TypeScript frontend
-AZ-104.Simulator.Database/    SQL schema and question bank importer
-AZ-104.Simulator.Dataset/     Source data (JSON, a human-readable Markdown version, the exhibit images)
+AZ-104.Simulator.sln               .NET solution (API + tests)
+src/
+  AZ-104.Simulator.Api/            .NET Web API
+  AZ-104.Simulator.Web/            React + TypeScript frontend
+  AZ-104.Simulator.Importer/       question bank importer (Python)
+tests/
+  AZ-104.Simulator.Api.Tests/      API unit tests
+db/                                SQL schema
+dataset/                           source data (JSON, a human-readable Markdown version, the exhibit images)
+docs/screenshots/                  the images in this README
 docker-compose.yml
 ```
+
+Each folder under `src/` is one Docker service: `api`, `web` and `importer`.
 
 ## Getting started
 
@@ -85,7 +93,7 @@ to reload the question bank from an updated JSON file.
 ### Reloading the question bank
 
 The importer replaces the contents of the question tables with what it reads from
-`AZ-104.Simulator.Dataset/az104_606_domande.json` — it is not incremental. Note that the JSON is **copied into
+`dataset/az104_606_domande.json` — it is not incremental. Note that the JSON is **copied into
 the importer image** at build time rather than mounted, so after editing the dataset rerun it with `--build`,
 otherwise the stale copy gets imported again:
 
@@ -139,8 +147,7 @@ docker compose up -d
 ## Tests
 
 ```bash
-cd AZ-104.Simulator.BE/AZ-104.Simulator.Api.Tests
-dotnet test
+dotnet test AZ-104.Simulator.sln
 ```
 
 No local Postgres is required: the repositories are substituted, never hit against a real database.

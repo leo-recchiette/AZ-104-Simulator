@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../AZ-104.Simulator.Api/AZ-104.Simulator.Api.csproj" />
+    <ProjectReference Include="../../src/AZ-104.Simulator.Api/AZ-104.Simulator.Api.csproj" />
   </ItemGroup>
 
 </Project>
