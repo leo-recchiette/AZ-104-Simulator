@@ -7,7 +7,8 @@ to be installed locally except Docker itself.
 ## Screenshots
 
 Home screen: pick a mode and see where your Simulations stand — worst and best score, the average of the last five
-and how many you have passed in a row. The chart of every session can be zoomed on a period and on the score axis.
+and how many you have passed in a row. The chart of every session can be zoomed on a period by dragging across it,
+and its score axis fits the scores shown.
 
 ![Home screen](docs/screenshots/home.png)
 
@@ -39,7 +40,7 @@ questions you saved to study later together with the ones you got wrong.
 - **Exhibits**: the screenshots that come with a question are shown inline and can be zoomed in and out, since many
   of them are small and dense.
 - **History and progress**: every submitted session is kept with its questions and answers. The home screen charts
-  them all — zoomable on a period and on the score range — and sums up your Simulations: worst, best, average of the
+  them all — zoomable on a period by dragging across it — and sums up your Simulations: worst, best, average of the
   last five and passes in a row.
 - **Study later**: mark any question during a session with *Save to study later*, then find it in the review at the
   end of the session and in the history, where it can also be listed together with the questions you got wrong.

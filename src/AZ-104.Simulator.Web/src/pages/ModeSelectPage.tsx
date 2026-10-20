@@ -18,9 +18,8 @@ export function ModeSelectPage() {
   const navigate = useNavigate();
   const { theme, tokens: t } = useTheme();
   const [history, setHistory] = useState<ExamAttemptDto[]>([]);
-  // Zoom del grafico: null = tutto. Il periodo vale anche per le tre statistiche, la scala Y no.
+  // Periodo zoomato nel grafico: null = tutto. Vale anche per le statistiche.
   const [range, setRange] = useState<[number, number] | null>(null);
-  const [yDomain, setYDomain] = useState<[number, number] | null>(null);
 
   useEffect(() => {
     // Pannello "best effort": se lo storico non si carica, la pagina resta comunque utilizzabile.
@@ -48,6 +47,7 @@ export function ModeSelectPage() {
       streak,
     };
   }, [shown]);
+  const recentCount = stats?.recentCount ?? RECENT_COUNT;
 
   return (
     <>
@@ -151,19 +151,14 @@ export function ModeSelectPage() {
                   View history ({history.length})
                 </button>
               </div>
-              {(range || yDomain) && (
+              {range && (
                 <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", margin: "-4px 0 14px", fontSize: 12.5, color: t.mu }}>
-                  {range && (
-                    <span>
-                      Sessions {range[0] + 1}–{range[1] + 1} of {history.length} · {formatDateShort(shown[0].endTime)} –{" "}
-                      {formatDateShort(shown[shown.length - 1].endTime)}
-                    </span>
-                  )}
+                  <span>
+                    Sessions {range[0] + 1}–{range[1] + 1} of {history.length} · {formatDateShort(shown[0].endTime)} –{" "}
+                    {formatDateShort(shown[shown.length - 1].endTime)}
+                  </span>
                   <button
-                    onClick={() => {
-                      setRange(null);
-                      setYDomain(null);
-                    }}
+                    onClick={() => setRange(null)}
                     style={{ background: "none", border: "none", padding: 0, color: t.ac, font: "inherit", fontSize: 12.5, fontWeight: 600 }}
                   >
                     Reset zoom
@@ -171,31 +166,26 @@ export function ModeSelectPage() {
                 </div>
               )}
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(118px, 1fr))", gap: 14, marginBottom: 10 }}>
-                <StatTile label="Worst score" value={stats ? `${stats.worst}%` : "—"} color={t.er} />
-                <StatTile label="Best score" value={stats ? `${stats.best}%` : "—"} color={t.ok} />
+                {/* Senza Simulation nel periodo il trattino e' neutro: rosso o verde sembrerebbe un valore. */}
+                <StatTile label="Worst Simulation score" value={stats ? `${stats.worst}%` : "—"} color={stats ? t.er : t.fa} />
+                <StatTile label="Best Simulation score" value={stats ? `${stats.best}%` : "—"} color={stats ? t.ok : t.fa} />
                 <StatTile
-                  label={`Last ${stats?.recentCount ?? RECENT_COUNT} average`}
-                  title={`Average of the last ${stats?.recentCount ?? RECENT_COUNT} Simulations`}
+                  label={recentCount === 1 ? "Last Simulation" : `Last ${recentCount} Simulations average`}
+                  title={recentCount === 1 ? "Score of the only Simulation in this period" : `Average of the last ${recentCount} Simulations`}
                   value={stats ? `${stats.recent}%` : "—"}
-                  color={stats && stats.recent >= PASS_MARK_PERCENT ? t.ok : t.er}
+                  color={!stats ? t.fa : stats.recent >= PASS_MARK_PERCENT ? t.ok : t.er}
                 />
                 <StatTile
                   label="Passed in a row"
                   title={`Consecutive Simulations at or above ${PASS_MARK_PERCENT}%, up to the latest`}
                   value={stats ? String(stats.streak) : "—"}
-                  color={stats?.streak ? t.ok : t.mu}
+                  color={!stats ? t.fa : stats.streak ? t.ok : t.mu}
                 />
               </div>
               <div style={{ fontSize: 11.5, color: t.fa, marginBottom: 22 }}>
                 {stats ? "Simulation sessions only · the chart shows every session" : "No Simulation in this period · the chart shows every session"}
               </div>
-              <ProgressChart
-                attempts={history}
-                range={range}
-                onRangeChange={setRange}
-                yDomain={yDomain}
-                onYDomainChange={setYDomain}
-              />
+              <ProgressChart attempts={history} range={range} onRangeChange={setRange} />
             </div>
           )}
         </div>
