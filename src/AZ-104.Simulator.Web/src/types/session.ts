@@ -15,7 +15,7 @@ export interface SaveActiveSessionDto {
   autoReveal: boolean;
   /** Practice a oltranza: questionNumbers sono solo le domande proposte finora. */
   openEnded: boolean;
-  /** Practice: percentuale dell'esame aggiornata a ogni risposta. */
+  /** Practice: punteggio dell'esame aggiornato a ogni risposta. */
   liveScore: boolean;
   /** Serve a ripescare il bank a oltranza dopo un ripristino. */
   drawMode: DrawMode;

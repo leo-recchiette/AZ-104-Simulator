@@ -14,7 +14,7 @@ import { groupMembers, sessionUnits, unitsAnswered, unitsStarted } from "../util
 import { isAnswerStarted, isRevealedWrong } from "../utils/questionShape";
 import { OptionsMenu } from "../components/OptionsMenu";
 import { HEADER_GRADIENT } from "../theme/tokens";
-import { MAX_QUESTION_COUNT, PASS_MARK_PERCENT } from "../constants";
+import { MAX_QUESTION_COUNT, PASS_MARK_SCORE } from "../constants";
 
 // Fuori dal tema: stanno sul banner blu, uguale in light e dark.
 const CLOCK_OK = "#3ddc84";
@@ -29,11 +29,11 @@ const AUTO_REVEAL_DELAY_MS = 400;
 const NO_ANSWER: string[] = [];
 
 /** Verde dalla soglia di superamento, poi giallo, arancione e rosso. */
-function scoreColor(percentage: number | null): string {
-  if (percentage === null) return "#ffffff";
-  if (percentage >= PASS_MARK_PERCENT) return CLOCK_OK;
-  if (percentage >= PASS_MARK_PERCENT - 10) return CLOCK_WARN;
-  if (percentage >= PASS_MARK_PERCENT - 20) return SCORE_ORANGE;
+function scoreColor(score: number | null): string {
+  if (score === null) return "#ffffff";
+  if (score >= PASS_MARK_SCORE) return CLOCK_OK;
+  if (score >= PASS_MARK_SCORE - 100) return CLOCK_WARN;
+  if (score >= PASS_MARK_SCORE - 200) return SCORE_ORANGE;
   return CLOCK_DANGER;
 }
 
@@ -120,7 +120,7 @@ export function SessionPage() {
           mode: state.mode,
           drawMode: state.drawMode,
           questionCount: scored.length,
-          percentage: score.percentage,
+          score: score.score,
           startTime: startTime.toISOString(),
           endTime: endTime.toISOString(),
           answers: submissions,
@@ -378,7 +378,7 @@ export function SessionPage() {
             <div title={scoreHint} style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
               <span style={{ fontSize: 12.5, color: "#e4e7ee" }}>Score</span>
               <span style={{ fontSize: 20, fontWeight: 600, fontVariantNumeric: "tabular-nums", color: scoreColor(liveScore), transition: "color .3s" }}>
-                {liveScore === null ? "—" : `${liveScore.toFixed(1)}%`}
+                {liveScore ?? "—"}
               </span>
             </div>
           )}

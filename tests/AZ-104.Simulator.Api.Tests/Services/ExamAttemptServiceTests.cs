@@ -28,7 +28,7 @@ public sealed class ExamAttemptServiceTests
             Mode = "practice",
             DrawMode = "least_seen",
             QuestionCount = 30,
-            Percentage = 76.5,
+            Score = 765,
             StartTime = StartTime,
             EndTime = EndTime,
         };
@@ -125,7 +125,7 @@ public sealed class ExamAttemptServiceTests
             Mode: "practice",
             DrawMode: "least_seen",
             QuestionCount: 30,
-            Percentage: 76.5,
+            Score: 765,
             StartTime: StartTime,
             EndTime: EndTime,
             CompletedAt: CompletedAt);
@@ -139,13 +139,13 @@ public sealed class ExamAttemptServiceTests
         var repository = Substitute.For<IExamAttemptRepository>();
         repository
             .GetAllAsync(Arg.Any<CancellationToken>())
-            .Returns([Attempt(1, 50), Attempt(2, 60), Attempt(3, 90)]);
+            .Returns([Attempt(1, 500), Attempt(2, 600), Attempt(3, 900)]);
         var sut = Sut(repository);
 
         var actual = await sut.GetAllAttemptsAsync(CancellationToken.None);
 
         // Il service non deve riordinare: il grafico si appoggia all'ordine del repository.
-        var expected = new[] { AttemptDto(1, 50), AttemptDto(2, 60), AttemptDto(3, 90) };
+        var expected = new[] { AttemptDto(1, 500), AttemptDto(2, 600), AttemptDto(3, 900) };
 
         actual.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
     }
@@ -264,7 +264,7 @@ public sealed class ExamAttemptServiceTests
     private static SaveExamAttemptDto SaveRequest() => new(
         Mode: "practice",
         QuestionCount: 30,
-        Percentage: 76.5,
+        Score: 765,
         StartTime: StartTime,
         EndTime: EndTime,
         // Anche la domanda in bianco va salvata.
@@ -280,30 +280,30 @@ public sealed class ExamAttemptServiceTests
         Mode = "practice",
         DrawMode = "least_seen",
         QuestionCount = 30,
-        Percentage = 76.5,
+        Score = 765,
         StartTime = StartTime,
         EndTime = EndTime,
         CompletedAt = CompletedAt,
     };
 
-    private static ExamAttempt Attempt(int id, double percentage) => new()
+    private static ExamAttempt Attempt(int id, int score) => new()
     {
         Id = id,
         Mode = "exam",
         DrawMode = "random",
         QuestionCount = 60,
-        Percentage = percentage,
+        Score = score,
         StartTime = StartTime.AddDays(id),
         EndTime = EndTime.AddDays(id),
         CompletedAt = CompletedAt.AddDays(id),
     };
 
-    private static ExamAttemptDto AttemptDto(int id, double percentage) => new(
+    private static ExamAttemptDto AttemptDto(int id, int score) => new(
         Id: id,
         Mode: "exam",
         DrawMode: "random",
         QuestionCount: 60,
-        Percentage: percentage,
+        Score: score,
         StartTime: StartTime.AddDays(id),
         EndTime: EndTime.AddDays(id),
         CompletedAt: CompletedAt.AddDays(id));

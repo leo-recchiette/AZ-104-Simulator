@@ -13,7 +13,7 @@ import { getAnswerShape } from "../utils/questionShape";
 import { pointsEarned } from "../utils/grading";
 import { reviewAnchorId, reviewUnits } from "../utils/reviewUnits";
 import { formatDateTime, formatDuration } from "../utils/format";
-import { PASS_MARK_PERCENT } from "../constants";
+import { MAX_SCORE, PASS_MARK_SCORE } from "../constants";
 import { HEADER_GRADIENT } from "../theme/tokens";
 
 type AttemptFilter = "all" | "wrong" | "studyLater" | "studyLaterOrWrong";
@@ -113,7 +113,7 @@ export function AttemptDetailPage() {
   }, [pendingScroll]);
 
   const attempt = detail?.attempt;
-  const passed = (attempt?.percentage ?? 0) >= PASS_MARK_PERCENT;
+  const passed = (attempt?.score ?? 0) >= PASS_MARK_SCORE;
 
   return (
     <div style={{ flex: 1 }}>
@@ -140,7 +140,8 @@ export function AttemptDetailPage() {
               </div>
               <div style={{ display: "flex", alignItems: "flex-end", gap: 14, margin: "12px 0 0", flexWrap: "wrap" }}>
                 <span style={{ fontFamily: "'Source Serif 4', Georgia, serif", fontSize: 46, fontWeight: 600, lineHeight: 1, letterSpacing: "-.02em" }}>
-                  {attempt.percentage.toFixed(1)}%
+                  {attempt.score}
+                  <span style={{ fontSize: 17, fontWeight: 500, color: t.fa, letterSpacing: 0 }}> / {MAX_SCORE}</span>
                 </span>
                 <span style={{ fontSize: 14, fontWeight: 600, padding: "5px 11px", borderRadius: 8, background: passed ? t.okbg : t.erbg, color: passed ? t.ok : t.er, marginBottom: 5 }}>
                   {passed ? "Pass" : "Fail"}

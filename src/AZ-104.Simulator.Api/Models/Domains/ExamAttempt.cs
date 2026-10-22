@@ -11,7 +11,7 @@ public sealed record ExamAttempt
     public required string DrawMode { get; init; }
 
     public required int QuestionCount { get; init; }
-    public required double Percentage { get; init; }
+    public required int Score { get; init; }
     public required DateTimeOffset StartTime { get; init; }
     public required DateTimeOffset EndTime { get; init; }
     public DateTimeOffset CompletedAt { get; init; }

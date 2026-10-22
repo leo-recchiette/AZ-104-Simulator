@@ -95,7 +95,8 @@ CREATE TABLE exam_attempts (
     -- Come sono state pescate le domande. I tentativi precedenti la scelta erano tutti casuali.
     draw_mode      TEXT             NOT NULL DEFAULT 'random' CHECK (draw_mode IN ('random', 'least_seen')),
     question_count INTEGER          NOT NULL,
-    percentage     DOUBLE PRECISION NOT NULL,
+    -- Su 1000 come l'esame, si supera con 700. Fino al 2026-10-22 era una percentuale a un decimale.
+    score          INTEGER          NOT NULL CHECK (score BETWEEN 0 AND 1000),
     start_time     TIMESTAMPTZ      NOT NULL,
     end_time       TIMESTAMPTZ      NOT NULL,
     completed_at   TIMESTAMPTZ      NOT NULL DEFAULT now()

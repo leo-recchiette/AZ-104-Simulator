@@ -6,7 +6,7 @@ public sealed record ExamAttemptDto(
     string Mode,
     string DrawMode,
     int QuestionCount,
-    double Percentage,
+    int Score,
     DateTimeOffset StartTime,
     DateTimeOffset EndTime,
     DateTimeOffset CompletedAt);

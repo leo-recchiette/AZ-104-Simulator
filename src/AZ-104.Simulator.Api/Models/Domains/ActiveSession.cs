@@ -24,7 +24,7 @@ public sealed record ActiveSession
     /// <summary>Practice a oltranza: QuestionNumbers sono solo le domande gia' proposte.</summary>
     public required bool OpenEnded { get; init; }
 
-    /// <summary>Practice: percentuale dell'esame aggiornata a ogni risposta.</summary>
+    /// <summary>Practice: punteggio dell'esame aggiornato a ogni risposta.</summary>
     public required bool LiveScore { get; init; }
 
     /// <summary>"random" | "least_seen": per ripescare il bank a oltranza dopo un ripristino.</summary>

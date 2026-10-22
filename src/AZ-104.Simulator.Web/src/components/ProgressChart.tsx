@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { useTheme } from "../theme/ThemeContext";
-import { PASS_MARK_PERCENT } from "../constants";
+import { MAX_SCORE, PASS_MARK_SCORE } from "../constants";
 import { formatDateShort, formatDateTime, formatDuration } from "../utils/format";
 import type { ExamAttemptDto } from "../types/answer";
 
@@ -10,7 +10,7 @@ const PAD = { top: 16, right: 64, bottom: 34, left: 44 };
 // Sotto questa distanza il trascinamento e' un clic: il tooltip dei pallini resta raggiungibile al tocco.
 const DRAG_THRESHOLD = 4;
 // Respiro sopra e sotto i punteggi estremi, prima di arrotondare al passo.
-const Y_MARGIN = 3;
+const Y_MARGIN = 30;
 
 type Range = [number, number];
 
@@ -29,11 +29,11 @@ const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v
  * cosi' le tacche cadono su valori tondi e nessun punto finisce sul bordo.
  */
 function yScale(scores: number[]): { lo: number; hi: number; step: number } {
-  const min = Math.min(PASS_MARK_PERCENT, ...scores) - Y_MARGIN;
-  const max = Math.max(PASS_MARK_PERCENT, ...scores) + Y_MARGIN;
+  const min = Math.min(PASS_MARK_SCORE, ...scores) - Y_MARGIN;
+  const max = Math.max(PASS_MARK_SCORE, ...scores) + Y_MARGIN;
   const span = max - min;
-  const step = span <= 30 ? 5 : span <= 60 ? 10 : 20;
-  return { lo: clamp(Math.floor(min / step) * step, 0, 100), hi: clamp(Math.ceil(max / step) * step, 0, 100), step };
+  const step = span <= 300 ? 50 : span <= 600 ? 100 : 200;
+  return { lo: clamp(Math.floor(min / step) * step, 0, MAX_SCORE), hi: clamp(Math.ceil(max / step) * step, 0, MAX_SCORE), step };
 }
 
 /** In pixel misurati, non in un viewBox riscalato, che deformerebbe pallini ed etichette. */
@@ -66,13 +66,13 @@ export function ProgressChart({ attempts, range, onRangeChange }: ProgressChartP
   const innerW = Math.max(0, width - PAD.left - PAD.right);
   const innerH = HEIGHT - PAD.top - PAD.bottom;
   const plotRight = width - PAD.right;
-  const { lo, hi, step } = yScale(visible.map((a) => a.percentage));
+  const { lo, hi, step } = yScale(visible.map((a) => a.score));
 
   // Spaziatura uniforme, non proporzionale alle date: un buco di un mese schiaccerebbe il resto.
   const x = (i: number) => (n === 1 ? PAD.left + innerW / 2 : PAD.left + (i / (n - 1)) * innerW);
-  const y = (pct: number) => PAD.top + (1 - (pct - lo) / (hi - lo)) * innerH;
+  const y = (score: number) => PAD.top + (1 - (score - lo) / (hi - lo)) * innerH;
 
-  const points = visible.map((a, i) => ({ x: x(i), y: y(a.percentage), attempt: a }));
+  const points = visible.map((a, i) => ({ x: x(i), y: y(a.score), attempt: a }));
   const hovered = selection ? null : points.find((p) => p.attempt.id === activeId) ?? null;
   const ticks: number[] = [];
   for (let v = lo; v <= hi; v += step) ticks.push(v);
@@ -121,7 +121,7 @@ export function ProgressChart({ attempts, range, onRangeChange }: ProgressChartP
     cleanupRef.current = cleanup;
   }
 
-  const passVisible = PASS_MARK_PERCENT >= lo && PASS_MARK_PERCENT <= hi;
+  const passVisible = PASS_MARK_SCORE >= lo && PASS_MARK_SCORE <= hi;
   const picked = selection && selectedIndexes(selection);
   const isPicked = (i: number) => !!picked && i >= picked[0] && i <= picked[1];
 
@@ -147,7 +147,7 @@ export function ProgressChart({ attempts, range, onRangeChange }: ProgressChartP
             <g key={v} pointerEvents="none">
               <line x1={PAD.left} y1={y(v)} x2={plotRight} y2={y(v)} stroke={t.bd2} strokeWidth={1} />
               <text x={PAD.left - 10} y={y(v) + 3.5} textAnchor="end" fontSize={10} fill={t.fa} style={{ fontVariantNumeric: "tabular-nums" }}>
-                {v}%
+                {v}
               </text>
             </g>
           ))}
@@ -155,11 +155,11 @@ export function ProgressChart({ attempts, range, onRangeChange }: ProgressChartP
           {passVisible && (
             <g pointerEvents="none">
               <line
-                x1={PAD.left} y1={y(PASS_MARK_PERCENT)} x2={plotRight} y2={y(PASS_MARK_PERCENT)}
+                x1={PAD.left} y1={y(PASS_MARK_SCORE)} x2={plotRight} y2={y(PASS_MARK_SCORE)}
                 stroke={t.ok} strokeWidth={1} strokeDasharray="4 4" opacity={0.7}
               />
-              <text x={plotRight + 8} y={y(PASS_MARK_PERCENT) + 3.5} fontSize={9.5} fill={t.ok}>
-                Pass {PASS_MARK_PERCENT}%
+              <text x={plotRight + 8} y={y(PASS_MARK_SCORE) + 3.5} fontSize={9.5} fill={t.ok}>
+                Pass {PASS_MARK_SCORE}
               </text>
             </g>
           )}
@@ -203,7 +203,7 @@ export function ProgressChart({ attempts, range, onRangeChange }: ProgressChartP
                 {/* Area di click piu' grande del pallino. */}
                 <circle
                   cx={p.x} cy={p.y} r={15} fill="transparent" tabIndex={0} role="img"
-                  aria-label={`${p.attempt.percentage.toFixed(1)}% — ${formatDateTime(p.attempt.endTime)}, ${
+                  aria-label={`${p.attempt.score} — ${formatDateTime(p.attempt.endTime)}, ${
                     p.attempt.mode === "practice" ? "practice" : "simulation"}, ${p.attempt.questionCount} questions`}
                   style={{ cursor: selection ? "crosshair" : "pointer", outline: "none" }}
                   onMouseEnter={() => setActiveId(p.attempt.id)}
@@ -258,9 +258,9 @@ export function ProgressChart({ attempts, range, onRangeChange }: ProgressChartP
         >
           <div style={{
             fontSize: 15, fontWeight: 600, fontVariantNumeric: "tabular-nums",
-            color: hovered.attempt.percentage >= PASS_MARK_PERCENT ? t.ok : t.er,
+            color: hovered.attempt.score >= PASS_MARK_SCORE ? t.ok : t.er,
           }}>
-            {hovered.attempt.percentage.toFixed(1)}%
+            {hovered.attempt.score}
           </div>
           <div style={{ fontSize: 12, color: t.tx2, marginTop: 2 }}>
             {formatDateTime(hovered.attempt.endTime)}

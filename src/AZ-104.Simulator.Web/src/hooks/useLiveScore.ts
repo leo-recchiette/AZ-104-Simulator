@@ -6,11 +6,11 @@ import type { AnswerSubmissionDto } from "../types/answer";
 const LIVE_SCORE_DELAY_MS = 400;
 
 /**
- * La percentuale che darebbe l'invio adesso: stessa getScore e stesse submission di handleFinish,
+ * Il punteggio che darebbe l'invio adesso: stessa getScore e stesse submission di handleFinish,
  * cosi' non puo' divergere. null = niente da valutare o disattivato. Mai nel SessionContext.
  */
 export function useLiveScore(submissions: AnswerSubmissionDto[] | null): number | null {
-  const [percentage, setPercentage] = useState<number | null>(null);
+  const [score, setScore] = useState<number | null>(null);
   const active = submissions !== null && submissions.length > 0;
 
   useEffect(() => {
@@ -18,8 +18,8 @@ export function useLiveScore(submissions: AnswerSubmissionDto[] | null): number 
     let cancelled = false;
     const timer = setTimeout(() => {
       getScore(submissions)
-        .then((score) => {
-          if (!cancelled) setPercentage(score.percentage);
+        .then((result) => {
+          if (!cancelled) setScore(result.score);
         })
         .catch((err) => console.error("Impossibile aggiornare il punteggio:", err));
     }, LIVE_SCORE_DELAY_MS);
@@ -30,5 +30,5 @@ export function useLiveScore(submissions: AnswerSubmissionDto[] | null): number 
     };
   }, [submissions]);
 
-  return active ? percentage : null;
+  return active ? score : null;
 }

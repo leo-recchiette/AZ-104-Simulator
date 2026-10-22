@@ -105,7 +105,7 @@ public partial class ResultsControllerTests : IDisposable
         mode = "exam",
         drawMode = "least_seen",
         questionCount = answers.Length,
-        percentage = 53.8,
+        score = 538,
         startTime = endTime.AddMinutes(-90),
         endTime,
         answers,

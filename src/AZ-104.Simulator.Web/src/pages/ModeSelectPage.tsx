@@ -6,7 +6,7 @@ import type { ExamAttemptDto } from "../types/answer";
 import { FloatingThemeToggle } from "../components/FloatingThemeToggle";
 import { ResumeSessionBanner } from "../components/ResumeSessionBanner";
 import { ProgressChart } from "../components/ProgressChart";
-import { EXAM_QUESTION_COUNT, EXAM_TIME_LIMIT_MINUTES, PASS_MARK_PERCENT } from "../constants";
+import { EXAM_QUESTION_COUNT, EXAM_TIME_LIMIT_MINUTES, MAX_SCORE, PASS_MARK_SCORE } from "../constants";
 import { MODE_BG_GRADIENT } from "../theme/tokens";
 import { formatDateShort } from "../utils/format";
 import badgeUrl from "../assets/microsoft-certified-associate-badge.png";
@@ -34,15 +34,15 @@ export function ModeSelectPage() {
 
   // Solo le Simulation: in Practice le soluzioni sono a portata di mano e il numero di domande varia.
   const stats = useMemo(() => {
-    const scores = shown.filter((h) => h.mode === "exam").map((h) => h.percentage);
+    const scores = shown.filter((h) => h.mode === "exam").map((h) => h.score);
     if (scores.length === 0) return null;
     const recentCount = Math.min(RECENT_COUNT, scores.length);
     let streak = 0;
-    for (let i = scores.length - 1; i >= 0 && scores[i] >= PASS_MARK_PERCENT; i--) streak++;
+    for (let i = scores.length - 1; i >= 0 && scores[i] >= PASS_MARK_SCORE; i--) streak++;
     return {
       worst: Math.min(...scores),
       best: Math.max(...scores),
-      recent: round1(average(scores.slice(-recentCount))),
+      recent: Math.round(average(scores.slice(-recentCount))),
       recentCount,
       streak,
     };
@@ -132,7 +132,7 @@ export function ModeSelectPage() {
           </div>
 
           <p style={{ margin: "28px 0 0", fontSize: 12.5, color: t.fa2 }}>
-            Passing score {PASS_MARK_PERCENT}%. One point per correct component, no deductions for wrong answers.
+            Passing score {PASS_MARK_SCORE} out of {MAX_SCORE}. One point per correct component, no deductions for wrong answers.
           </p>
 
           {history.length > 0 && (
@@ -167,17 +167,17 @@ export function ModeSelectPage() {
               )}
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(118px, 1fr))", gap: 14, marginBottom: 10 }}>
                 {/* Senza Simulation nel periodo il trattino e' neutro: rosso o verde sembrerebbe un valore. */}
-                <StatTile label="Worst Simulation score" value={stats ? `${stats.worst}%` : "—"} color={stats ? t.er : t.fa} />
-                <StatTile label="Best Simulation score" value={stats ? `${stats.best}%` : "—"} color={stats ? t.ok : t.fa} />
+                <StatTile label="Worst Simulation score" value={stats ? String(stats.worst) : "—"} color={stats ? t.er : t.fa} />
+                <StatTile label="Best Simulation score" value={stats ? String(stats.best) : "—"} color={stats ? t.ok : t.fa} />
                 <StatTile
                   label={recentCount === 1 ? "Last Simulation" : `Last ${recentCount} Simulations average`}
                   title={recentCount === 1 ? "Score of the only Simulation in this period" : `Average of the last ${recentCount} Simulations`}
-                  value={stats ? `${stats.recent}%` : "—"}
-                  color={!stats ? t.fa : stats.recent >= PASS_MARK_PERCENT ? t.ok : t.er}
+                  value={stats ? String(stats.recent) : "—"}
+                  color={!stats ? t.fa : stats.recent >= PASS_MARK_SCORE ? t.ok : t.er}
                 />
                 <StatTile
                   label="Passed in a row"
-                  title={`Consecutive Simulations at or above ${PASS_MARK_PERCENT}%, up to the latest`}
+                  title={`Consecutive Simulations at or above ${PASS_MARK_SCORE}, up to the latest`}
                   value={stats ? String(stats.streak) : "—"}
                   color={!stats ? t.fa : stats.streak ? t.ok : t.mu}
                 />
@@ -205,4 +205,3 @@ function StatTile({ label, value, color, title }: { label: string; value: string
 }
 
 const average = (xs: number[]) => xs.reduce((sum, x) => sum + x, 0) / xs.length;
-const round1 = (x: number) => Math.round(x * 10) / 10;

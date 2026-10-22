@@ -6,7 +6,7 @@ import { ApiError } from "../api/client";
 import type { ExamAttemptDto } from "../types/answer";
 import { OptionsMenu } from "../components/OptionsMenu";
 import { formatDateTime, formatDuration } from "../utils/format";
-import { PASS_MARK_PERCENT } from "../constants";
+import { PASS_MARK_SCORE } from "../constants";
 import { HEADER_GRADIENT } from "../theme/tokens";
 
 /** Elenco dei tentativi conclusi; da qui se ne apre uno per rileggerlo. */
@@ -62,7 +62,7 @@ export function HistoryPage() {
 
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {attempts?.map((a) => {
-            const passed = a.percentage >= PASS_MARK_PERCENT;
+            const passed = a.score >= PASS_MARK_SCORE;
             return (
               <button
                 key={a.id}
@@ -78,7 +78,7 @@ export function HistoryPage() {
                   background: passed ? t.okbg : t.erbg, color: passed ? t.ok : t.er,
                   fontSize: 18, fontWeight: 600, fontVariantNumeric: "tabular-nums",
                 }}>
-                  {a.percentage.toFixed(1)}%
+                  {a.score}
                 </span>
                 <span style={{ flex: 1, minWidth: 0 }}>
                   <span style={{ display: "block", fontSize: 15, fontWeight: 600, marginBottom: 4 }}>

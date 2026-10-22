@@ -5,8 +5,9 @@ export const EXAM_QUESTION_COUNT = 54;
 export const EXAM_TIME_LIMIT_MINUTES = 100;
 export const EXAM_TIME_LIMIT_SECONDS = EXAM_TIME_LIMIT_MINUTES * 60;
 
-/** Soglia di superamento: combacia con quella reale dell'esame AZ-104 (700/1000). */
-export const PASS_MARK_PERCENT = 70;
+/** Scala e soglia dell'esame reale: si supera con 700 su 1000. */
+export const MAX_SCORE = 1000;
+export const PASS_MARK_SCORE = 700;
 
 export const MAX_QUESTION_COUNT = 584;
 

@@ -69,8 +69,8 @@ public partial class QuestionsControllerTests : IDisposable
     {
         // Una sessione salvata ha gia' proposto tutto tranne la domanda 5.
         await TestDatabase.ExecuteAsync(_webApplicationFactory.Services, """
-            INSERT INTO exam_attempts (mode, question_count, percentage, start_time, end_time)
-            VALUES ('exam', 6, 50, '2026-10-01T09:00:00Z', '2026-10-01T10:00:00Z');
+            INSERT INTO exam_attempts (mode, question_count, score, start_time, end_time)
+            VALUES ('exam', 6, 500, '2026-10-01T09:00:00Z', '2026-10-01T10:00:00Z');
             INSERT INTO exam_attempt_answers (attempt_id, ord, question_number, user_answers)
             SELECT 1, ord, number, '{}' FROM unnest(ARRAY[1, 2, 3, 4, 6, 7]) WITH ORDINALITY AS seen(number, ord);
             """);

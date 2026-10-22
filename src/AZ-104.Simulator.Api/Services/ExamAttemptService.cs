@@ -24,7 +24,7 @@ public sealed class ExamAttemptService : IExamAttemptService
             Mode = request.Mode,
             DrawMode = request.DrawMode,
             QuestionCount = request.QuestionCount,
-            Percentage = request.Percentage,
+            Score = request.Score,
             StartTime = request.StartTime,
             EndTime = request.EndTime,
         };

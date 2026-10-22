@@ -28,14 +28,15 @@ export interface AnswerCheckResultDto {
 }
 
 export interface ExamScoreDto {
-  percentage: number;
+  /** Su MAX_SCORE. */
+  score: number;
 }
 
 export interface SaveExamAttemptDto {
   mode: "practice" | "exam";
   drawMode: DrawMode;
   questionCount: number;
-  percentage: number;
+  score: number;
   /** ISO 8601. */
   startTime: string;
   /** ISO 8601. */
@@ -52,7 +53,7 @@ export interface ExamAttemptDto {
   /** "random" anche per i tentativi salvati prima che si potesse scegliere: si pescava sempre a caso. */
   drawMode: DrawMode;
   questionCount: number;
-  percentage: number;
+  score: number;
   startTime: string;
   endTime: string;
   completedAt: string;

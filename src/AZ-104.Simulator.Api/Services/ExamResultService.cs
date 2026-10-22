@@ -34,8 +34,9 @@ public sealed class ExamResultService : IExamResultService
             pointsTotal += total;
         }
 
-        var percentage = pointsTotal == 0 ? 0d : Math.Round(100.0 * earnedTotal / pointsTotal, 1);
-        return new ExamScoreDto(percentage);
+        // Lineare: quello di Microsoft e' scalato sulla difficolta' delle domande, qui non riproducibile.
+        var score = pointsTotal == 0 ? 0 : (int)Math.Round((double)ExamScoreDto.MaxScore * earnedTotal / pointsTotal);
+        return new ExamScoreDto(score);
     }
 
     public async Task<IReadOnlyList<AnswerCheckResultDto>> CheckAnswersAsync(IReadOnlyList<AnswerSubmissionDto> submissions, CancellationToken cancellationToken)

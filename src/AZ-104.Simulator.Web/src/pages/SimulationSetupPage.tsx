@@ -13,7 +13,8 @@ import {
   EXAM_QUESTION_COUNT,
   EXAM_TIME_LIMIT_MINUTES,
   EXAM_TIME_LIMIT_SECONDS,
-  PASS_MARK_PERCENT,
+  MAX_SCORE,
+  PASS_MARK_SCORE,
   SIMULATION_DEFAULT_DRAW_MODE,
 } from "../constants";
 
@@ -22,7 +23,7 @@ const RULES = [
   { label: "Questions", value: `${EXAM_QUESTION_COUNT}, a scenario series counts as one` },
   { label: "Time limit", value: `${EXAM_TIME_LIMIT_MINUTES} minutes` },
   { label: "Solutions", value: "After you submit" },
-  { label: "Passing score", value: `${PASS_MARK_PERCENT}%` },
+  { label: "Passing score", value: `${PASS_MARK_SCORE} out of ${MAX_SCORE}` },
 ];
 
 export function SimulationSetupPage() {

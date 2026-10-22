@@ -60,7 +60,7 @@ public sealed class ResultsController : ControllerBase
             { Mode: var mode } when !ValidModes.Contains(mode) => $"mode deve essere uno tra: {string.Join(", ", ValidModes)}.",
             { DrawMode: var draw } when !DrawModeMapper.IsValid(draw) => $"drawMode deve essere uno tra: {string.Join(", ", DrawModeMapper.Values)}.",
             { QuestionCount: < 1 or > MaxCount } => $"questionCount deve essere fra 1 e {MaxCount}.",
-            { Percentage: < 0 or > 100 } => "percentage deve essere fra 0 e 100.",
+            { Score: < 0 or > ExamScoreDto.MaxScore } => $"score deve essere fra 0 e {ExamScoreDto.MaxScore}.",
             { StartTime: var start, EndTime: var end } when end < start => "endTime non puo' precedere startTime.",
             { Answers.Count: > MaxCount } => $"non piu' di {MaxCount} risposte per tentativo.",
             { StudyLaterQuestions.Count: > MaxCount } => $"non piu' di {MaxCount} domande da studiare per tentativo.",

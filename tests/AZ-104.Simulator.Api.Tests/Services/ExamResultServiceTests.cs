@@ -15,7 +15,7 @@ public sealed class ExamResultServiceTests
     private readonly ExamResultService _sutWithTenQuestions = Sut(Questions(), Options());
 
     [TestMethod]
-    public async Task Should_Calculate_Percentage_Ignoring_Unknown_Questions()
+    public async Task Should_Calculate_Score_Ignoring_Unknown_Questions()
     {
         var submissions = new[]
         {
@@ -25,7 +25,7 @@ public sealed class ExamResultServiceTests
 
         var actual = await _sut.ScoreAsync(submissions, CancellationToken.None);
 
-        var expected = new ExamScoreDto(Percentage: 100);
+        var expected = new ExamScoreDto(Score: 1000);
 
         actual.Should().BeEquivalentTo(expected);
     }
@@ -43,25 +43,25 @@ public sealed class ExamResultServiceTests
     }
 
     [TestMethod]
-    public async Task Should_Calculate_Percentage_When_Two_Of_Ten_Are_Wrong()
+    public async Task Should_Calculate_Score_When_Two_Of_Ten_Are_Wrong()
     {
         var submissions = Submissions(wrongNumbers: [9, 10]);
 
         var actual = await _sutWithTenQuestions.ScoreAsync(submissions, CancellationToken.None);
 
-        var expected = new ExamScoreDto(Percentage: 80);
+        var expected = new ExamScoreDto(Score: 800);
 
         actual.Should().BeEquivalentTo(expected);
     }
 
     [TestMethod]
-    public async Task Should_Calculate_Percentage_When_Three_Of_Ten_Are_Correct()
+    public async Task Should_Calculate_Score_When_Three_Of_Ten_Are_Correct()
     {
         var submissions = Submissions(wrongNumbers: [4, 5, 6, 7, 8, 9, 10]);
 
         var actual = await _sutWithTenQuestions.ScoreAsync(submissions, CancellationToken.None);
 
-        var expected = new ExamScoreDto(Percentage: 30);
+        var expected = new ExamScoreDto(Score: 300);
 
         actual.Should().BeEquivalentTo(expected);
     }

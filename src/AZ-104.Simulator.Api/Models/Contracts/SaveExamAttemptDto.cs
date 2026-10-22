@@ -10,7 +10,7 @@ namespace Simulator.Api.Models.Contracts;
 public sealed record SaveExamAttemptDto(
     string Mode,
     int QuestionCount,
-    double Percentage,
+    int Score,
     DateTimeOffset StartTime,
     DateTimeOffset EndTime,
     IReadOnlyList<AnswerSubmissionDto>? Answers,

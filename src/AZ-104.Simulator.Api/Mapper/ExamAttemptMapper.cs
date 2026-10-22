@@ -10,7 +10,7 @@ public static class ExamAttemptMapper
         attempt.Mode, 
         attempt.DrawMode,
         attempt.QuestionCount,
-        attempt.Percentage,
+        attempt.Score,
         attempt.StartTime, 
         attempt.EndTime, 
         attempt.CompletedAt);

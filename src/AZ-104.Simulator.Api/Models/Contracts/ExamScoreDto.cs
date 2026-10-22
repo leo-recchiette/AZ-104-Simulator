@@ -1,3 +1,7 @@
 namespace Simulator.Api.Models.Contracts;
 
-public sealed record ExamScoreDto(double Percentage);
+/// <summary>Score su 1000 come il punteggio dell'esame, che si supera con 700.</summary>
+public sealed record ExamScoreDto(int Score)
+{
+    public const int MaxScore = 1000;
+}

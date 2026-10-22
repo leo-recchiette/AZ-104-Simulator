@@ -13,7 +13,7 @@ import { ReviewQuestionCard } from "../components/review/ReviewQuestionCard";
 import { ReviewGroupCard } from "../components/review/ReviewGroupCard";
 import { reviewUnits } from "../utils/reviewUnits";
 import { FilterPill } from "../components/FilterPill";
-import { PASS_MARK_PERCENT } from "../constants";
+import { MAX_SCORE, PASS_MARK_SCORE } from "../constants";
 import { HEADER_GRADIENT } from "../theme/tokens";
 
 interface GradedEntry {
@@ -61,8 +61,8 @@ export function ResultsPage() {
     navigate("/");
   }
 
-  const percentage = state.score?.percentage ?? 0;
-  const passed = percentage >= PASS_MARK_PERCENT;
+  const score = state.score?.score ?? 0;
+  const passed = score >= PASS_MARK_SCORE;
   const isPractice = state.mode === "practice";
   const modeLabel = isPractice ? "Practice" : "Simulation";
 
@@ -175,14 +175,15 @@ export function ResultsPage() {
           </div>
           <div style={{ display: "flex", alignItems: "flex-end", gap: 16, margin: "14px 0 4px", flexWrap: "wrap" }}>
             <span style={{ fontFamily: "'Source Serif 4', Georgia, serif", fontSize: 64, fontWeight: 600, lineHeight: 1, letterSpacing: "-.02em" }}>
-              {percentage.toFixed(1)}%
+              {score}
+              <span style={{ fontSize: 22, fontWeight: 500, color: t.fa, letterSpacing: 0 }}> / {MAX_SCORE}</span>
             </span>
             <span style={{ fontSize: 15, fontWeight: 600, padding: "6px 13px", borderRadius: 8, background: passed ? t.okbg : t.erbg, color: passed ? t.ok : t.er, marginBottom: 8 }}>
               {passed ? "Pass" : "Fail"}
             </span>
           </div>
           <div style={{ height: 8, borderRadius: 4, background: t.track, margin: "20px 0 12px", overflow: "hidden" }}>
-            <div style={{ height: "100%", width: `${percentage}%`, background: passed ? t.ok : t.er }} />
+            <div style={{ height: "100%", width: `${(score / MAX_SCORE) * 100}%`, background: passed ? t.ok : t.er }} />
           </div>
           {error && <p style={{ margin: "0 0 12px", color: t.er, fontSize: 14 }}>{error}</p>}
           {state.historyOutcome === "discarded" && (
@@ -196,7 +197,7 @@ export function ResultsPage() {
             </p>
           )}
           <p style={{ margin: "0 0 26px", color: t.mu, fontSize: 14 }}>
-            Pass mark {PASS_MARK_PERCENT}% · Time used {fmt(state.timeUsedSeconds ?? 0)}
+            Pass mark {PASS_MARK_SCORE} · Time used {fmt(state.timeUsedSeconds ?? 0)}
           </p>
           <div style={{ display: "flex", flexDirection: "column", gap: 1, background: t.bd2, border: `1px solid ${t.bd2}`, borderRadius: 12, overflow: "hidden", marginBottom: 26 }}>
             <SummaryRow label="Questions" value={String(state.questions.length)} fg={t.tx} />
