@@ -110,6 +110,10 @@ docker compose --profile dev up -d pgweb
 
 A browser-based SQL client at http://localhost:8081, handy for inspecting the database without installing anything.
 
+### History backup
+
+[`db/history_backup.sql`](db/history_backup.sql) is the backup of my personal session history.
+
 ### Starting over (when something gets stuck)
 
 When things jam — an image that won't update, a frontend still serving old code, a corrupted `node_modules` in the
@@ -201,3 +205,12 @@ docker compose down -v                # wipe everything, database volume (and se
 docker compose stop pgweb             # stop a service behind a profile (it has to be named explicitly)
 docker compose --profile dev down     # full cleanup, services behind profiles included
 ```
+
+<br>
+<br>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/AZ--104-PASSED_%C2%B7_842%2F1000-2ea44f?style=for-the-badge" alt="AZ-104 passed with 842/1000">
+  <br>
+  <sub><i>I passed AZ-104 on 22 October 2026 with a score of 842 :D</i></sub>
+</p>
