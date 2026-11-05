@@ -55,16 +55,17 @@ def connect(database_url: str, attempts: int = 15, delay_seconds: float = 2.0) -
     raise SystemExit("database irraggiungibile")
 
 
-def insert_question(cur: psycopg.Cursor, certification_id: str, q: dict) -> int:
+def insert_question(cur: psycopg.Cursor, vendor: str, certification_id: str, q: dict) -> int:
     cur.execute(
         """
-        INSERT INTO questions (certification_id, number, type, answer_layout, question, explanation,
+        INSERT INTO questions (vendor, certification_id, number, type, answer_layout, question, explanation,
                                answer_text, note, source, group_id, group_type, variant_group,
                                unordered_answer)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         RETURNING id
         """,
         (
+            vendor,
             certification_id,
             q["id"],
             q["type"],
@@ -208,13 +209,15 @@ def find_variant_mismatches(questions: list[dict]) -> list[list[tuple[int, str |
     return mismatches
 
 
-def import_all(conn: psycopg.Connection, banks: dict[str, list[dict]]) -> None:
+def import_all(conn: psycopg.Connection, datasets: dict[str, Path], banks: dict[str, list[dict]]) -> None:
     """Il database rispecchia il dataset: si reimportano tutte le certificazioni insieme."""
     with conn, conn.cursor() as cur:
         cur.execute("TRUNCATE questions RESTART IDENTITY CASCADE")
         for certification_id, questions in banks.items():
+            # <vendor>/<certificazione>/questions.json: il vendor e' la cartella sopra quella della certificazione.
+            vendor = datasets[certification_id].parent.parent.name
             for q in questions:
-                question_id = insert_question(cur, certification_id, q)
+                question_id = insert_question(cur, vendor, certification_id, q)
                 insert_images(cur, question_id, q)
                 if q["type"] == MULTIPLE_CHOICE:
                     correct_letters = set(q["correct_answers"])
@@ -281,7 +284,7 @@ def main() -> int:
         return 0
 
     conn = connect(DATABASE_URL)
-    import_all(conn, banks)
+    import_all(conn, datasets, banks)
     counts = ", ".join(f"{certification_id} {len(questions)}" for certification_id, questions in banks.items())
     print(f"importate le domande ({counts}) su {DATABASE_URL.rsplit('@', 1)[-1]}")
     return 0

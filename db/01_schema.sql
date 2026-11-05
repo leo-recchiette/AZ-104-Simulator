@@ -16,6 +16,9 @@ CREATE TYPE question_type AS ENUM (
 
 CREATE TABLE questions (
     id            SERIAL PRIMARY KEY,
+    -- Es. 'microsoft': la cartella che contiene quella della certificazione. Si ripete su ogni domanda
+    -- perche' non c'e' una tabella delle certificazioni.
+    vendor        TEXT          NOT NULL,
     -- Es. 'az-104'. Senza tabella delle certificazioni: per ora non c'e' altro da dire su di loro.
     certification_id TEXT       NOT NULL,
     -- "id" nel JSON: unico solo dentro la certificazione, ognuna riparte da 1.

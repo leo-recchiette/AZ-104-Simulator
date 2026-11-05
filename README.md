@@ -3,7 +3,8 @@
 An exam simulator for the Microsoft AZ-104 (Azure Administrator Associate) certification, built around a question
 bank of 584 items. .NET 10 Web API, PostgreSQL, React + TypeScript — the whole stack runs in Docker, so nothing has
 to be installed locally except Docker itself. The database also holds a second bank, 167 questions for the HashiCorp
-Terraform Associate (004) certification, which the frontend does not offer yet.
+Terraform Associate (004) certification, which the frontend does not offer yet. The API lists the certifications
+it finds in the database at `GET /api/certifications/getAllCertifications`.
 
 ## Screenshots
 
