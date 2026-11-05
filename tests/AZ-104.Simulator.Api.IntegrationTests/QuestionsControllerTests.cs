@@ -55,9 +55,9 @@ public partial class QuestionsControllerTests : IDisposable
     public async Task Should_Serve_One_Member_Per_Variant_Family()
     {
         await TestDatabase.ExecuteAsync(_webApplicationFactory.Services, """
-            INSERT INTO questions (vendor, certification_id, number, type, question, explanation, answer_text, source, variant_group) VALUES
-            ('microsoft', 'az-104', 8, 'multiple_choice', 'Same question, first option set.', 'Explanation', 'A. Yes', 'text_layer', 'v01'),
-            ('microsoft', 'az-104', 9, 'multiple_choice', 'Same question, second option set.', 'Explanation', 'A. Yes', 'text_layer', 'v01')
+            INSERT INTO questions (certification_id, number, type, question, explanation, answer_text, source, variant_group) VALUES
+            ('az-104', 8, 'multiple_choice', 'Same question, first option set.', 'Explanation', 'A. Yes', 'text_layer', 'v01'),
+            ('az-104', 9, 'multiple_choice', 'Same question, second option set.', 'Explanation', 'A. Yes', 'text_layer', 'v01')
             """);
 
         var numbers = (await GetExamAsync("count=584")).Select(Number);
@@ -105,8 +105,8 @@ public partial class QuestionsControllerTests : IDisposable
     {
         // Stesso numero 1 dell'AZ-104 del seed: si distingue solo dalla certificazione.
         await TestDatabase.ExecuteAsync(_webApplicationFactory.Services, """
-            INSERT INTO questions (vendor, certification_id, number, type, question, explanation, answer_text, source) VALUES
-            ('hashicorp', 'terraform-associate-004', 1, 'multiple_choice', 'Which command initializes a working directory?', 'Explanation', 'A. terraform init', 'text_layer')
+            INSERT INTO questions (certification_id, number, type, question, explanation, answer_text, source) VALUES
+            ('terraform-associate-004', 1, 'multiple_choice', 'Which command initializes a working directory?', 'Explanation', 'A. terraform init', 'text_layer')
             """);
 
         var terraform = await GetExamAsync("count=584", "terraform-associate-004");

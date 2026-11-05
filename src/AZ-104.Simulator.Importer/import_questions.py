@@ -1,8 +1,8 @@
 """Importa i question bank delle certificazioni da JSON a PostgreSQL.
 
 Ogni certificazione ha la sua cartella, <dataset>/<vendor>/<certificazione>/questions.json, e il nome
-della cartella diventa il certification_id delle sue domande. Il JSON e' ground truth: se cambia forma
-si aggiorna questo script, non il JSON.
+della cartella diventa il certification_id delle sue domande. Accanto c'e' certificationSettings.json, con le regole
+della simulazione d'esame. Il JSON e' ground truth: se cambia forma si aggiorna questo script, non il JSON.
 
 Uso:
     python import_questions.py              legge tutti i JSON e popola il database
@@ -27,6 +27,7 @@ DATABASE_URL = os.environ.get(
 
 MULTIPLE_CHOICE = "multiple_choice"
 ORDERED_ANSWER = "ordered_answer"
+SETTINGS_FIELDS = ("exam_question_count", "exam_time_limit_minutes")
 
 
 def find_datasets(root: Path) -> dict[str, Path]:
@@ -44,6 +45,18 @@ def load_questions(path: Path) -> list[dict]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def load_settings(path: Path) -> dict:
+    """certificationSettings.json accanto a questions.json: le regole della simulazione d'esame, obbligatorie."""
+    if not path.exists():
+        raise SystemExit(f"manca {path}")
+    settings = json.loads(path.read_text(encoding="utf-8"))
+    for field in SETTINGS_FIELDS:
+        # type() e non isinstance(): True e' un int per Python.
+        if type(settings.get(field)) is not int or settings[field] < 1:
+            raise SystemExit(f"{path}: {field} deve essere un intero positivo")
+    return settings
+
+
 def connect(database_url: str, attempts: int = 15, delay_seconds: float = 2.0) -> psycopg.Connection:
     """Si collega al database, riprovando finche' non e' pronto ad accettare connessioni."""
     for attempt in range(1, attempts + 1):
@@ -55,17 +68,16 @@ def connect(database_url: str, attempts: int = 15, delay_seconds: float = 2.0) -
     raise SystemExit("database irraggiungibile")
 
 
-def insert_question(cur: psycopg.Cursor, vendor: str, certification_id: str, q: dict) -> int:
+def insert_question(cur: psycopg.Cursor, certification_id: str, q: dict) -> int:
     cur.execute(
         """
-        INSERT INTO questions (vendor, certification_id, number, type, answer_layout, question, explanation,
+        INSERT INTO questions (certification_id, number, type, answer_layout, question, explanation,
                                answer_text, note, source, group_id, group_type, variant_group,
                                unordered_answer)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         RETURNING id
         """,
         (
-            vendor,
             certification_id,
             q["id"],
             q["type"],
@@ -209,15 +221,22 @@ def find_variant_mismatches(questions: list[dict]) -> list[list[tuple[int, str |
     return mismatches
 
 
-def import_all(conn: psycopg.Connection, datasets: dict[str, Path], banks: dict[str, list[dict]]) -> None:
+def import_all(
+    conn: psycopg.Connection, datasets: dict[str, Path], settings: dict[str, dict], banks: dict[str, list[dict]]
+) -> None:
     """Il database rispecchia il dataset: si reimportano tutte le certificazioni insieme."""
     with conn, conn.cursor() as cur:
-        cur.execute("TRUNCATE questions RESTART IDENTITY CASCADE")
+        cur.execute("TRUNCATE certifications, questions RESTART IDENTITY CASCADE")
         for certification_id, questions in banks.items():
             # <vendor>/<certificazione>/questions.json: il vendor e' la cartella sopra quella della certificazione.
             vendor = datasets[certification_id].parent.parent.name
+            rules = settings[certification_id]
+            cur.execute(
+                "INSERT INTO certifications (id, vendor, exam_question_count, exam_time_limit_minutes) VALUES (%s, %s, %s, %s)",
+                (certification_id, vendor, rules["exam_question_count"], rules["exam_time_limit_minutes"]),
+            )
             for q in questions:
-                question_id = insert_question(cur, vendor, certification_id, q)
+                question_id = insert_question(cur, certification_id, q)
                 insert_images(cur, question_id, q)
                 if q["type"] == MULTIPLE_CHOICE:
                     correct_letters = set(q["correct_answers"])
@@ -272,8 +291,10 @@ def main() -> int:
         raise SystemExit(f"nessun questions.json in {DATASET_DIR}/<vendor>/<certificazione>/")
 
     banks: dict[str, list[dict]] = {}
+    settings: dict[str, dict] = {}
     for certification_id, path in datasets.items():
         print(f"{certification_id}: lettura di {path}")
+        settings[certification_id] = load_settings(path.with_name("certificationSettings.json"))
         questions = load_questions(path)
         print(f"  {len(questions)} domande lette")
         report_warnings(questions)
@@ -284,7 +305,7 @@ def main() -> int:
         return 0
 
     conn = connect(DATABASE_URL)
-    import_all(conn, datasets, banks)
+    import_all(conn, datasets, settings, banks)
     counts = ", ".join(f"{certification_id} {len(questions)}" for certification_id, questions in banks.items())
     print(f"importate le domande ({counts}) su {DATABASE_URL.rsplit('@', 1)[-1]}")
     return 0

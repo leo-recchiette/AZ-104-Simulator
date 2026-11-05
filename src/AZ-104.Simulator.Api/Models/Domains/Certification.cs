@@ -7,4 +7,9 @@ public sealed record Certification
 
     public required string Id { get; init; }
     public required int QuestionCount { get; init; }
+
+    /// <summary>Unita' della simulazione d'esame: una scenario series conta come una.</summary>
+    public required int ExamQuestionCount { get; init; }
+
+    public required int ExamTimeLimitMinutes { get; init; }
 }

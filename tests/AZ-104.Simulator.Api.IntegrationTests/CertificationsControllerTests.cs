@@ -23,9 +23,9 @@ public partial class CertificationsControllerTests : IDisposable
     public async Task Should_List_The_Certifications_With_Their_Question_Count()
     {
         await TestDatabase.ExecuteAsync(_webApplicationFactory.Services, """
-            INSERT INTO questions (vendor, certification_id, number, type, question, explanation, answer_text, source) VALUES
-            ('hashicorp', 'terraform-associate-004', 1, 'multiple_choice', 'Which command initializes a working directory?', 'Explanation', 'A. terraform init', 'text_layer'),
-            ('hashicorp', 'terraform-associate-004', 2, 'multiple_choice', 'Which command formats the configuration?', 'Explanation', 'A. terraform fmt', 'text_layer')
+            INSERT INTO questions (certification_id, number, type, question, explanation, answer_text, source) VALUES
+            ('terraform-associate-004', 1, 'multiple_choice', 'Which command initializes a working directory?', 'Explanation', 'A. terraform init', 'text_layer'),
+            ('terraform-associate-004', 2, 'multiple_choice', 'Which command formats the configuration?', 'Explanation', 'A. terraform fmt', 'text_layer')
             """);
 
         var actual = await _httpClient.GetStringAsync("api/certifications/getAllCertifications");

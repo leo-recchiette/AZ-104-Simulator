@@ -3,14 +3,18 @@
     {
       vendor: hashicorp,
       id: terraform-associate-004,
-      questionCount: 2
+      questionCount: 2,
+      examQuestionCount: 57,
+      examTimeLimitMinutes: 60
     }
   ],
   microsoft: [
     {
       vendor: microsoft,
       id: az-104,
-      questionCount: 7
+      questionCount: 7,
+      examQuestionCount: 54,
+      examTimeLimitMinutes: 100
     }
   ]
 }
