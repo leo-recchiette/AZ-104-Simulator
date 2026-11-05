@@ -8,6 +8,7 @@ namespace Simulator.Api.Models.Contracts;
 /// StudyLaterQuestions sono numeri di domanda; quelli che non stanno in Answers si ignorano.
 /// </summary>
 public sealed record SaveExamAttemptDto(
+    string CertificationId,
     string Mode,
     int QuestionCount,
     int Score,

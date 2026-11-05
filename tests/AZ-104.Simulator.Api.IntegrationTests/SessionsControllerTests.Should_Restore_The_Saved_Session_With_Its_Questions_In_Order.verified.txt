@@ -1,4 +1,5 @@
 ﻿{
+  certificationId: az-104,
   mode: practice,
   questions: [
     {
@@ -68,7 +69,7 @@
       selectCount: 2,
       sequenceLength: 0,
       images: [
-        q001_pre0.png
+        az-104/q001_pre0.png
       ],
       groupId: null,
       groupType: null,

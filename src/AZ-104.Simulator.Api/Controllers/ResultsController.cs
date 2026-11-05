@@ -24,6 +24,7 @@ public sealed class ResultsController : ControllerBase
 
     [HttpPost("getScore")]
     public async Task<ActionResult<ExamScoreDto>> GetScoreAsync(
+        [FromQuery] string certificationId,
         [FromBody] List<AnswerSubmissionDto> submissions,
         CancellationToken cancellationToken)
     {
@@ -32,12 +33,13 @@ public sealed class ResultsController : ControllerBase
         if (submissions.Count > MaxCount)
             return BadRequest($"non piu' di {MaxCount} risposte per richiesta.");
 
-        var score = await _examResultService.ScoreAsync(submissions, cancellationToken);
+        var score = await _examResultService.ScoreAsync(certificationId, submissions, cancellationToken);
         return Ok(score);
     }
 
     [HttpPost("checkAnswers")]
     public async Task<ActionResult<IReadOnlyList<AnswerCheckResultDto>>> CheckAnswersAsync(
+        [FromQuery] string certificationId,
         [FromBody] List<AnswerSubmissionDto> submissions,
         CancellationToken cancellationToken)
     {
@@ -46,7 +48,7 @@ public sealed class ResultsController : ControllerBase
         if (submissions.Count > MaxCount)
             return BadRequest($"non piu' di {MaxCount} risposte per richiesta.");
 
-        var results = await _examResultService.CheckAnswersAsync(submissions, cancellationToken);
+        var results = await _examResultService.CheckAnswersAsync(certificationId, submissions, cancellationToken);
         return Ok(results);
     }
 
@@ -84,10 +86,13 @@ public sealed class ResultsController : ControllerBase
         return Ok(detail);
     }
 
+    /// <summary>Solo i tentativi di "certificationId". Il dettaglio di uno, con getAttempt, non la chiede: la sa gia'.</summary>
     [HttpGet("getAllAttempts")]
-    public async Task<ActionResult<IReadOnlyList<ExamAttemptDto>>> GetAllAttemptsAsync(CancellationToken cancellationToken)
+    public async Task<ActionResult<IReadOnlyList<ExamAttemptDto>>> GetAllAttemptsAsync(
+        [FromQuery] string certificationId,
+        CancellationToken cancellationToken)
     {
-        var attempts = await _examAttemptService.GetAllAttemptsAsync(cancellationToken);
+        var attempts = await _examAttemptService.GetAllAttemptsAsync(certificationId, cancellationToken);
         return Ok(attempts);
     }
 }

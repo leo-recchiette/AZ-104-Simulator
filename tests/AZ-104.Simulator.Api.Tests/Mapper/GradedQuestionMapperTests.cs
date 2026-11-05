@@ -63,7 +63,7 @@ public sealed class GradedQuestionMapperTests
 
         var sut = input.ToAnswerDto();
 
-        sut.Images.Should().Equal("q063_post0.png", "q063_post1.png");
+        sut.Images.Should().Equal("az-104/q063_post0.png", "az-104/q063_post1.png");
     }
 
     #region Utils
@@ -71,6 +71,7 @@ public sealed class GradedQuestionMapperTests
     private static Question Question() => new()
     {
         Id = 1,
+        CertificationId = "az-104",
         Number = 63,
         Type = QuestionType.HotspotYesNo,
         Text = "Domanda di prova",

@@ -27,6 +27,20 @@ public sealed class ActiveSessionServiceTests
         actual.LiveScore.Should().BeTrue();
         actual.DrawMode.Should().Be("least_seen");
         actual.StudyLaterQuestions.Should().Equal(9);
+        actual.CertificationId.Should().Be("az-104");
+    }
+
+    [TestMethod]
+    public async Task Should_Read_The_Questions_Of_The_Session_Certification()
+    {
+        // Lo stesso numero, in un'altra certificazione, e' un'altra domanda.
+        var repository = Repository(Session([7, 3, 9]) with { CertificationId = "terraform-associate-004" });
+        var questionService = QuestionService(7, 3, 9);
+        var sut = new ActiveSessionService(repository, questionService);
+
+        await sut.GetAsync(CancellationToken.None);
+
+        await questionService.Received(1).GetByNumbersAsync("terraform-associate-004", Arg.Any<IReadOnlyList<int>>(), Arg.Any<CancellationToken>());
     }
 
     [TestMethod]
@@ -162,7 +176,7 @@ public sealed class ActiveSessionServiceTests
     private static IQuestionService QuestionService(params int[] existingNumbers)
     {
         var service = Substitute.For<IQuestionService>();
-        service.GetByNumbersAsync(Arg.Any<IReadOnlyList<int>>(), Arg.Any<CancellationToken>())
+        service.GetByNumbersAsync(Arg.Any<string>(), Arg.Any<IReadOnlyList<int>>(), Arg.Any<CancellationToken>())
             .Returns(call =>
             {
                 var requested = call.Arg<IReadOnlyList<int>>();
@@ -179,6 +193,7 @@ public sealed class ActiveSessionServiceTests
 
     private static ActiveSession Session(IReadOnlyList<int> numbers) => new()
     {
+        CertificationId = "az-104",
         Mode = "practice",
         QuestionNumbers = numbers,
         Answers = new Dictionary<int, IReadOnlyList<string>> { [7] = ["A"] },
@@ -199,6 +214,7 @@ public sealed class ActiveSessionServiceTests
         int currentIndex,
         IReadOnlyDictionary<int, IReadOnlyList<string>>? answers = null) =>
         new(
+            "az-104",
             "practice",
             questionNumbers,
             answers ?? new Dictionary<int, IReadOnlyList<string>> { [7] = ["A"] },

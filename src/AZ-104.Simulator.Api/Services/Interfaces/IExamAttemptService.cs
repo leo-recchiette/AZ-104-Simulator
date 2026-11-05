@@ -7,7 +7,7 @@ public interface IExamAttemptService
 {
     Task<ExamAttemptDto> SaveAttemptAsync(SaveExamAttemptDto request, CancellationToken cancellationToken);
 
-    Task<IReadOnlyList<ExamAttemptDto>> GetAllAttemptsAsync(CancellationToken cancellationToken);
+    Task<IReadOnlyList<ExamAttemptDto>> GetAllAttemptsAsync(string certificationId, CancellationToken cancellationToken);
 
     /// <summary>null se l'id non esiste.</summary>
     Task<ExamAttemptDetailDto?> GetAttemptDetailAsync(int id, CancellationToken cancellationToken);

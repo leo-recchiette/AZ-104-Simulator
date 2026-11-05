@@ -4,6 +4,9 @@ public sealed record ExamAttempt
 {
     public int Id { get; init; }
 
+    /// <summary>Come Question.CertificationId: i numeri delle domande valgono dentro questa certificazione.</summary>
+    public required string CertificationId { get; init; }
+
     /// <summary>"practice" | "exam".</summary>
     public required string Mode { get; init; }
 

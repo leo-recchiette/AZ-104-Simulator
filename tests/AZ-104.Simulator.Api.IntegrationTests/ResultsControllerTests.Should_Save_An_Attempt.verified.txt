@@ -1,5 +1,6 @@
 ﻿{
   id: 1,
+  certificationId: az-104,
   mode: exam,
   drawMode: least_seen,
   questionCount: 7,

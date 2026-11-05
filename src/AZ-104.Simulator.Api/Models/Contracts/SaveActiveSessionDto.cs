@@ -7,6 +7,7 @@ namespace Simulator.Api.Models.Contracts;
 /// un client vecchio che non lo manda pescava comunque a caso.
 /// </summary>
 public sealed record SaveActiveSessionDto(
+    string CertificationId,
     string Mode,
     IReadOnlyList<int> QuestionNumbers,
     IReadOnlyDictionary<int, IReadOnlyList<string>> Answers,

@@ -25,6 +25,7 @@ public sealed class ExamAttemptServiceTests
 
         var expected = new ExamAttempt
         {
+            CertificationId = "az-104",
             Mode = "practice",
             DrawMode = "least_seen",
             QuestionCount = 30,
@@ -46,7 +47,7 @@ public sealed class ExamAttemptServiceTests
             .InsertAsync(Arg.Do<ExamAttempt>(attempt => inserted = attempt), Arg.Any<IReadOnlyList<ExamAttemptAnswer>>(), Arg.Any<CancellationToken>())
             .Returns(Saved());
         var sut = Sut(repository);
-        var request = new SaveExamAttemptDto("exam", 54, 70, StartTime, EndTime, Answers: null);
+        var request = new SaveExamAttemptDto("az-104", "exam", 54, 70, StartTime, EndTime, Answers: null);
 
         await sut.SaveAttemptAsync(request, CancellationToken.None);
 
@@ -122,6 +123,7 @@ public sealed class ExamAttemptServiceTests
         // Id e CompletedAt devono venire dalla insert, non dalla richiesta.
         var expected = new ExamAttemptDto(
             Id: 7,
+            CertificationId: "az-104",
             Mode: "practice",
             DrawMode: "least_seen",
             QuestionCount: 30,
@@ -138,11 +140,11 @@ public sealed class ExamAttemptServiceTests
     {
         var repository = Substitute.For<IExamAttemptRepository>();
         repository
-            .GetAllAsync(Arg.Any<CancellationToken>())
+            .GetAllAsync("az-104", Arg.Any<CancellationToken>())
             .Returns([Attempt(1, 500), Attempt(2, 600), Attempt(3, 900)]);
         var sut = Sut(repository);
 
-        var actual = await sut.GetAllAttemptsAsync(CancellationToken.None);
+        var actual = await sut.GetAllAttemptsAsync("az-104", CancellationToken.None);
 
         // Il service non deve riordinare: il grafico si appoggia all'ordine del repository.
         var expected = new[] { AttemptDto(1, 500), AttemptDto(2, 600), AttemptDto(3, 900) };
@@ -154,10 +156,10 @@ public sealed class ExamAttemptServiceTests
     public async Task Should_Return_Empty_History_When_No_Attempts_Saved()
     {
         var repository = Substitute.For<IExamAttemptRepository>();
-        repository.GetAllAsync(Arg.Any<CancellationToken>()).Returns([]);
+        repository.GetAllAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns([]);
         var sut = Sut(repository);
 
-        var actual = await sut.GetAllAttemptsAsync(CancellationToken.None);
+        var actual = await sut.GetAllAttemptsAsync("az-104", CancellationToken.None);
 
         actual.Should().BeEmpty();
     }
@@ -186,7 +188,7 @@ public sealed class ExamAttemptServiceTests
         var actual = await sut.GetAttemptDetailAsync(404, CancellationToken.None);
 
         actual.Should().BeNull();
-        await examResultService.DidNotReceiveWithAnyArgs().ReviewAsync(default!, default);
+        await examResultService.DidNotReceiveWithAnyArgs().ReviewAsync(default!, default!, default);
     }
 
     [TestMethod]
@@ -200,15 +202,18 @@ public sealed class ExamAttemptServiceTests
         var repository = Substitute.For<IExamAttemptRepository>();
         repository.GetDetailAsync(42, Arg.Any<CancellationToken>()).Returns(new ExamAttemptDetail(Saved(), savedAnswers));
 
+        string? reviewedCertification = null;
         IReadOnlyList<AnswerSubmissionDto>? reviewed = null;
         var examResultService = Substitute.For<IExamResultService>();
         examResultService
-            .ReviewAsync(Arg.Do<IReadOnlyList<AnswerSubmissionDto>>(s => reviewed = s), Arg.Any<CancellationToken>())
+            .ReviewAsync(Arg.Do<string>(c => reviewedCertification = c), Arg.Do<IReadOnlyList<AnswerSubmissionDto>>(s => reviewed = s), Arg.Any<CancellationToken>())
             .Returns([ReviewedAnswer(7, ["C"]), ReviewedAnswer(3, [])]);
         var sut = new ExamAttemptService(repository, examResultService);
 
         var actual = await sut.GetAttemptDetailAsync(42, CancellationToken.None);
 
+        // Le domande si cercano nella certificazione del tentativo.
+        reviewedCertification.Should().Be("az-104");
         reviewed.Should().BeEquivalentTo(
             new[] { new AnswerSubmissionDto(7, ["C"]), new AnswerSubmissionDto(3, []) },
             options => options.WithStrictOrdering());
@@ -228,7 +233,7 @@ public sealed class ExamAttemptServiceTests
         repository.GetDetailAsync(42, Arg.Any<CancellationToken>()).Returns(new ExamAttemptDetail(Saved(), savedAnswers));
         var examResultService = Substitute.For<IExamResultService>();
         examResultService
-            .ReviewAsync(Arg.Any<IReadOnlyList<AnswerSubmissionDto>>(), Arg.Any<CancellationToken>())
+            .ReviewAsync(Arg.Any<string>(), Arg.Any<IReadOnlyList<AnswerSubmissionDto>>(), Arg.Any<CancellationToken>())
             .Returns([ReviewedAnswer(7, ["C"]), ReviewedAnswer(3, [])]);
         var sut = new ExamAttemptService(repository, examResultService);
 
@@ -249,7 +254,7 @@ public sealed class ExamAttemptServiceTests
         var actual = await sut.GetAttemptDetailAsync(42, CancellationToken.None);
 
         actual!.Answers.Should().BeEmpty();
-        await examResultService.DidNotReceiveWithAnyArgs().ReviewAsync(default!, default);
+        await examResultService.DidNotReceiveWithAnyArgs().ReviewAsync(default!, default!, default);
     }
 
     #region Utils
@@ -262,6 +267,7 @@ public sealed class ExamAttemptServiceTests
         new(repository, Substitute.For<IExamResultService>());
 
     private static SaveExamAttemptDto SaveRequest() => new(
+        CertificationId: "az-104",
         Mode: "practice",
         QuestionCount: 30,
         Score: 765,
@@ -277,6 +283,7 @@ public sealed class ExamAttemptServiceTests
     private static ExamAttempt Saved() => new()
     {
         Id = 42,
+        CertificationId = "az-104",
         Mode = "practice",
         DrawMode = "least_seen",
         QuestionCount = 30,
@@ -289,6 +296,7 @@ public sealed class ExamAttemptServiceTests
     private static ExamAttempt Attempt(int id, int score) => new()
     {
         Id = id,
+        CertificationId = "az-104",
         Mode = "exam",
         DrawMode = "random",
         QuestionCount = 60,
@@ -300,6 +308,7 @@ public sealed class ExamAttemptServiceTests
 
     private static ExamAttemptDto AttemptDto(int id, int score) => new(
         Id: id,
+        CertificationId: "az-104",
         Mode: "exam",
         DrawMode: "random",
         QuestionCount: 60,

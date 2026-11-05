@@ -15,18 +15,18 @@ public sealed class QuestionService : IQuestionService
         _repository = repository;
     }
 
-    public async Task<IReadOnlyList<QuestionDto>> GetRandomSetAsync(int count, QuestionType? type, DrawMode drawMode, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<QuestionDto>> GetRandomSetAsync(string certificationId, int count, QuestionType? type, DrawMode drawMode, CancellationToken cancellationToken)
     {
-        var questions = await _repository.GetRandomAsync(count, type, drawMode, cancellationToken);
+        var questions = await _repository.GetRandomAsync(certificationId, count, type, drawMode, cancellationToken);
         return await BuildDtosAsync(questions, cancellationToken);
     }
 
-    public async Task<IReadOnlyList<QuestionDto>> GetByNumbersAsync(IReadOnlyList<int> numbers, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<QuestionDto>> GetByNumbersAsync(string certificationId, IReadOnlyList<int> numbers, CancellationToken cancellationToken)
     {
         if (numbers.Count == 0)
             return [];
 
-        var questions = await _repository.GetByNumbersAsync(numbers, cancellationToken);
+        var questions = await _repository.GetByNumbersAsync(certificationId, numbers, cancellationToken);
         var dtos = await BuildDtosAsync(questions, cancellationToken);
         var byNumber = dtos.ToDictionary(d => d.Number);
         return numbers

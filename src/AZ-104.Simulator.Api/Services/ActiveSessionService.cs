@@ -22,7 +22,7 @@ public sealed class ActiveSessionService : IActiveSessionService
         if (session is null)
             return null;
 
-        var questions = await _questionService.GetByNumbersAsync(session.QuestionNumbers, cancellationToken);
+        var questions = await _questionService.GetByNumbersAsync(session.CertificationId, session.QuestionNumbers, cancellationToken);
 
         if (questions.Count != session.QuestionNumbers.Count)
         {
@@ -31,6 +31,7 @@ public sealed class ActiveSessionService : IActiveSessionService
         }
 
         return new ActiveSessionDto(
+            session.CertificationId,
             session.Mode,
             questions,
             session.Answers,
@@ -55,6 +56,7 @@ public sealed class ActiveSessionService : IActiveSessionService
 
         var session = new ActiveSession
         {
+            CertificationId = request.CertificationId,
             Mode = request.Mode,
             QuestionNumbers = request.QuestionNumbers,
             Answers = request.Answers,

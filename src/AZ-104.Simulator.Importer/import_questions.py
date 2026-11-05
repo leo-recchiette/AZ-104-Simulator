@@ -1,9 +1,11 @@
-"""Importa il question bank AZ-104 da JSON a PostgreSQL.
+"""Importa i question bank delle certificazioni da JSON a PostgreSQL.
 
-Il JSON e' ground truth: se cambia forma si aggiorna questo script, non il JSON.
+Ogni certificazione ha la sua cartella, <dataset>/<vendor>/<certificazione>/questions.json, e il nome
+della cartella diventa il certification_id delle sue domande. Il JSON e' ground truth: se cambia forma
+si aggiorna questo script, non il JSON.
 
 Uso:
-    python import_questions.py              legge il JSON e popola il database
+    python import_questions.py              legge tutti i JSON e popola il database
     python import_questions.py --dry-run     legge e conta, senza toccare il DB
 """
 
@@ -18,7 +20,7 @@ from pathlib import Path
 
 import psycopg
 
-QUESTIONS_JSON = os.environ.get("QUESTIONS_JSON", "/data/questions.json")
+DATASET_DIR = os.environ.get("DATASET_DIR", "/data")
 DATABASE_URL = os.environ.get(
     "DATABASE_URL", "postgresql://simulator:simulator@db:5432/simulator"
 )
@@ -27,8 +29,19 @@ MULTIPLE_CHOICE = "multiple_choice"
 ORDERED_ANSWER = "ordered_answer"
 
 
-def load_questions(path: str) -> list[dict]:
-    return json.loads(Path(path).read_text(encoding="utf-8"))
+def find_datasets(root: Path) -> dict[str, Path]:
+    """certification_id -> questions.json. L'id e' il nome della cartella, unico anche fra vendor diversi."""
+    datasets: dict[str, Path] = {}
+    for path in sorted(root.glob("*/*/questions.json")):
+        certification_id = path.parent.name
+        if certification_id in datasets:
+            raise SystemExit(f"certificazione {certification_id} doppia: {datasets[certification_id]} e {path}")
+        datasets[certification_id] = path
+    return datasets
+
+
+def load_questions(path: Path) -> list[dict]:
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def connect(database_url: str, attempts: int = 15, delay_seconds: float = 2.0) -> psycopg.Connection:
@@ -42,16 +55,17 @@ def connect(database_url: str, attempts: int = 15, delay_seconds: float = 2.0) -
     raise SystemExit("database irraggiungibile")
 
 
-def insert_question(cur: psycopg.Cursor, q: dict) -> int:
+def insert_question(cur: psycopg.Cursor, certification_id: str, q: dict) -> int:
     cur.execute(
         """
-        INSERT INTO questions (number, type, answer_layout, question, explanation,
+        INSERT INTO questions (certification_id, number, type, answer_layout, question, explanation,
                                answer_text, note, source, group_id, group_type, variant_group,
                                unordered_answer)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         RETURNING id
         """,
         (
+            certification_id,
             q["id"],
             q["type"],
             q.get("answer_layout"),
@@ -194,34 +208,28 @@ def find_variant_mismatches(questions: list[dict]) -> list[list[tuple[int, str |
     return mismatches
 
 
-def import_all(conn: psycopg.Connection, questions: list[dict]) -> None:
+def import_all(conn: psycopg.Connection, banks: dict[str, list[dict]]) -> None:
+    """Il database rispecchia il dataset: si reimportano tutte le certificazioni insieme."""
     with conn, conn.cursor() as cur:
         cur.execute("TRUNCATE questions RESTART IDENTITY CASCADE")
-        for q in questions:
-            question_id = insert_question(cur, q)
-            insert_images(cur, question_id, q)
-            if q["type"] == MULTIPLE_CHOICE:
-                correct_letters = set(q["correct_answers"])
-                items = [(o["letter"], o["text"], o["letter"] in correct_letters) for o in q["options"]]
-                insert_option_pool(cur, question_id, items)
-            elif q.get("answer_layout") == ORDERED_ANSWER:
-                correct_items = set(q["answer_items"])
-                items = [(None, text, text in correct_items) for text in q["all_actions"]]
-                insert_option_pool(cur, question_id, items)
-                insert_ordered_sequence(cur, question_id, q["answer_items"])
-            else:
-                insert_answer_rows(cur, question_id, q.get("answer_rows", []))
+        for certification_id, questions in banks.items():
+            for q in questions:
+                question_id = insert_question(cur, certification_id, q)
+                insert_images(cur, question_id, q)
+                if q["type"] == MULTIPLE_CHOICE:
+                    correct_letters = set(q["correct_answers"])
+                    items = [(o["letter"], o["text"], o["letter"] in correct_letters) for o in q["options"]]
+                    insert_option_pool(cur, question_id, items)
+                elif q.get("answer_layout") == ORDERED_ANSWER:
+                    correct_items = set(q["answer_items"])
+                    items = [(None, text, text in correct_items) for text in q["all_actions"]]
+                    insert_option_pool(cur, question_id, items)
+                    insert_ordered_sequence(cur, question_id, q["answer_items"])
+                else:
+                    insert_answer_rows(cur, question_id, q.get("answer_rows", []))
 
 
-def main() -> int:
-    argp = argparse.ArgumentParser(description="Importa il question bank AZ-104.")
-    argp.add_argument("--dry-run", action="store_true", help="non scrivere sul database")
-    args = argp.parse_args()
-
-    print(f"lettura di {QUESTIONS_JSON}")
-    questions = load_questions(QUESTIONS_JSON)
-    print(f"  {len(questions)} domande lette")
-
+def report_warnings(questions: list[dict]) -> None:
     unverified = [q for q in questions if not q.get("verified")]
     if unverified:
         numbers = ", ".join(str(q["id"]) for q in unverified[:10])
@@ -250,13 +258,32 @@ def main() -> int:
             described = ", ".join(f"{question_id} ({variant_group})" for question_id, variant_group in members)
             print(f"  attenzione: varianti incoerenti - {described}", file=sys.stderr)
 
+
+def main() -> int:
+    argp = argparse.ArgumentParser(description="Importa i question bank delle certificazioni.")
+    argp.add_argument("--dry-run", action="store_true", help="non scrivere sul database")
+    args = argp.parse_args()
+
+    datasets = find_datasets(Path(DATASET_DIR))
+    if not datasets:
+        raise SystemExit(f"nessun questions.json in {DATASET_DIR}/<vendor>/<certificazione>/")
+
+    banks: dict[str, list[dict]] = {}
+    for certification_id, path in datasets.items():
+        print(f"{certification_id}: lettura di {path}")
+        questions = load_questions(path)
+        print(f"  {len(questions)} domande lette")
+        report_warnings(questions)
+        banks[certification_id] = questions
+
     if args.dry_run:
         print("dry run: database non toccato")
         return 0
 
     conn = connect(DATABASE_URL)
-    import_all(conn, questions)
-    print(f"importate {len(questions)} domande su {DATABASE_URL.rsplit('@', 1)[-1]}")
+    import_all(conn, banks)
+    counts = ", ".join(f"{certification_id} {len(questions)}" for certification_id, questions in banks.items())
+    print(f"importate le domande ({counts}) su {DATABASE_URL.rsplit('@', 1)[-1]}")
     return 0
 
 

@@ -26,5 +26,6 @@ export interface SaveActiveSessionDto {
 
 /** Quello che torna da GET: lo stato salvato, con le domande gia' ricostruite e in ordine. */
 export interface ActiveSessionDto extends Omit<SaveActiveSessionDto, "questionNumbers"> {
+  certificationId: string;
   questions: QuestionDto[];
 }

@@ -3,6 +3,10 @@ namespace Simulator.Api.Models.Domains;
 public sealed record Question
 {
     public required int Id { get; init; }
+
+    /// <summary>Nome della cartella del dataset da cui arriva, es. 'az-104'.</summary>
+    public required string CertificationId { get; init; }
+
     public required int Number { get; init; }
     public required QuestionType Type { get; init; }
 

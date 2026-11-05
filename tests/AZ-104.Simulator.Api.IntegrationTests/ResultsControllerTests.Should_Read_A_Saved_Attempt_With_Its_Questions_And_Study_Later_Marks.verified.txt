@@ -1,6 +1,7 @@
 ﻿{
   attempt: {
     id: 1,
+    certificationId: az-104,
     mode: exam,
     drawMode: least_seen,
     questionCount: 7,
@@ -41,7 +42,7 @@
         selectCount: 2,
         sequenceLength: 0,
         images: [
-          q001_pre0.png
+          az-104/q001_pre0.png
         ],
         groupId: null,
         groupType: null,
@@ -58,7 +59,7 @@
           C
         ],
         images: [
-          q001_post0.png
+          az-104/q001_post0.png
         ]
       },
       studyLater: false

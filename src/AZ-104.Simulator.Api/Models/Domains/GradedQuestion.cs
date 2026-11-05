@@ -3,6 +3,7 @@ namespace Simulator.Api.Models.Domains;
 /// <summary>Aggregato costruito solo da ExamResultService per la correzione.</summary>
 internal sealed record GradedQuestion(Question Source, IReadOnlyList<Option> Options, IReadOnlyList<AnswerRow> AnswerRows, IReadOnlyList<QuestionImage> Images)
 {
+    public string CertificationId => Source.CertificationId;
     public int Number => Source.Number;
     public QuestionType Type => Source.Type;
     public bool UnorderedAnswer => Source.UnorderedAnswer;

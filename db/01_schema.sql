@@ -1,4 +1,5 @@
--- Question bank AZ-104, alimentato da az104_606_domande.json.
+-- Question bank, alimentato dai dataset/<vendor>/<certificazione>/questions.json: una cartella per
+-- certificazione, e il nome della cartella e' il certification_id delle sue domande.
 -- 
 -- La forma di storage segue answer_layout, non type:
 --   ordered_answer - sequenza: pool in options (letter NULL), ordine corretto in answer_rows.
@@ -15,7 +16,10 @@ CREATE TYPE question_type AS ENUM (
 
 CREATE TABLE questions (
     id            SERIAL PRIMARY KEY,
-    number        INTEGER       NOT NULL UNIQUE,  -- "id" nel JSON, 1..584
+    -- Es. 'az-104'. Senza tabella delle certificazioni: per ora non c'e' altro da dire su di loro.
+    certification_id TEXT       NOT NULL,
+    -- "id" nel JSON: unico solo dentro la certificazione, ognuna riparte da 1.
+    number        INTEGER       NOT NULL,
     type          question_type NOT NULL,
     -- NULL per multiple_choice.
     answer_layout TEXT,
@@ -35,6 +39,8 @@ CREATE TABLE questions (
     -- Solo per ordered_answer: la risposta e' un insieme ("which objects should you create"), non una
     -- sequenza, e si valuta senza guardare la posizione.
     unordered_answer BOOLEAN    NOT NULL DEFAULT FALSE,
+    CONSTRAINT questions_certification_number_unique
+        UNIQUE (certification_id, number),
     CONSTRAINT questions_group_both_or_neither
         CHECK ((group_id IS NULL) = (group_type IS NULL)),
     CONSTRAINT questions_group_or_variant
@@ -73,7 +79,8 @@ CREATE TABLE answer_row_options (
     text          TEXT    NOT NULL
 );
 
--- kind: 'question' (prima della risposta) o 'answer' (solo dopo). Solo il nome file.
+-- kind: 'question' (prima della risposta) o 'answer' (solo dopo). Solo il nome file: la certificazione
+-- e' quella della domanda, e l'API lo serve su /images/<certification_id>/<filename>.
 CREATE TABLE question_images (
     id          SERIAL  PRIMARY KEY,
     question_id INTEGER NOT NULL REFERENCES questions (id) ON DELETE CASCADE,
@@ -91,6 +98,8 @@ CREATE INDEX idx_questions_type ON questions (type);
 -- Storico indipendente dal question bank: un reimport non lo azzera.
 CREATE TABLE exam_attempts (
     id             SERIAL PRIMARY KEY,
+    -- Come questions.certification_id. Niente FK: le domande si reimportano, lo storico resta.
+    certification_id TEXT           NOT NULL,
     mode           TEXT             NOT NULL CHECK (mode IN ('practice', 'exam')),
     -- Come sono state pescate le domande. I tentativi precedenti la scelta erano tutti casuali.
     draw_mode      TEXT             NOT NULL DEFAULT 'random' CHECK (draw_mode IN ('random', 'least_seen')),
@@ -102,10 +111,11 @@ CREATE TABLE exam_attempts (
     completed_at   TIMESTAMPTZ      NOT NULL DEFAULT now()
 );
 
-CREATE INDEX idx_exam_attempts_end_time ON exam_attempts (end_time);
+CREATE INDEX idx_exam_attempts_certification_end_time ON exam_attempts (certification_id, end_time);
 
 -- question_number non e' una FK: il TRUNCATE ... CASCADE dell'importer cancellerebbe lo storico.
--- Una domanda puo' quindi non esistere piu' alla rilettura.
+-- Una domanda puo' quindi non esistere piu' alla rilettura. Il numero vale dentro la certificazione
+-- del tentativo.
 CREATE TABLE exam_attempt_answers (
     id              SERIAL  PRIMARY KEY,
     attempt_id      INTEGER NOT NULL REFERENCES exam_attempts (id) ON DELETE CASCADE,
@@ -125,6 +135,8 @@ CREATE INDEX idx_exam_attempt_answers_attempt ON exam_attempt_answers (attempt_i
 -- non e' vincolato a questions per lo stesso motivo di exam_attempt_answers.
 CREATE TABLE active_session (
     id                  INTEGER   PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+    -- Le question_numbers valgono dentro questa certificazione.
+    certification_id    TEXT      NOT NULL,
     mode                TEXT      NOT NULL CHECK (mode IN ('practice', 'exam')),
     question_numbers    INTEGER[] NOT NULL,
     -- questionNumber -> risposta. jsonb: si riscrive per intero, non si interroga.

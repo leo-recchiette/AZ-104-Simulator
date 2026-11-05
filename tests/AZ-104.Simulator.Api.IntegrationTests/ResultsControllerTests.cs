@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 
@@ -27,7 +28,7 @@ public partial class ResultsControllerTests : IDisposable
     [TestMethod]
     public async Task Should_Score_A_Submission_With_Partial_Credit()
     {
-        var response = await _httpClient.PostAsJsonAsync("api/results/getScore", Submissions());
+        var response = await _httpClient.PostAsJsonAsync("api/results/getScore?certificationId=az-104", Submissions());
 
         await VerifyJson(await response.Content.ReadAsStringAsync());
     }
@@ -35,7 +36,7 @@ public partial class ResultsControllerTests : IDisposable
     [TestMethod]
     public async Task Should_Reveal_The_Solutions()
     {
-        var response = await _httpClient.PostAsJsonAsync("api/results/checkAnswers", Submissions());
+        var response = await _httpClient.PostAsJsonAsync("api/results/checkAnswers?certificationId=az-104", Submissions());
 
         await VerifyJson(await response.Content.ReadAsStringAsync());
     }
@@ -43,7 +44,7 @@ public partial class ResultsControllerTests : IDisposable
     [TestMethod]
     public async Task Should_Return_No_Solution_For_An_Unknown_Question()
     {
-        var response = await _httpClient.PostAsJsonAsync("api/results/checkAnswers", new[] { Submission(999, "A") });
+        var response = await _httpClient.PostAsJsonAsync("api/results/checkAnswers?certificationId=az-104", new[] { Submission(999, "A") });
 
         await VerifyJson(await response.Content.ReadAsStringAsync());
     }
@@ -72,9 +73,32 @@ public partial class ResultsControllerTests : IDisposable
         await SaveAttemptAsync(EndTime);
         await SaveAttemptAsync(EndTime.AddDays(-1));
 
-        var actual = await _httpClient.GetStringAsync("api/results/getAllAttempts");
+        var actual = await _httpClient.GetStringAsync("api/results/getAllAttempts?certificationId=az-104");
 
         await VerifyJson(actual);
+    }
+
+    [TestMethod]
+    public async Task Should_List_Only_The_Attempts_Of_The_Requested_Certification()
+    {
+        await SaveAttemptAsync(EndTime);
+        await SaveAttemptAsync(EndTime.AddDays(1), "terraform-associate-004");
+
+        var actual = await _httpClient.GetFromJsonAsync<JsonArray>("api/results/getAllAttempts?certificationId=terraform-associate-004");
+
+        actual!.Select(a => (a!["id"]!.GetValue<int>(), a["certificationId"]!.GetValue<string>()))
+            .Should().Equal((2, "terraform-associate-004"));
+    }
+
+    [TestMethod]
+    public async Task Should_Not_Mark_Another_Certification_Question_As_Solved()
+    {
+        // La 1 esiste solo in AZ-104: in Terraform non c'e' niente da correggere.
+        var response = await _httpClient.PostAsJsonAsync("api/results/checkAnswers?certificationId=terraform-associate-004", new[] { Submission(1, "A", "C") });
+
+        var actual = await response.Content.ReadFromJsonAsync<JsonArray>();
+
+        actual!.Single()!["correctAnswer"].Should().BeNull();
     }
 
     [TestMethod]
@@ -97,11 +121,12 @@ public partial class ResultsControllerTests : IDisposable
 
     #region Utils
 
-    private Task<HttpResponseMessage> SaveAttemptAsync(DateTimeOffset endTime)
-        => _httpClient.PostAsJsonAsync("api/results/saveAttempt", Attempt(Submissions(), endTime));
+    private Task<HttpResponseMessage> SaveAttemptAsync(DateTimeOffset endTime, string certificationId = "az-104")
+        => _httpClient.PostAsJsonAsync("api/results/saveAttempt", Attempt(Submissions(), endTime, certificationId));
 
-    private static object Attempt(object[] answers, DateTimeOffset endTime) => new
+    private static object Attempt(object[] answers, DateTimeOffset endTime, string certificationId = "az-104") => new
     {
+        certificationId,
         mode = "exam",
         drawMode = "least_seen",
         questionCount = answers.Length,

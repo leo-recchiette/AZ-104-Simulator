@@ -19,9 +19,10 @@ public sealed class QuestionsController : ControllerBase
         _questionService = questionService;
     }
 
-    /// <summary>"type" filtra opzionalmente su uno dei 4 tipi; "draw" sceglie come pescare.</summary>
+    /// <summary>Pesca dentro "certificationId"; "type" filtra opzionalmente su uno dei 4 tipi; "draw" sceglie come pescare.</summary>
     [HttpGet("getExam")]
     public async Task<ActionResult<IReadOnlyList<QuestionDto>>> GetExamAsync(
+        [FromQuery] string certificationId,
         [FromQuery] int count = 40,
         [FromQuery] string? type = null,
         [FromQuery] string draw = DrawModeMapper.Default,
@@ -47,7 +48,7 @@ public sealed class QuestionsController : ControllerBase
             }
         }
 
-        var questions = await _questionService.GetRandomSetAsync(count, parsedType, drawMode, cancellationToken);
+        var questions = await _questionService.GetRandomSetAsync(certificationId, count, parsedType, drawMode, cancellationToken);
         return Ok(questions);
     }
 }

@@ -15,7 +15,7 @@ public sealed class QuestionServiceTests
     {
         var sut = new QuestionService(Repository(questions: [Question()], options: [Option()]));
 
-        var actual = await sut.GetRandomSetAsync(count: 1, type: null, DrawMode.Random, CancellationToken.None);
+        var actual = await sut.GetRandomSetAsync("az-104", count: 1, type: null, DrawMode.Random, CancellationToken.None);
 
         var expected = new[]
         {
@@ -33,7 +33,7 @@ public sealed class QuestionServiceTests
             questions: [Question(), Grouped(2, "ss01"), Grouped(3, "ss01"), Grouped(50, "ss09")],
             options: []));
 
-        var actual = await sut.GetRandomSetAsync(count: 3, type: null, DrawMode.Random, CancellationToken.None);
+        var actual = await sut.GetRandomSetAsync("az-104", count: 3, type: null, DrawMode.Random, CancellationToken.None);
 
         actual.Select(q => q.Number).Should().Equal(1, 2, 3, 50);
     }
@@ -45,9 +45,9 @@ public sealed class QuestionServiceTests
         var repository = Repository(questions: [Question()], options: []);
         var sut = new QuestionService(repository);
 
-        await sut.GetRandomSetAsync(count: 5, type: null, DrawMode.LeastSeen, CancellationToken.None);
+        await sut.GetRandomSetAsync("az-104", count: 5, type: null, DrawMode.LeastSeen, CancellationToken.None);
 
-        await repository.Received(1).GetRandomAsync(5, null, DrawMode.LeastSeen, Arg.Any<CancellationToken>());
+        await repository.Received(1).GetRandomAsync("az-104", 5, null, DrawMode.LeastSeen, Arg.Any<CancellationToken>());
     }
 
     #region Utils
@@ -55,7 +55,7 @@ public sealed class QuestionServiceTests
     private static IQuestionRepository Repository(IReadOnlyList<Question> questions, IReadOnlyList<Option> options)
     {
         var repository = Substitute.For<IQuestionRepository>();
-        repository.GetRandomAsync(Arg.Any<int>(), Arg.Any<QuestionType?>(), Arg.Any<DrawMode>(), Arg.Any<CancellationToken>()).Returns(questions);
+        repository.GetRandomAsync(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<QuestionType?>(), Arg.Any<DrawMode>(), Arg.Any<CancellationToken>()).Returns(questions);
         repository.GetOptionsAsync(Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<CancellationToken>()).Returns(options);
         repository.GetAnswerRowsAsync(Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<CancellationToken>()).Returns([]);
         repository.GetAnswerRowOptionsAsync(Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<CancellationToken>()).Returns([]);
@@ -66,6 +66,7 @@ public sealed class QuestionServiceTests
     private static Question Grouped(int number, string groupId) => new()
     {
         Id = number,
+        CertificationId = "az-104",
         Number = number,
         Type = QuestionType.MultipleChoice,
         Text = $"Domanda {number}",
@@ -79,6 +80,7 @@ public sealed class QuestionServiceTests
     private static Question Question() => new()
     {
         Id = 1,
+        CertificationId = "az-104",
         Number = 1,
         Type = QuestionType.MultipleChoice,
         Text = "Domanda di prova",

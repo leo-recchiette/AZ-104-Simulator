@@ -21,6 +21,7 @@ public sealed class ExamAttemptService : IExamAttemptService
     {
         var attempt = new ExamAttempt
         {
+            CertificationId = request.CertificationId,
             Mode = request.Mode,
             DrawMode = request.DrawMode,
             QuestionCount = request.QuestionCount,
@@ -43,9 +44,9 @@ public sealed class ExamAttemptService : IExamAttemptService
         return saved.ToDto();
     }
 
-    public async Task<IReadOnlyList<ExamAttemptDto>> GetAllAttemptsAsync(CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<ExamAttemptDto>> GetAllAttemptsAsync(string certificationId, CancellationToken cancellationToken)
     {
-        var attempts = await _repository.GetAllAsync(cancellationToken);
+        var attempts = await _repository.GetAllAsync(certificationId, cancellationToken);
         return attempts.Select(a => a.ToDto()).ToList();
     }
 
@@ -61,7 +62,7 @@ public sealed class ExamAttemptService : IExamAttemptService
         // ReviewAsync risponde nell'ordine delle submission: il segno da studiare si riprende per posizione.
         IReadOnlyList<AttemptAnswerDto> answers = submissions.Count == 0
             ? []
-            : (await _examResultService.ReviewAsync(submissions, cancellationToken))
+            : (await _examResultService.ReviewAsync(detail.Attempt.CertificationId, submissions, cancellationToken))
                 .Zip(detail.Answers, (reviewed, saved) => reviewed with { StudyLater = saved.StudyLater })
                 .ToList();
 

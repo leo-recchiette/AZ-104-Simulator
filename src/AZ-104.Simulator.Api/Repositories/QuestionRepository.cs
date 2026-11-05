@@ -15,7 +15,7 @@ public sealed class QuestionRepository : IQuestionRepository
     }
 
     private const string SelectColumns = """
-        id, number, type, answer_layout AS "AnswerLayout", question AS "Text",
+        id, certification_id AS "CertificationId", number, type, answer_layout AS "AnswerLayout", question AS "Text",
         explanation, answer_text AS "AnswerText", note, source,
         group_id AS "GroupId", group_type AS "GroupType", variant_group AS "VariantGroup",
         unordered_answer AS "UnorderedAnswer"
@@ -27,26 +27,31 @@ public sealed class QuestionRepository : IQuestionRepository
     /// </summary>
     private const string UnitKey = "COALESCE(group_id, '~' || variant_group, '#' || number)";
 
-    public async Task<IReadOnlyList<Question>> GetRandomAsync(int count, QuestionType? type, DrawMode drawMode, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Question>> GetRandomAsync(string certificationId, int count, QuestionType? type, DrawMode drawMode, CancellationToken cancellationToken)
     {
-        var typeFilter = type is null ? "" : "WHERE type = @type::question_type";
+        var typeFilter = type is null ? "" : "AND q.type = @type::question_type";
 
         // LeastSeen: prima le unita' proposte meno volte nelle sessioni salvate, a caso fra le pari merito.
         // seen conta le sessioni, non le righe: un gruppo ha una riga per domanda in ogni sessione.
         // Una famiglia di varianti conta per intero, e ne esce la variante proposta meno volte.
         // Random: times e' sempre 0 e l'ordine e' solo il sorteggio.
+        // Contano solo i tentativi della stessa certificazione: altrove lo stesso numero e' un'altra domanda.
         var leastSeen = drawMode is DrawMode.LeastSeen;
         var seenCte = leastSeen
             ? $"""
               seen AS (
                   SELECT {UnitKey} AS unit_key, count(DISTINCT a.attempt_id) AS times
                   FROM exam_attempt_answers a
-                  JOIN questions q ON q.number = a.question_number
+                  JOIN exam_attempts t ON t.id = a.attempt_id
+                  JOIN questions q ON q.certification_id = t.certification_id AND q.number = a.question_number
+                  WHERE t.certification_id = @certificationId
                   GROUP BY 1
               ),
               seen_questions AS (
-                  SELECT question_number, count(DISTINCT attempt_id) AS times
-                  FROM exam_attempt_answers
+                  SELECT a.question_number, count(DISTINCT a.attempt_id) AS times
+                  FROM exam_attempt_answers a
+                  JOIN exam_attempts t ON t.id = a.attempt_id
+                  WHERE t.certification_id = @certificationId
                   GROUP BY 1
               ),
               """
@@ -66,7 +71,7 @@ public sealed class QuestionRepository : IQuestionRepository
                            row_number() OVER (PARTITION BY q.variant_group ORDER BY {questionTimes}, random()) AS variant_rank
                     FROM questions q
                     {seenQuestionsJoin}
-                    {typeFilter}
+                    WHERE q.certification_id = @certificationId {typeFilter}
                 ) c
                 WHERE variant_group IS NULL OR variant_rank = 1
             ),
@@ -87,25 +92,26 @@ public sealed class QuestionRepository : IQuestionRepository
             FROM questions q
             JOIN candidates c ON c.question_number = q.number
             JOIN units u ON u.unit_key = c.unit_key
+            WHERE q.certification_id = @certificationId
             ORDER BY u.ord, q.number
             """;
 
         var command = type is null
-            ? new CommandDefinition(sql, new { count }, cancellationToken: cancellationToken)
-            : new CommandDefinition(sql, new { count, type = QuestionTypeMapper.ToDb(type.Value) }, cancellationToken: cancellationToken);
+            ? new CommandDefinition(sql, new { certificationId, count }, cancellationToken: cancellationToken)
+            : new CommandDefinition(sql, new { certificationId, count, type = QuestionTypeMapper.ToDb(type.Value) }, cancellationToken: cancellationToken);
 
         await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
         var rows = await connection.QueryAsync<QuestionRow>(command);
         return rows.Select(r => r.ToQuestion()).ToList();
     }
 
-    public async Task<IReadOnlyList<Question>> GetByNumbersAsync(IReadOnlyCollection<int> numbers, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Question>> GetByNumbersAsync(string certificationId, IReadOnlyCollection<int> numbers, CancellationToken cancellationToken)
     {
         if (numbers.Count == 0)
             return [];
 
-        var sql = $"SELECT {SelectColumns} FROM questions WHERE number = ANY(@numbers)";
-        var command = new CommandDefinition(sql, new { numbers = numbers.ToArray() }, cancellationToken: cancellationToken);
+        var sql = $"SELECT {SelectColumns} FROM questions WHERE certification_id = @certificationId AND number = ANY(@numbers)";
+        var command = new CommandDefinition(sql, new { certificationId, numbers = numbers.ToArray() }, cancellationToken: cancellationToken);
 
         await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
         var rows = await connection.QueryAsync<QuestionRow>(command);

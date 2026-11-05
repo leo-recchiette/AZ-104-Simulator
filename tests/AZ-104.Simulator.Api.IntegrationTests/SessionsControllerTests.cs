@@ -93,6 +93,7 @@ public partial class SessionsControllerTests : IDisposable
         int[]? questionNumbers = null,
         Dictionary<int, string[]>? answers = null) => new
     {
+        certificationId = "az-104",
         mode,
         questionNumbers = questionNumbers ?? [6, 7, 1],
         answers = answers ?? new Dictionary<int, string[]> { [6] = ["A"], [1] = ["A", "C"] },

@@ -33,6 +33,7 @@ public sealed class QuestionRowMapperTests
 
     private static QuestionRow QuestionRow() => new(
         Id: 1,
+        CertificationId: "az-104",
         Number: 20,
         Type: "drag_and_drop",
         AnswerLayout: "ordered_answer",
@@ -49,6 +50,7 @@ public sealed class QuestionRowMapperTests
     private static Question Question() => new()
     {
         Id = 1,
+        CertificationId = "az-104",
         Number = 20,
         Type = QuestionType.DragAndDrop,
         AnswerLayout = "ordered_answer",

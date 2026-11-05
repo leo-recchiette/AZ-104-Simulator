@@ -134,7 +134,7 @@ public sealed class QuestionMapperTests
                 new PromptOptionsDto("To add a backend pool to LB1", ["Contributor on LB1", "Network Contributor on LB1"], 1),
                 new PromptOptionsDto("To add a health probe to LB2", ["Contributor on LB2", "Network Contributor on LB2"], 1),
             ],
-            Images: ["q001_pre0.png", "q001_pre1.png"],
+            Images: ["az-104/q001_pre0.png", "az-104/q001_pre1.png"],
             GroupId: null,
             GroupType: null,
             VariantGroup: null);
@@ -201,6 +201,7 @@ public sealed class QuestionMapperTests
     private static Question Question(QuestionType type, string? answerLayout) => new()
     {
         Id = 1,
+        CertificationId = "az-104",
         Number = 1,
         Type = type,
         AnswerLayout = answerLayout,

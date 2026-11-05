@@ -23,7 +23,7 @@ public sealed class ExamResultServiceTests
             new AnswerSubmissionDto(QuestionNumber: 999, UserAnswers: ["X"]),
         };
 
-        var actual = await _sut.ScoreAsync(submissions, CancellationToken.None);
+        var actual = await _sut.ScoreAsync("az-104", submissions, CancellationToken.None);
 
         var expected = new ExamScoreDto(Score: 1000);
 
@@ -35,7 +35,7 @@ public sealed class ExamResultServiceTests
     {
         var submissions = new[] { new AnswerSubmissionDto(QuestionNumber: 1, UserAnswers: ["A"]) };
 
-        var actual = await _sut.CheckAnswersAsync(submissions, CancellationToken.None);
+        var actual = await _sut.CheckAnswersAsync("az-104", submissions, CancellationToken.None);
 
         var expected = new[] { AnswerCheckResultDto(userAnswers: ["A"], correctAnswer: QuestionAnswerDto()) };
 
@@ -47,7 +47,7 @@ public sealed class ExamResultServiceTests
     {
         var submissions = Submissions(wrongNumbers: [9, 10]);
 
-        var actual = await _sutWithTenQuestions.ScoreAsync(submissions, CancellationToken.None);
+        var actual = await _sutWithTenQuestions.ScoreAsync("az-104", submissions, CancellationToken.None);
 
         var expected = new ExamScoreDto(Score: 800);
 
@@ -59,7 +59,7 @@ public sealed class ExamResultServiceTests
     {
         var submissions = Submissions(wrongNumbers: [4, 5, 6, 7, 8, 9, 10]);
 
-        var actual = await _sutWithTenQuestions.ScoreAsync(submissions, CancellationToken.None);
+        var actual = await _sutWithTenQuestions.ScoreAsync("az-104", submissions, CancellationToken.None);
 
         var expected = new ExamScoreDto(Score: 300);
 
@@ -71,7 +71,7 @@ public sealed class ExamResultServiceTests
     {
         var submissions = new[] { new AnswerSubmissionDto(QuestionNumber: 1, UserAnswers: ["A"]) };
 
-        var actual = await _sut.ReviewAsync(submissions, CancellationToken.None);
+        var actual = await _sut.ReviewAsync("az-104", submissions, CancellationToken.None);
 
         actual.Should().ContainSingle();
         actual[0].UserAnswers.Should().BeEquivalentTo(["A"]);
@@ -85,7 +85,7 @@ public sealed class ExamResultServiceTests
     {
         var submissions = new[] { new AnswerSubmissionDto(QuestionNumber: 999, UserAnswers: ["B"]) };
 
-        var actual = await _sut.ReviewAsync(submissions, CancellationToken.None);
+        var actual = await _sut.ReviewAsync("az-104", submissions, CancellationToken.None);
 
         var expected = new[] { new AttemptAnswerDto(QuestionNumber: 999, UserAnswers: ["B"], Question: null, CorrectAnswer: null) };
 
@@ -97,7 +97,7 @@ public sealed class ExamResultServiceTests
     {
         var submissions = new[] { 3, 1, 2 }.Select(n => new AnswerSubmissionDto(n, ["A"])).ToList();
 
-        var actual = await _sutWithTenQuestions.ReviewAsync(submissions, CancellationToken.None);
+        var actual = await _sutWithTenQuestions.ReviewAsync("az-104", submissions, CancellationToken.None);
 
         // Ordine di presentazione, non numerico: conta per i gruppi.
         actual.Select(a => a.QuestionNumber).Should().Equal(3, 1, 2);
@@ -109,7 +109,7 @@ public sealed class ExamResultServiceTests
     private static ExamResultService Sut(IReadOnlyList<Question> questions, IReadOnlyList<Option> options)
     {
         var repository = Substitute.For<IQuestionRepository>();
-        repository.GetByNumbersAsync(Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<CancellationToken>()).Returns(questions);
+        repository.GetByNumbersAsync("az-104", Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<CancellationToken>()).Returns(questions);
         repository.GetOptionsAsync(Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<CancellationToken>()).Returns(options);
         repository.GetAnswerRowsAsync(Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<CancellationToken>()).Returns([]);
         repository.GetImagesAsync(Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<CancellationToken>()).Returns([]);
@@ -121,6 +121,7 @@ public sealed class ExamResultServiceTests
     private static Question Question() => new()
     {
         Id = 1,
+        CertificationId = "az-104",
         Number = 1,
         Type = QuestionType.MultipleChoice,
         Text = "Domanda di prova",
@@ -164,6 +165,7 @@ public sealed class ExamResultServiceTests
             .Select(number => new Question
             {
                 Id = number,
+                CertificationId = "az-104",
                 Number = number,
                 Type = QuestionType.MultipleChoice,
                 Text = $"Domanda {number}",

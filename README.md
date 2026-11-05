@@ -58,7 +58,9 @@ src/
 tests/
   AZ-104.Simulator.Api.Tests/      API unit tests
 db/                                SQL schema
-dataset/                           source data (JSON, a human-readable Markdown version, the exhibit images)
+dataset/<vendor>/<certification>/  source data, one folder per certification (e.g. dataset/microsoft/az-104/):
+                                     questions.json, questions.md (human-readable version), images.zip (exhibits).
+                                     The folder name is the certification id stored with its questions
 docs/screenshots/                  the images in this README
 docker-compose.yml
 ```
@@ -93,10 +95,11 @@ to reload the question bank from an updated JSON file.
 
 ### Reloading the question bank
 
-The importer replaces the contents of the question tables with what it reads from
-`dataset/az104_606_domande.json` — it is not incremental. Note that the JSON is **copied into
-the importer image** at build time rather than mounted, so after editing the dataset rerun it with `--build`,
-otherwise the stale copy gets imported again:
+The importer replaces the contents of the question tables with every `questions.json` it finds under
+`dataset/<vendor>/<certification>/` — all certifications at once, it is not incremental. Each question is tagged
+with the name of its folder (`az-104`), and its exhibits are served from `/images/<certification>/`. Note that the
+JSON is **copied into the importer image** at build time rather than mounted, so after editing the dataset rerun
+it with `--build`, otherwise the stale copy gets imported again:
 
 ```bash
 docker compose --profile setup run --rm --build importer

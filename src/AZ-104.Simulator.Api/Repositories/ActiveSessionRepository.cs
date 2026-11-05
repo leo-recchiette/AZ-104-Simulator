@@ -17,7 +17,7 @@ public sealed class ActiveSessionRepository : IActiveSessionRepository
     public async Task<ActiveSession?> GetAsync(CancellationToken cancellationToken)
     {
         const string sql = """
-            SELECT mode AS "Mode", question_numbers AS "QuestionNumbers", answers::text AS "Answers",
+            SELECT certification_id AS "CertificationId", mode AS "Mode", question_numbers AS "QuestionNumbers", answers::text AS "Answers",
                    flagged_indexes AS "FlaggedIndexes", study_later_questions AS "StudyLaterQuestions",
                    current_index AS "CurrentIndex",
                    time_limit_seconds AS "TimeLimitSeconds", auto_reveal AS "AutoReveal",
@@ -36,6 +36,7 @@ public sealed class ActiveSessionRepository : IActiveSessionRepository
         var answers = JsonSerializer.Deserialize<Dictionary<int, IReadOnlyList<string>>>(row.Answers) ?? [];
         return new ActiveSession
         {
+            CertificationId = row.CertificationId,
             Mode = row.Mode,
             QuestionNumbers = row.QuestionNumbers,
             Answers = answers,
@@ -56,12 +57,13 @@ public sealed class ActiveSessionRepository : IActiveSessionRepository
     {
         const string sql = """
             INSERT INTO active_session (
-                id, mode, question_numbers, answers, flagged_indexes, study_later_questions, current_index,
+                id, certification_id, mode, question_numbers, answers, flagged_indexes, study_later_questions, current_index,
                 time_limit_seconds, auto_reveal, open_ended, live_score, draw_mode, started_at, saved_at, updated_at)
             VALUES (
-                1, @Mode, @QuestionNumbers, @Answers::jsonb, @FlaggedIndexes, @StudyLaterQuestions, @CurrentIndex,
+                1, @CertificationId, @Mode, @QuestionNumbers, @Answers::jsonb, @FlaggedIndexes, @StudyLaterQuestions, @CurrentIndex,
                 @TimeLimitSeconds, @AutoReveal, @OpenEnded, @LiveScore, @DrawMode, @StartedAt, @SavedAt, now())
             ON CONFLICT (id) DO UPDATE SET
+                certification_id = EXCLUDED.certification_id,
                 mode = EXCLUDED.mode,
                 question_numbers = EXCLUDED.question_numbers,
                 answers = EXCLUDED.answers,
@@ -80,6 +82,7 @@ public sealed class ActiveSessionRepository : IActiveSessionRepository
 
         var parameters = new
         {
+            session.CertificationId,
             session.Mode,
             QuestionNumbers = session.QuestionNumbers.ToArray(),
             Answers = JsonSerializer.Serialize(session.Answers),

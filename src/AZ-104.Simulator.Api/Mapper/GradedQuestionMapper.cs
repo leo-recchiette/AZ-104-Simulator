@@ -17,5 +17,5 @@ internal static class GradedQuestionMapper
             ? question.Options.Where(o => o.IsCorrect).Select(o => o.Letter!).ToList()
             : [],
         AnswerRows: question.AnswerRows.Select(r => new AnswerRowDto(r.Prompt, r.Answer)).ToList(),
-        Images: question.Images.Where(i => i.Kind == AnswerImageKind).OrderBy(i => i.Ord).Select(i => i.Filename).ToList());
+        Images: question.Images.Where(i => i.Kind == AnswerImageKind).OrderBy(i => i.Ord).Select(i => i.ToPath(question.CertificationId)).ToList());
 }

@@ -14,7 +14,7 @@ public sealed class ExamAttemptRepository : IExamAttemptRepository
     }
 
     private const string SelectAttemptColumns = """
-        id AS "Id", mode AS "Mode", draw_mode AS "DrawMode", question_count AS "QuestionCount",
+        id AS "Id", certification_id AS "CertificationId", mode AS "Mode", draw_mode AS "DrawMode", question_count AS "QuestionCount",
         score AS "Score", start_time AS "StartTime", end_time AS "EndTime",
         completed_at AS "CompletedAt"
         """;
@@ -22,8 +22,8 @@ public sealed class ExamAttemptRepository : IExamAttemptRepository
     public async Task<ExamAttempt> InsertAsync(ExamAttempt attempt, IReadOnlyList<ExamAttemptAnswer> answers, CancellationToken cancellationToken)
     {
         const string insertAttempt = $"""
-            INSERT INTO exam_attempts (mode, draw_mode, question_count, score, start_time, end_time)
-            VALUES (@Mode, @DrawMode, @QuestionCount, @Score, @StartTime, @EndTime)
+            INSERT INTO exam_attempts (certification_id, mode, draw_mode, question_count, score, start_time, end_time)
+            VALUES (@CertificationId, @Mode, @DrawMode, @QuestionCount, @Score, @StartTime, @EndTime)
             RETURNING {SelectAttemptColumns}
             """;
 
@@ -57,14 +57,15 @@ public sealed class ExamAttemptRepository : IExamAttemptRepository
         return saved;
     }
 
-    public async Task<IReadOnlyList<ExamAttempt>> GetAllAsync(CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<ExamAttempt>> GetAllAsync(string certificationId, CancellationToken cancellationToken)
     {
         const string sql = $"""
             SELECT {SelectAttemptColumns}
             FROM exam_attempts
+            WHERE certification_id = @certificationId
             ORDER BY end_time ASC
             """;
-        var command = new CommandDefinition(sql, cancellationToken: cancellationToken);
+        var command = new CommandDefinition(sql, new { certificationId }, cancellationToken: cancellationToken);
 
         await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
         var rows = await connection.QueryAsync<ExamAttempt>(command);

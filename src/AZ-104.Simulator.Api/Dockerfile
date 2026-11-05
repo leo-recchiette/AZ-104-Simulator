@@ -8,11 +8,18 @@ RUN dotnet restore src/AZ-104.Simulator.Api/AZ-104.Simulator.Api.csproj
 COPY src/AZ-104.Simulator.Api/ src/AZ-104.Simulator.Api/
 RUN dotnet publish src/AZ-104.Simulator.Api/AZ-104.Simulator.Api.csproj -c Release -o /app --no-restore
 
-# Screenshot delle domande, serviti su /images/<file>. Nel repo c'e' solo lo zip, scompattato in
-# questa fase usa-e-getta: dopo un aggiornamento dello zip va ricostruita l'immagine.
+# Screenshot delle domande, serviti su /images/<certificazione>/<file>: uno zip per certificazione, in
+# dataset/<vendor>/<certificazione>/images.zip, che puo' anche mancare. Nel repo ci sono solo gli zip,
+# scompattati in questa fase usa-e-getta: dopo un aggiornamento del dataset va ricostruita l'immagine.
 RUN apt-get update && apt-get install -y --no-install-recommends unzip && rm -rf /var/lib/apt/lists/*
-COPY dataset/az104_Dataset_Images.zip /tmp/images.zip
-RUN mkdir -p /images && unzip -q -j /tmp/images.zip -d /images && rm /tmp/images.zip
+COPY dataset/ /tmp/dataset/
+RUN mkdir -p /images && \
+    for zip in /tmp/dataset/*/*/images.zip; do \
+        [ -f "$zip" ] || continue; \
+        certification=$(basename "$(dirname "$zip")"); \
+        mkdir -p "/images/$certification" && unzip -q -j "$zip" -d "/images/$certification" || exit 1; \
+    done && \
+    rm -rf /tmp/dataset
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app

@@ -3,6 +3,7 @@ namespace Simulator.Api.Models.Domains;
 /// <summary>Riga grezza di Dapper: answers e' ancora il testo JSON della colonna jsonb.</summary>
 internal sealed record ActiveSessionRow
 {
+    public required string CertificationId { get; init; }
     public required string Mode { get; init; }
     public required int[] QuestionNumbers { get; init; }
     public required string Answers { get; init; }

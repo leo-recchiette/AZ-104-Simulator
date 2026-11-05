@@ -7,6 +7,7 @@ internal static class QuestionRowMapper
     internal static Question ToQuestion(this QuestionRow row) => new()
     {
         Id = row.Id,
+        CertificationId = row.CertificationId,
         Number = row.Number,
         Type = QuestionTypeMapper.FromDb(row.Type),
         AnswerLayout = row.AnswerLayout,

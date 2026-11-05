@@ -49,6 +49,7 @@ export interface SaveExamAttemptDto {
 
 export interface ExamAttemptDto {
   id: number;
+  certificationId: string;
   mode: "practice" | "exam";
   /** "random" anche per i tentativi salvati prima che si potesse scegliere: si pescava sempre a caso. */
   drawMode: DrawMode;

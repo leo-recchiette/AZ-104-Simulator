@@ -36,7 +36,7 @@ public static class QuestionMapper
                     r.Prompt!,
                     isYesNo ? YesNoOptions : rowOptionsByAnswerRowId[r.Id].Select(o => o.Text).ToList(),
                     r.Answer.CorrectValueCount())).ToList(),
-            Images: images.Where(i => i.Kind == QuestionImageKind).OrderBy(i => i.Ord).Select(i => i.Filename).ToList(),
+            Images: images.Where(i => i.Kind == QuestionImageKind).OrderBy(i => i.Ord).Select(i => i.ToPath(question.CertificationId)).ToList(),
             GroupId: question.GroupId,
             GroupType: question.GroupType,
             VariantGroup: question.VariantGroup,

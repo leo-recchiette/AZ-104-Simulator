@@ -17,9 +17,9 @@ public sealed class ExamResultService : IExamResultService
         _scorer = scorer;
     }
 
-    public async Task<ExamScoreDto> ScoreAsync(IReadOnlyList<AnswerSubmissionDto> submissions, CancellationToken cancellationToken)
+    public async Task<ExamScoreDto> ScoreAsync(string certificationId, IReadOnlyList<AnswerSubmissionDto> submissions, CancellationToken cancellationToken)
     {
-        var graded = await LoadGradedQuestionsAsync(submissions.Select(s => s.QuestionNumber), cancellationToken);
+        var graded = await LoadGradedQuestionsAsync(certificationId, submissions.Select(s => s.QuestionNumber), cancellationToken);
 
         var earnedTotal = 0;
         var pointsTotal = 0;
@@ -39,9 +39,9 @@ public sealed class ExamResultService : IExamResultService
         return new ExamScoreDto(score);
     }
 
-    public async Task<IReadOnlyList<AnswerCheckResultDto>> CheckAnswersAsync(IReadOnlyList<AnswerSubmissionDto> submissions, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<AnswerCheckResultDto>> CheckAnswersAsync(string certificationId, IReadOnlyList<AnswerSubmissionDto> submissions, CancellationToken cancellationToken)
     {
-        var graded = await LoadGradedQuestionsAsync(submissions.Select(s => s.QuestionNumber), cancellationToken);
+        var graded = await LoadGradedQuestionsAsync(certificationId, submissions.Select(s => s.QuestionNumber), cancellationToken);
 
         return submissions
             .Select(submission =>
@@ -55,9 +55,9 @@ public sealed class ExamResultService : IExamResultService
             .ToList();
     }
 
-    public async Task<IReadOnlyList<AttemptAnswerDto>> ReviewAsync(IReadOnlyList<AnswerSubmissionDto> submissions, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<AttemptAnswerDto>> ReviewAsync(string certificationId, IReadOnlyList<AnswerSubmissionDto> submissions, CancellationToken cancellationToken)
     {
-        var graded = await LoadGradedQuestionsAsync(submissions.Select(s => s.QuestionNumber), cancellationToken);
+        var graded = await LoadGradedQuestionsAsync(certificationId, submissions.Select(s => s.QuestionNumber), cancellationToken);
 
         // Pool row-scoped: servono solo per rileggere le domande 'selection'.
         var rowIds = graded.Values.SelectMany(g => g.AnswerRows).Select(r => r.Id).ToList();
@@ -80,10 +80,10 @@ public sealed class ExamResultService : IExamResultService
     }
 
     private async Task<Dictionary<int, GradedQuestion>> LoadGradedQuestionsAsync(
-        IEnumerable<int> numbers, CancellationToken cancellationToken)
+        string certificationId, IEnumerable<int> numbers, CancellationToken cancellationToken)
     {
         var distinctNumbers = numbers.Distinct().ToList();
-        var questions = await _repository.GetByNumbersAsync(distinctNumbers, cancellationToken);
+        var questions = await _repository.GetByNumbersAsync(certificationId, distinctNumbers, cancellationToken);
 
         var ids = questions.Select(q => q.Id).ToList();
         var options = await _repository.GetOptionsAsync(ids, cancellationToken);

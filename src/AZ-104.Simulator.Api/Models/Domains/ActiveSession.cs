@@ -3,6 +3,9 @@ namespace Simulator.Api.Models.Domains;
 /// <summary>Solo i numeri delle domande: il testo si rilegge al ripristino.</summary>
 public sealed record ActiveSession
 {
+    /// <summary>Come Question.CertificationId: i numeri delle domande valgono dentro questa certificazione.</summary>
+    public required string CertificationId { get; init; }
+
     /// <summary>"practice" | "exam".</summary>
     public required string Mode { get; init; }
 
