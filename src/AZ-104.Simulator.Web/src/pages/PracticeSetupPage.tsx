@@ -9,7 +9,7 @@ import { EmptyBankDialog } from "../components/EmptyBankDialog";
 import { ResumeSessionBanner } from "../components/ResumeSessionBanner";
 import { DrawModeToggle } from "../components/DrawModeToggle";
 import type { DrawMode } from "../types/question";
-import { MAX_QUESTION_COUNT, PRACTICE_DEFAULT_DRAW_MODE } from "../constants";
+import { CERTIFICATION_HOME, MAX_QUESTION_COUNT, PRACTICE_DEFAULT_DRAW_MODE } from "../constants";
 
 const COUNT_OPTIONS = [10, 20, 30, 40, 50, 60, 70, 80];
 const MINUTE_OPTIONS = [15, 30, 45, 60, 90, 120];
@@ -72,7 +72,7 @@ export function PracticeSetupPage() {
       {emptyBank && <EmptyBankDialog onClose={() => setEmptyBank(false)} />}
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 24px" }}>
         <div style={{ width: "100%", maxWidth: 620, background: t.card, border: `1px solid ${t.bd}`, borderRadius: 16, padding: "34px 32px", boxShadow: `0 2px 10px ${t.sh}` }}>
-          <button onClick={() => navigate("/")} style={{ background: "none", border: "none", padding: 0, color: t.mu, fontSize: 13, marginBottom: 18, font: "inherit" }}>
+          <button onClick={() => navigate(CERTIFICATION_HOME)} style={{ background: "none", border: "none", padding: 0, color: t.mu, fontSize: 13, marginBottom: 18, font: "inherit" }}>
             ← Back
           </button>
           <h2 style={{ fontFamily: "'Source Serif 4', Georgia, serif", fontWeight: 600, fontSize: 28, margin: "0 0 6px" }}>

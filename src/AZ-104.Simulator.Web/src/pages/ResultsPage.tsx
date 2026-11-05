@@ -13,7 +13,7 @@ import { ReviewQuestionCard } from "../components/review/ReviewQuestionCard";
 import { ReviewGroupCard } from "../components/review/ReviewGroupCard";
 import { reviewUnits } from "../utils/reviewUnits";
 import { FilterPill } from "../components/FilterPill";
-import { MAX_SCORE, PASS_MARK_SCORE } from "../constants";
+import { CERTIFICATION_HOME, MAX_SCORE, PASS_MARK_SCORE } from "../constants";
 import { HEADER_GRADIENT } from "../theme/tokens";
 
 interface GradedEntry {
@@ -58,7 +58,7 @@ export function ResultsPage() {
 
   function handleRestart() {
     dispatch({ type: "RESET" });
-    navigate("/");
+    navigate(CERTIFICATION_HOME);
   }
 
   const score = state.score?.score ?? 0;

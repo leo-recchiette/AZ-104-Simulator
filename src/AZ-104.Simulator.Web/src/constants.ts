@@ -2,6 +2,8 @@ import type { DrawMode } from "./types/question";
 
 /** Nome della cartella del dataset (dataset/<vendor>/<certificazione>/): l'unica finche' la UI non la fa scegliere. */
 export const CERTIFICATION_ID = "az-104";
+/** Pagina Practice/Simulation della certificazione: la home "/" e' il catalogo. */
+export const CERTIFICATION_HOME = `/${CERTIFICATION_ID}`;
 
 /** EXAM_QUESTION_COUNT conta unita', non domande: un gruppo torna intero e le domande sono di piu'. */
 export const EXAM_QUESTION_COUNT = 54;

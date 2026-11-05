@@ -10,6 +10,7 @@ import { EmptyBankDialog } from "../components/EmptyBankDialog";
 import { ResumeSessionBanner } from "../components/ResumeSessionBanner";
 import { DrawModeToggle } from "../components/DrawModeToggle";
 import {
+  CERTIFICATION_HOME,
   EXAM_QUESTION_COUNT,
   EXAM_TIME_LIMIT_MINUTES,
   EXAM_TIME_LIMIT_SECONDS,
@@ -61,7 +62,7 @@ export function SimulationSetupPage() {
       {emptyBank && <EmptyBankDialog onClose={() => setEmptyBank(false)} />}
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 24px" }}>
         <div style={{ width: "100%", maxWidth: 620, background: t.card, border: `1px solid ${t.bd}`, borderRadius: 16, padding: "34px 32px", boxShadow: `0 2px 10px ${t.sh}` }}>
-          <button onClick={() => navigate("/")} style={{ background: "none", border: "none", padding: 0, color: t.mu, fontSize: 13, marginBottom: 18, font: "inherit" }}>
+          <button onClick={() => navigate(CERTIFICATION_HOME)} style={{ background: "none", border: "none", padding: 0, color: t.mu, fontSize: 13, marginBottom: 18, font: "inherit" }}>
             ← Back
           </button>
           <h2 style={{ fontFamily: "'Source Serif 4', Georgia, serif", fontWeight: 600, fontSize: 28, margin: "0 0 6px" }}>

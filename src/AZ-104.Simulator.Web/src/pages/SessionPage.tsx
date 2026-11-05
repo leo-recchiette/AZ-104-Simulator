@@ -14,7 +14,7 @@ import { groupMembers, sessionUnits, unitsAnswered, unitsStarted } from "../util
 import { isAnswerStarted, isRevealedWrong } from "../utils/questionShape";
 import { OptionsMenu } from "../components/OptionsMenu";
 import { HEADER_GRADIENT } from "../theme/tokens";
-import { MAX_QUESTION_COUNT, PASS_MARK_SCORE } from "../constants";
+import { CERTIFICATION_HOME, MAX_QUESTION_COUNT, PASS_MARK_SCORE } from "../constants";
 
 // Fuori dal tema: stanno sul banner blu, uguale in light e dark.
 const CLOCK_OK = "#3ddc84";
@@ -97,7 +97,7 @@ export function SessionPage() {
     // Niente da valutare: la sessione si scarta.
     if (scored.length === 0) {
       dispatch({ type: "RESET" });
-      navigate("/");
+      navigate(CERTIFICATION_HOME);
       return;
     }
 
@@ -154,7 +154,7 @@ export function SessionPage() {
   }, [remaining, limit, handleFinish]);
 
   useEffect(() => {
-    if (!question) navigate("/", { replace: true });
+    if (!question) navigate(CERTIFICATION_HOME, { replace: true });
   }, [question, navigate]);
 
   useEffect(() => {
@@ -359,7 +359,7 @@ export function SessionPage() {
           <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
             {/* La sessione resta in-progress: la home la ripropone con "Resume". */}
             <button
-              onClick={() => navigate("/")}
+              onClick={() => navigate(CERTIFICATION_HOME)}
               title="Back to the home page"
               style={{
                 // "font" e' una shorthand: va prima di size/weight.

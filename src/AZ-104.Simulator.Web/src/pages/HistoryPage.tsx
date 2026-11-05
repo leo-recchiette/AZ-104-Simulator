@@ -6,7 +6,7 @@ import { ApiError } from "../api/client";
 import type { ExamAttemptDto } from "../types/answer";
 import { OptionsMenu } from "../components/OptionsMenu";
 import { formatDateTime, formatDuration } from "../utils/format";
-import { PASS_MARK_SCORE } from "../constants";
+import { CERTIFICATION_HOME, PASS_MARK_SCORE } from "../constants";
 import { HEADER_GRADIENT } from "../theme/tokens";
 
 /** Elenco dei tentativi conclusi; da qui se ne apre uno per rileggerlo. */
@@ -28,7 +28,7 @@ export function HistoryPage() {
     <div style={{ flex: 1 }}>
       <div style={{ position: "sticky", top: 0, zIndex: 5, background: headerGradient, backdropFilter: "blur(8px)", borderBottom: "1px solid rgba(255,255,255,.18)" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", padding: "16px 24px", display: "flex", alignItems: "center", gap: 14 }}>
-          <button onClick={() => navigate("/")} style={{ background: "none", border: "none", padding: 0, color: "#e4e7ee", fontSize: 13.5, font: "inherit" }}>
+          <button onClick={() => navigate(CERTIFICATION_HOME)} style={{ background: "none", border: "none", padding: 0, color: "#e4e7ee", fontSize: 13.5, font: "inherit" }}>
             ← Home
           </button>
           <div style={{ flex: 1 }} />

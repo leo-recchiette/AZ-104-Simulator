@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useSession } from "./session/SessionContext";
 import { useTheme } from "./theme/ThemeContext";
+import { CERTIFICATION_HOME } from "./constants";
+import { CertificationsPage } from "./pages/CertificationsPage";
 import { ModeSelectPage } from "./pages/ModeSelectPage";
 import { PracticeSetupPage } from "./pages/PracticeSetupPage";
 import { SimulationSetupPage } from "./pages/SimulationSetupPage";
@@ -14,7 +16,7 @@ import { AttemptDetailPage } from "./pages/AttemptDetailPage";
 function RequireSession({ children }: { children: ReactNode }) {
   const { state, restoring } = useSession();
   if (restoring) return <RestoringScreen />;
-  if (state.questions.length === 0) return <Navigate to="/" replace />;
+  if (state.questions.length === 0) return <Navigate to={CERTIFICATION_HOME} replace />;
   return <>{children}</>;
 }
 
@@ -32,7 +34,8 @@ export function App() {
   return (
     <div style={{ minHeight: "100dvh", display: "flex", flexDirection: "column", background: t.bg, color: t.tx, transition: "background .2s, color .2s" }}>
       <Routes>
-        <Route path="/" element={<ModeSelectPage />} />
+        <Route path="/" element={<CertificationsPage />} />
+        <Route path={CERTIFICATION_HOME} element={<ModeSelectPage />} />
         <Route path="/practice/setup" element={<PracticeSetupPage />} />
         <Route path="/simulation/setup" element={<SimulationSetupPage />} />
         {/* Fuori da RequireSession: lo storico si legge dal database, non dalla sessione in corso. */}
