@@ -43,7 +43,9 @@ function CertificationLayout() {
       });
   }, [certificationId]);
 
-  if (certification === undefined) return <LoadingScreen text="Loading..." />;
+  // Anche quando l'id dell'URL cambia senza smontare il layout (Resume di una sessione di un'altra certificazione):
+  // con la certificazione vecchia RequireSession rimanderebbe indietro.
+  if (certification === undefined || (certification !== null && certification.id !== certificationId)) return <LoadingScreen text="Loading..." />;
   if (certification === null) return <Navigate to="/" replace />;
   return (
     <VendorTheme vendor={certification.vendor}>

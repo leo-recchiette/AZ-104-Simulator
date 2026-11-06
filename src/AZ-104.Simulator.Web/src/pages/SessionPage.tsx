@@ -350,12 +350,11 @@ export function SessionPage() {
   const modeChipBg = isPractice ? "rgba(255,255,255,.22)" : "rgba(255,255,255,.92)";
   const modeChipFg = isPractice ? "#fff" : "#0b3fae";
   const modeLabel = isPractice ? "Practice" : "Simulation";
-  const headerGradient = t.header;
 
   return (
     <div style={{ height: "100dvh", display: "flex", flexDirection: "column", overflow: "hidden" }}>
       {/* zIndex: il popover di Options sta sopra l'area che scorre. */}
-      <div style={{ flexShrink: 0, position: "relative", zIndex: 5, background: headerGradient, backdropFilter: "blur(8px)", borderBottom: "1px solid rgba(255,255,255,.18)" }}>
+      <div style={{ flexShrink: 0, position: "relative", zIndex: 5, background: t.header, backdropFilter: "blur(8px)", borderBottom: "1px solid rgba(255,255,255,.18)" }}>
         <div style={{ maxWidth: 1000, margin: "0 auto", padding: "14px 24px 12px", display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
             {/* La sessione resta in-progress: la home la ripropone con "Resume". */}
@@ -368,7 +367,7 @@ export function SessionPage() {
                 color: "#fff", background: "none", border: "none", padding: 0, cursor: "pointer",
               }}
             >
-              AZ-104
+              {certification.code}
             </button>
             <span style={{ fontSize: 11, letterSpacing: ".08em", textTransform: "uppercase", fontWeight: 600, padding: "4px 8px", borderRadius: 6, background: modeChipBg, color: modeChipFg }}>
               {modeLabel}

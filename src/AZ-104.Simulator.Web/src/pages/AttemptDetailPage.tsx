@@ -24,7 +24,6 @@ export function AttemptDetailPage() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { tokens: t } = useTheme();
-  const headerGradient = t.header;
   const [detail, setDetail] = useState<ExamAttemptDetailDto | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<AttemptFilter>("all");
@@ -118,7 +117,7 @@ export function AttemptDetailPage() {
 
   return (
     <div style={{ flex: 1 }}>
-      <div style={{ position: "sticky", top: 0, zIndex: 5, background: headerGradient, backdropFilter: "blur(8px)", borderBottom: "1px solid rgba(255,255,255,.18)" }}>
+      <div style={{ position: "sticky", top: 0, zIndex: 5, background: t.header, backdropFilter: "blur(8px)", borderBottom: "1px solid rgba(255,255,255,.18)" }}>
         <div style={{ maxWidth: 1000, margin: "0 auto", padding: "16px 24px", display: "flex", alignItems: "center", gap: 14 }}>
           <button onClick={() => navigate(`/${certification.id}/history`)} style={{ background: "none", border: "none", padding: 0, color: "#e4e7ee", fontSize: 13.5, font: "inherit" }}>
             ← History

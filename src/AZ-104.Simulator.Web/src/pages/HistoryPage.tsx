@@ -14,7 +14,6 @@ export function HistoryPage() {
   const certification = useOutletContext<CertificationDto>();
   const navigate = useNavigate();
   const { tokens: t } = useTheme();
-  const headerGradient = t.header;
   const [attempts, setAttempts] = useState<ExamAttemptDto[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,7 +26,7 @@ export function HistoryPage() {
 
   return (
     <div style={{ flex: 1 }}>
-      <div style={{ position: "sticky", top: 0, zIndex: 5, background: headerGradient, backdropFilter: "blur(8px)", borderBottom: "1px solid rgba(255,255,255,.18)" }}>
+      <div style={{ position: "sticky", top: 0, zIndex: 5, background: t.header, backdropFilter: "blur(8px)", borderBottom: "1px solid rgba(255,255,255,.18)" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", padding: "16px 24px", display: "flex", alignItems: "center", gap: 14 }}>
           <button onClick={() => navigate(`/${certification.id}`)} style={{ background: "none", border: "none", padding: 0, color: "#e4e7ee", fontSize: 13.5, font: "inherit" }}>
             ← Home

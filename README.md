@@ -112,6 +112,31 @@ it with `--build`, otherwise the stale copy gets imported again:
 docker compose --profile setup run --rm --build importer
 ```
 
+### Upgrading a database created before the certifications table
+
+The schema runs only when the `pgdata` volume is created, so a volume from an older version has no `certifications`
+table and the importer stops with `relation "certifications" does not exist`. Rather than `down -v`, which would
+wipe the session history, add the table by hand and reimport:
+
+```bash
+docker compose exec -T db psql -U simulator -d simulator -v ON_ERROR_STOP=1 -1 -c "
+CREATE TABLE certifications (
+    id TEXT PRIMARY KEY,
+    vendor TEXT NOT NULL,
+    code TEXT NOT NULL,
+    name TEXT NOT NULL,
+    exam_question_count INTEGER NOT NULL CHECK (exam_question_count > 0),
+    exam_time_limit_minutes INTEGER NOT NULL CHECK (exam_time_limit_minutes > 0)
+);
+TRUNCATE questions RESTART IDENTITY CASCADE;
+ALTER TABLE questions ADD CONSTRAINT questions_certification_id_fkey
+    FOREIGN KEY (certification_id) REFERENCES certifications (id);"
+docker compose --profile setup run --rm --build importer
+```
+
+The `TRUNCATE` only empties the question tables, which the importer fills again: the history and the session in
+progress have no foreign key to the questions and stay as they are.
+
 ### Optional services
 
 ```bash
