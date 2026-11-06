@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Navigate, Outlet, Route, Routes, useOutletContext, useParams } from "react-router-dom";
-import { useSession } from "./session/SessionContext";
+import { SessionProvider, useSession } from "./session/SessionContext";
 import { useTheme, VendorTheme } from "./theme/ThemeContext";
 import { getAllCertifications } from "./api/certifications";
 import type { CertificationDto } from "./types/certification";
@@ -13,15 +13,12 @@ import { ResultsPage } from "./pages/ResultsPage";
 import { HistoryPage } from "./pages/HistoryPage";
 import { AttemptDetailPage } from "./pages/AttemptDetailPage";
 
-/**
- * Aspetta il ripristino prima di decidere, altrimenti un reload rimanderebbe indietro. Senza sessione, o con la
- * sessione di un'altra certificazione (URL scritto a mano), si torna alla pagina della certificazione.
- */
+/** Aspetta il ripristino prima di decidere, altrimenti un reload rimanderebbe indietro. Senza sessione si torna alla certificazione. */
 function RequireSession({ children }: { children: ReactNode }) {
   const certification = useOutletContext<CertificationDto>();
   const { state, restoring } = useSession();
   if (restoring) return <LoadingScreen text="Restoring your session..." />;
-  if (state.questions.length === 0 || state.certificationId !== certification.id) return <Navigate to={`/${certification.id}`} replace />;
+  if (state.questions.length === 0) return <Navigate to={`/${certification.id}`} replace />;
   return <>{children}</>;
 }
 
@@ -43,13 +40,15 @@ function CertificationLayout() {
       });
   }, [certificationId]);
 
-  // Anche quando l'id dell'URL cambia senza smontare il layout (Resume di una sessione di un'altra certificazione):
-  // con la certificazione vecchia RequireSession rimanderebbe indietro.
+  // Anche quando l'id dell'URL cambia senza smontare il layout: le pagine non devono girare con la certificazione vecchia.
   if (certification === undefined || (certification !== null && certification.id !== certificationId)) return <LoadingScreen text="Loading..." />;
   if (certification === null) return <Navigate to="/" replace />;
   return (
     <VendorTheme vendor={certification.vendor}>
-      <Outlet context={certification} />
+      {/* key: cambiando certificazione si riparte da zero, con il ripristino della sua sessione. */}
+      <SessionProvider key={certification.id} certificationId={certification.id}>
+        <Outlet context={certification} />
+      </SessionProvider>
     </VendorTheme>
   );
 }

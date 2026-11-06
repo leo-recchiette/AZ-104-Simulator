@@ -48,7 +48,8 @@ questions you saved to study later together with the ones you got wrong.
 - **Study later**: mark any question during a session with *Save to study later*, then find it in the review at the
   end of the session and in the history, where it can also be listed together with the questions you got wrong.
 - **Sessions survive an interruption.** The session in progress is saved as you go, so a reload, a closed tab or a
-  laptop lid coming down doesn't cost you your answers — and the clock stops while the app is away.
+  laptop lid coming down doesn't cost you your answers — and the clock stops while the app is away. Each
+  certification keeps its own: you can leave an AZ-104 session halfway, work on Terraform and come back to it.
 
 ## Project layout
 
@@ -136,6 +137,16 @@ docker compose --profile setup run --rm --build importer
 
 The `TRUNCATE` only empties the question tables, which the importer fills again: the history and the session in
 progress have no foreign key to the questions and stay as they are.
+
+A volume from before sessions were kept per certification still has a single-row `active_session`, and saving a
+session fails with `there is no unique or exclusion constraint matching the ON CONFLICT specification`. The saved
+session is kept, under its certification:
+
+```bash
+docker compose exec -T db psql -U simulator -d simulator -v ON_ERROR_STOP=1 -1 -c "
+ALTER TABLE active_session DROP COLUMN id;
+ALTER TABLE active_session ADD PRIMARY KEY (certification_id);"
+```
 
 ### Optional services
 

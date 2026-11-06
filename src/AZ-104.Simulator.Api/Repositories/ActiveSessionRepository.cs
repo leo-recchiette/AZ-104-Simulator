@@ -14,7 +14,7 @@ public sealed class ActiveSessionRepository : IActiveSessionRepository
         _dataSource = dataSource;
     }
 
-    public async Task<ActiveSession?> GetAsync(CancellationToken cancellationToken)
+    public async Task<ActiveSession?> GetAsync(string certificationId, CancellationToken cancellationToken)
     {
         const string sql = """
             SELECT certification_id AS "CertificationId", mode AS "Mode", question_numbers AS "QuestionNumbers", answers::text AS "Answers",
@@ -24,12 +24,12 @@ public sealed class ActiveSessionRepository : IActiveSessionRepository
                    open_ended AS "OpenEnded", live_score AS "LiveScore", draw_mode AS "DrawMode",
                    started_at AS "StartedAt", saved_at AS "SavedAt"
             FROM active_session
-            WHERE id = 1
+            WHERE certification_id = @certificationId
             """;
 
         await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
         var row = await connection.QuerySingleOrDefaultAsync<ActiveSessionRow>(
-            new CommandDefinition(sql, cancellationToken: cancellationToken));
+            new CommandDefinition(sql, new { certificationId }, cancellationToken: cancellationToken));
         if (row is null)
             return null;
 
@@ -57,13 +57,12 @@ public sealed class ActiveSessionRepository : IActiveSessionRepository
     {
         const string sql = """
             INSERT INTO active_session (
-                id, certification_id, mode, question_numbers, answers, flagged_indexes, study_later_questions, current_index,
+                certification_id, mode, question_numbers, answers, flagged_indexes, study_later_questions, current_index,
                 time_limit_seconds, auto_reveal, open_ended, live_score, draw_mode, started_at, saved_at, updated_at)
             VALUES (
-                1, @CertificationId, @Mode, @QuestionNumbers, @Answers::jsonb, @FlaggedIndexes, @StudyLaterQuestions, @CurrentIndex,
+                @CertificationId, @Mode, @QuestionNumbers, @Answers::jsonb, @FlaggedIndexes, @StudyLaterQuestions, @CurrentIndex,
                 @TimeLimitSeconds, @AutoReveal, @OpenEnded, @LiveScore, @DrawMode, @StartedAt, @SavedAt, now())
-            ON CONFLICT (id) DO UPDATE SET
-                certification_id = EXCLUDED.certification_id,
+            ON CONFLICT (certification_id) DO UPDATE SET
                 mode = EXCLUDED.mode,
                 question_numbers = EXCLUDED.question_numbers,
                 answers = EXCLUDED.answers,
@@ -102,10 +101,10 @@ public sealed class ActiveSessionRepository : IActiveSessionRepository
         await connection.ExecuteAsync(new CommandDefinition(sql, parameters, cancellationToken: cancellationToken));
     }
 
-    public async Task DeleteAsync(CancellationToken cancellationToken)
+    public async Task DeleteAsync(string certificationId, CancellationToken cancellationToken)
     {
-        const string sql = "DELETE FROM active_session WHERE id = 1";
+        const string sql = "DELETE FROM active_session WHERE certification_id = @certificationId";
         await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
-        await connection.ExecuteAsync(new CommandDefinition(sql, cancellationToken: cancellationToken));
+        await connection.ExecuteAsync(new CommandDefinition(sql, new { certificationId }, cancellationToken: cancellationToken));
     }
 }

@@ -11,6 +11,8 @@ namespace Simulator.Api.IntegrationTests;
 public partial class SessionsControllerTests : IDisposable
 {
     private static readonly DateTimeOffset StartedAt = new(2026, 10, 20, 9, 0, 0, TimeSpan.Zero);
+    private const string Terraform = "terraform-associate-004";
+    private const string Current = "api/sessions/getCurrentSession";
 
     private readonly WebApplicationFactory<Program> _webApplicationFactory = new();
     private readonly HttpClient _httpClient;
@@ -28,7 +30,7 @@ public partial class SessionsControllerTests : IDisposable
     [TestMethod]
     public async Task Should_Return_NoContent_When_There_Is_No_Session()
     {
-        var actual = await _httpClient.GetAsync("api/sessions/getCurrentSession");
+        var actual = await _httpClient.GetAsync("api/sessions/getCurrentSession?certificationId=az-104");
 
         actual.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }
@@ -38,26 +40,33 @@ public partial class SessionsControllerTests : IDisposable
     {
         await SaveAsync(Session());
 
-        var actual = await _httpClient.GetStringAsync("api/sessions/getCurrentSession");
+        var actual = await _httpClient.GetStringAsync("api/sessions/getCurrentSession?certificationId=az-104");
 
         await VerifyJson(actual);
     }
 
     [TestMethod]
-    public async Task Should_Restore_A_Session_With_The_Questions_Of_Its_Own_Certification()
+    public async Task Should_Keep_One_Session_Per_Certification()
     {
-        // Stesso numero 1 dell'AZ-104 del seed: la sessione deve ripescare la domanda Terraform.
+        // Stesso numero 1 dell'AZ-104 del seed: la sessione Terraform deve ripescare la domanda Terraform.
         await TestDatabase.ExecuteAsync(_webApplicationFactory.Services, """
             INSERT INTO questions (certification_id, number, type, question, explanation, answer_text, source) VALUES
             ('terraform-associate-004', 1, 'multiple_choice', 'Which command initializes a working directory?', 'Explanation', 'A. terraform init', 'text_layer')
             """);
-        await SaveAsync(Session(certificationId: "terraform-associate-004", questionNumbers: [1], answers: new Dictionary<int, string[]> { [1] = ["A"] }));
+        await SaveAsync(Session());
+        await SaveAsync(Session(certificationId: Terraform, questionNumbers: [1], answers: new Dictionary<int, string[]> { [1] = ["A"] }));
 
-        var actual = await _httpClient.GetFromJsonAsync<JsonObject>("api/sessions/getCurrentSession");
+        var azure = await _httpClient.GetFromJsonAsync<JsonObject>($"{Current}?certificationId=az-104");
+        var terraform = await _httpClient.GetFromJsonAsync<JsonObject>($"{Current}?certificationId={Terraform}");
+        await _httpClient.DeleteAsync("api/sessions/deleteCurrentSession?certificationId=az-104");
+        var azureAfterDelete = await _httpClient.GetAsync($"{Current}?certificationId=az-104");
+        var terraformAfterDelete = await _httpClient.GetAsync($"{Current}?certificationId={Terraform}");
 
-        actual!["certificationId"]!.GetValue<string>().Should().Be("terraform-associate-004");
-        actual["questions"]!.AsArray().Select(q => q!["text"]!.GetValue<string>())
+        azure!["questions"]!.AsArray().Select(q => q!["number"]!.GetValue<int>()).Should().Equal(6, 7, 1);
+        terraform!["questions"]!.AsArray().Select(q => q!["text"]!.GetValue<string>())
             .Should().Equal("Which command initializes a working directory?");
+        azureAfterDelete.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        terraformAfterDelete.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
     [TestMethod]
@@ -66,7 +75,7 @@ public partial class SessionsControllerTests : IDisposable
         await SaveAsync(Session());
         await SaveAsync(Session(answers: new Dictionary<int, string[]> { [6] = [""] }));
 
-        var actual = await _httpClient.GetAsync("api/sessions/getCurrentSession");
+        var actual = await _httpClient.GetAsync("api/sessions/getCurrentSession?certificationId=az-104");
 
         actual.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }
@@ -76,8 +85,8 @@ public partial class SessionsControllerTests : IDisposable
     {
         await SaveAsync(Session());
 
-        var deleted = await _httpClient.DeleteAsync("api/sessions/deleteCurrentSession");
-        var actual = await _httpClient.GetAsync("api/sessions/getCurrentSession");
+        var deleted = await _httpClient.DeleteAsync("api/sessions/deleteCurrentSession?certificationId=az-104");
+        var actual = await _httpClient.GetAsync("api/sessions/getCurrentSession?certificationId=az-104");
 
         deleted.StatusCode.Should().Be(HttpStatusCode.NoContent);
         actual.StatusCode.Should().Be(HttpStatusCode.NoContent);
@@ -88,7 +97,7 @@ public partial class SessionsControllerTests : IDisposable
     {
         await SaveAsync(Session(questionNumbers: [6, 7, 999]));
 
-        var actual = await _httpClient.GetAsync("api/sessions/getCurrentSession");
+        var actual = await _httpClient.GetAsync("api/sessions/getCurrentSession?certificationId=az-104");
 
         actual.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }

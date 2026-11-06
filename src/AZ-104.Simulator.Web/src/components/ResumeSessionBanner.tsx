@@ -35,8 +35,7 @@ export function ResumeSessionBanner({ style }: ResumeSessionBannerProps) {
           You have a session in progress
         </div>
         <div style={{ fontSize: 13.5, color: t.tx2 }}>
-          {/* C'e' una sola sessione alla volta: il banner compare in ogni certificazione e dice di quale e'. */}
-          {resumable.certificationId} · {resumable.mode === "practice" ? "Practice" : "Simulation"}
+          {resumable.mode === "practice" ? "Practice" : "Simulation"}
           {resumable.openEnded
             ? ` · open-ended · ${resumable.answered} answered`
             : ` · ${resumable.answered} of ${resumable.total} answered`}{" "}

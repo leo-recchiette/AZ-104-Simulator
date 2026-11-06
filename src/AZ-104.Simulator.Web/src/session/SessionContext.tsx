@@ -76,7 +76,8 @@ function fromDto(dto: ActiveSessionDto): SessionState {
   };
 }
 
-export function SessionProvider({ children }: { children: ReactNode }) {
+/** Uno per certificazione, montato dal layout delle sue pagine: ripristina e salva la sessione di quella certificazione. */
+export function SessionProvider({ certificationId, children }: { certificationId: string; children: ReactNode }) {
   const [state, dispatch] = useReducer(sessionReducer, initialSessionState);
   const [restoring, setRestoring] = useState(true);
   const stateRef = useRef(state);
@@ -87,7 +88,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let cancelled = false;
-    getActiveSession()
+    getActiveSession(certificationId)
       .then((dto) => {
         if (cancelled || !dto || dto.questions.length === 0) return;
         // Prima di segnarla come presente: se fromDto fallisse, la pulizia qui sotto la cancellerebbe.
@@ -103,7 +104,18 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [certificationId]);
+
+  // Uscendo dalle pagine della certificazione il provider si smonta e il salvataggio in debounce andrebbe perso.
+  useEffect(
+    () => () => {
+      const current = stateRef.current;
+      if (current.status !== "in-progress" || (!hasAnyAnswer(current) && !savedOnceRef.current)) return;
+      const dto = toSaveDto(current);
+      if (dto) saveActiveSession(dto).catch((err) => console.error("Impossibile salvare la sessione in corso:", err));
+    },
+    [],
+  );
 
   useEffect(() => {
     if (restoring || state.status !== "in-progress") return;
@@ -148,8 +160,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     if (restoring || !hadSessionRef.current || state.status === "in-progress") return;
     hadSessionRef.current = false;
     savedOnceRef.current = false;
-    deleteActiveSession().catch((err) => console.error("Impossibile cancellare la sessione in corso:", err));
-  }, [state.status, restoring]);
+    deleteActiveSession(certificationId).catch((err) => console.error("Impossibile cancellare la sessione in corso:", err));
+  }, [state.status, restoring, certificationId]);
 
   return <SessionContext.Provider value={{ state, dispatch, restoring }}>{children}</SessionContext.Provider>;
 }

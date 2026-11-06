@@ -17,7 +17,7 @@ public sealed class ActiveSessionServiceTests
         var repository = Repository(Session([7, 3, 9]));
         var sut = new ActiveSessionService(repository, QuestionService(7, 3, 9));
 
-        var actual = await sut.GetAsync(CancellationToken.None);
+        var actual = await sut.GetAsync("az-104", CancellationToken.None);
 
         actual.Should().NotBeNull();
         actual!.Questions.Select(q => q.Number).Should().Equal(7, 3, 9);
@@ -38,7 +38,7 @@ public sealed class ActiveSessionServiceTests
         var questionService = QuestionService(7, 3, 9);
         var sut = new ActiveSessionService(repository, questionService);
 
-        await sut.GetAsync(CancellationToken.None);
+        await sut.GetAsync("terraform-associate-004", CancellationToken.None);
 
         await questionService.Received(1).GetByNumbersAsync("terraform-associate-004", Arg.Any<IReadOnlyList<int>>(), Arg.Any<CancellationToken>());
     }
@@ -50,20 +50,20 @@ public sealed class ActiveSessionServiceTests
         var repository = Repository(Session([7, 3, 9]));
         var sut = new ActiveSessionService(repository, QuestionService(7, 9));
 
-        var actual = await sut.GetAsync(CancellationToken.None);
+        var actual = await sut.GetAsync("az-104", CancellationToken.None);
 
         actual.Should().BeNull();
-        await repository.Received(1).DeleteAsync(Arg.Any<CancellationToken>());
+        await repository.Received(1).DeleteAsync("az-104", Arg.Any<CancellationToken>());
     }
 
     [TestMethod]
     public async Task Should_Return_Null_When_There_Is_No_Session()
     {
         var repository = Substitute.For<IActiveSessionRepository>();
-        repository.GetAsync(Arg.Any<CancellationToken>()).Returns((ActiveSession?)null);
+        repository.GetAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns((ActiveSession?)null);
         var sut = new ActiveSessionService(repository, QuestionService());
 
-        var actual = await sut.GetAsync(CancellationToken.None);
+        var actual = await sut.GetAsync("az-104", CancellationToken.None);
 
         actual.Should().BeNull();
     }
@@ -136,7 +136,7 @@ public sealed class ActiveSessionServiceTests
 
         await sut.SaveAsync(SaveRequest([7, 3], currentIndex: 0, answers: new Dictionary<int, IReadOnlyList<string>>()), CancellationToken.None);
 
-        await repository.Received(1).DeleteAsync(Arg.Any<CancellationToken>());
+        await repository.Received(1).DeleteAsync("az-104", Arg.Any<CancellationToken>());
     }
 
     [TestMethod]
@@ -169,7 +169,7 @@ public sealed class ActiveSessionServiceTests
     private static IActiveSessionRepository Repository(ActiveSession session)
     {
         var repository = Substitute.For<IActiveSessionRepository>();
-        repository.GetAsync(Arg.Any<CancellationToken>()).Returns(session);
+        repository.GetAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(session);
         return repository;
     }
 

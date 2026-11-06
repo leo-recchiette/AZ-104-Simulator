@@ -147,12 +147,12 @@ CREATE TABLE exam_attempt_answers (
 
 CREATE INDEX idx_exam_attempt_answers_attempt ON exam_attempt_answers (attempt_id);
 
--- La sessione in corso. Una riga sola (app mono-utente, il CHECK lo impone). question_numbers
--- non e' vincolato a questions per lo stesso motivo di exam_attempt_answers.
+-- La sessione in corso, al massimo una per certificazione: se ne sospende una, se ne chiude un'altra e si
+-- riprende la prima. Niente FK verso certifications ne' verso questions: l'importer le riscrive con
+-- TRUNCATE ... CASCADE, che cancellerebbe anche le sessioni (stesso motivo di exam_attempt_answers).
 CREATE TABLE active_session (
-    id                  INTEGER   PRIMARY KEY DEFAULT 1 CHECK (id = 1),
     -- Le question_numbers valgono dentro questa certificazione.
-    certification_id    TEXT      NOT NULL,
+    certification_id    TEXT      PRIMARY KEY,
     mode                TEXT      NOT NULL CHECK (mode IN ('practice', 'exam')),
     question_numbers    INTEGER[] NOT NULL,
     -- questionNumber -> risposta. jsonb: si riscrive per intero, non si interroga.

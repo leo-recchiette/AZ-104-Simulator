@@ -16,9 +16,9 @@ public sealed class ActiveSessionService : IActiveSessionService
         _questionService = questionService;
     }
 
-    public async Task<ActiveSessionDto?> GetAsync(CancellationToken cancellationToken)
+    public async Task<ActiveSessionDto?> GetAsync(string certificationId, CancellationToken cancellationToken)
     {
-        var session = await _repository.GetAsync(cancellationToken);
+        var session = await _repository.GetAsync(certificationId, cancellationToken);
         if (session is null)
             return null;
 
@@ -26,7 +26,7 @@ public sealed class ActiveSessionService : IActiveSessionService
 
         if (questions.Count != session.QuestionNumbers.Count)
         {
-            await _repository.DeleteAsync(cancellationToken);
+            await _repository.DeleteAsync(certificationId, cancellationToken);
             return null;
         }
 
@@ -52,7 +52,7 @@ public sealed class ActiveSessionService : IActiveSessionService
         // Senza risposte non c'e' niente da riprendere. Si cancella, non si salta: una sessione gia'
         // salvata e poi svuotata non deve restare sul server.
         if (!HasAnyAnswer(request.Answers))
-            return _repository.DeleteAsync(cancellationToken);
+            return _repository.DeleteAsync(request.CertificationId, cancellationToken);
 
         var session = new ActiveSession
         {
@@ -75,8 +75,8 @@ public sealed class ActiveSessionService : IActiveSessionService
         return _repository.SaveAsync(session, cancellationToken);
     }
 
-    public Task DeleteAsync(CancellationToken cancellationToken) 
-        => _repository.DeleteAsync(cancellationToken);
+    public Task DeleteAsync(string certificationId, CancellationToken cancellationToken)
+        => _repository.DeleteAsync(certificationId, cancellationToken);
 
     private static bool HasAnyAnswer(IReadOnlyDictionary<int, IReadOnlyList<string>> answers)
         => answers.Values.Any(answer => answer.Any(value => !string.IsNullOrWhiteSpace(value)));

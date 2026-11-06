@@ -19,9 +19,9 @@ public sealed class SessionsController : ControllerBase
     }
 
     [HttpGet("getCurrentSession")]
-    public async Task<ActionResult<ActiveSessionDto>> GetCurrentSessionAsync(CancellationToken cancellationToken)
+    public async Task<ActionResult<ActiveSessionDto>> GetCurrentSessionAsync([FromQuery] string certificationId, CancellationToken cancellationToken)
     {
-        var session = await _activeSessionService.GetAsync(cancellationToken);
+        var session = await _activeSessionService.GetAsync(certificationId, cancellationToken);
         return session is null ? NoContent() : Ok(session);
     }
 
@@ -46,9 +46,9 @@ public sealed class SessionsController : ControllerBase
     }
 
     [HttpDelete("deleteCurrentSession")]
-    public async Task<IActionResult> DeleteCurrentSessionAsync(CancellationToken cancellationToken)
+    public async Task<IActionResult> DeleteCurrentSessionAsync([FromQuery] string certificationId, CancellationToken cancellationToken)
     {
-        await _activeSessionService.DeleteAsync(cancellationToken);
+        await _activeSessionService.DeleteAsync(certificationId, cancellationToken);
         return NoContent();
     }
 }
