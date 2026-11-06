@@ -2,6 +2,7 @@ import type { DrawMode, QuestionDto } from "./question";
 
 /** La sessione in corso come la salva il client: i numeri delle domande, non il testo. */
 export interface SaveActiveSessionDto {
+  certificationId: string;
   mode: "practice" | "exam";
   /** Nell'ordine di presentazione: per i gruppi non coincide con l'ordine dei numeri. */
   questionNumbers: number[];
@@ -26,6 +27,5 @@ export interface SaveActiveSessionDto {
 
 /** Quello che torna da GET: lo stato salvato, con le domande gia' ricostruite e in ordine. */
 export interface ActiveSessionDto extends Omit<SaveActiveSessionDto, "questionNumbers"> {
-  certificationId: string;
   questions: QuestionDto[];
 }

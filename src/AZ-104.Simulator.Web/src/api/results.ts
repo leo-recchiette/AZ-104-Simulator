@@ -1,5 +1,4 @@
 import { request } from "./client";
-import { CERTIFICATION_ID } from "../constants";
 import type {
   AnswerSubmissionDto,
   AnswerCheckResultDto,
@@ -10,31 +9,31 @@ import type {
 } from "../types/answer";
 
 /** Le domande si riconoscono dal numero solo dentro la certificazione. */
-const CERTIFICATION_QUERY = new URLSearchParams({ certificationId: CERTIFICATION_ID }).toString();
+const certificationQuery = (certificationId: string) => new URLSearchParams({ certificationId }).toString();
 
-export function checkAnswers(submissions: AnswerSubmissionDto[]): Promise<AnswerCheckResultDto[]> {
-  return request<AnswerCheckResultDto[]>(`/api/results/checkAnswers?${CERTIFICATION_QUERY}`, {
+export function checkAnswers(certificationId: string, submissions: AnswerSubmissionDto[]): Promise<AnswerCheckResultDto[]> {
+  return request<AnswerCheckResultDto[]>(`/api/results/checkAnswers?${certificationQuery(certificationId)}`, {
     method: "POST",
     body: JSON.stringify(submissions),
   });
 }
 
-export function getScore(submissions: AnswerSubmissionDto[]): Promise<ExamScoreDto> {
-  return request<ExamScoreDto>(`/api/results/getScore?${CERTIFICATION_QUERY}`, {
+export function getScore(certificationId: string, submissions: AnswerSubmissionDto[]): Promise<ExamScoreDto> {
+  return request<ExamScoreDto>(`/api/results/getScore?${certificationQuery(certificationId)}`, {
     method: "POST",
     body: JSON.stringify(submissions),
   });
 }
 
-export function saveAttempt(attempt: SaveExamAttemptDto): Promise<ExamAttemptDto> {
+export function saveAttempt(certificationId: string, attempt: SaveExamAttemptDto): Promise<ExamAttemptDto> {
   return request<ExamAttemptDto>("/api/results/saveAttempt", {
     method: "POST",
-    body: JSON.stringify({ ...attempt, certificationId: CERTIFICATION_ID }),
+    body: JSON.stringify({ ...attempt, certificationId }),
   });
 }
 
-export function getAllAttempts(): Promise<ExamAttemptDto[]> {
-  return request<ExamAttemptDto[]>(`/api/results/getAllAttempts?${CERTIFICATION_QUERY}`);
+export function getAllAttempts(certificationId: string): Promise<ExamAttemptDto[]> {
+  return request<ExamAttemptDto[]>(`/api/results/getAllAttempts?${certificationQuery(certificationId)}`);
 }
 
 /** Un tentativo dello storico con domande, risposte date e soluzioni. */

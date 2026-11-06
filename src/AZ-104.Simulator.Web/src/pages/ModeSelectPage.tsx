@@ -1,34 +1,34 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { useTheme } from "../theme/ThemeContext";
 import { getAllAttempts } from "../api/results";
 import type { ExamAttemptDto } from "../types/answer";
+import type { CertificationDto } from "../types/certification";
 import { FloatingThemeToggle } from "../components/FloatingThemeToggle";
 import { ResumeSessionBanner } from "../components/ResumeSessionBanner";
 import { ProgressChart } from "../components/ProgressChart";
-import { EXAM_QUESTION_COUNT, EXAM_TIME_LIMIT_MINUTES, MAX_SCORE, PASS_MARK_SCORE } from "../constants";
-import { MODE_BG_GRADIENT } from "../theme/tokens";
+import { MAX_SCORE, PASS_MARK_SCORE } from "../constants";
 import { formatDateShort } from "../utils/format";
-import badgeUrl from "../assets/microsoft-certified-associate-badge.png";
+import { imageUrl } from "../utils/images";
 
 /** Sessioni recenti: la loro media dice dove sei adesso. */
 const RECENT_COUNT = 5;
 
 export function ModeSelectPage() {
+  const certification = useOutletContext<CertificationDto>();
   const navigate = useNavigate();
-  const { theme, tokens: t } = useTheme();
+  const { tokens: t } = useTheme();
   const [history, setHistory] = useState<ExamAttemptDto[]>([]);
   // Periodo zoomato nel grafico: null = tutto. Vale anche per le statistiche.
   const [range, setRange] = useState<[number, number] | null>(null);
 
   useEffect(() => {
     // Pannello "best effort": se lo storico non si carica, la pagina resta comunque utilizzabile.
-    getAllAttempts()
+    getAllAttempts(certification.id)
       .then(setHistory)
       .catch((err) => console.error("Impossibile caricare lo storico dei tentativi:", err));
-  }, []);
+  }, [certification.id]);
 
-  const modeBgGrad = theme === "dark" ? MODE_BG_GRADIENT.dark : MODE_BG_GRADIENT.light;
 
   const shown = useMemo(() => (range ? history.slice(range[0], range[1] + 1) : history), [history, range]);
 
@@ -52,30 +52,37 @@ export function ModeSelectPage() {
   return (
     <>
       <FloatingThemeToggle />
-      <div style={{ flex: 1, position: "relative", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 24px", background: `${modeBgGrad}, ${t.bg}` }}>
-        <div style={{ position: "absolute", top: -180, left: -120, width: 520, height: 520, borderRadius: "50%", background: "radial-gradient(circle, rgba(0,120,212,.32), transparent 70%)", filter: "blur(10px)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", bottom: -220, right: -160, width: 640, height: 640, borderRadius: "50%", background: "radial-gradient(circle, rgba(80,230,255,.18), transparent 70%)", filter: "blur(10px)", pointerEvents: "none" }} />
+      <div style={{ flex: 1, position: "relative", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 24px", background: `${t.modeBg}, ${t.bg}` }}>
+        <div style={{ position: "absolute", top: -180, left: -120, width: 520, height: 520, borderRadius: "50%", background: `radial-gradient(circle, ${t.glowA}, transparent 70%)`, filter: "blur(10px)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: -220, right: -160, width: 640, height: 640, borderRadius: "50%", background: `radial-gradient(circle, ${t.glowB}, transparent 70%)`, filter: "blur(10px)", pointerEvents: "none" }} />
         <div style={{ width: "100%", maxWidth: 760, position: "relative" }}>
+          <button onClick={() => navigate("/")} style={{ background: "none", border: "none", padding: 0, color: t.mu, fontSize: 13, marginBottom: 18, font: "inherit" }}>
+            ← All certifications
+          </button>
           <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 24, marginBottom: 36 }}>
             <div style={{ flex: "1 1 340px" }}>
               <div style={{ fontSize: 11, letterSpacing: ".14em", textTransform: "uppercase", color: t.fa, fontWeight: 600 }}>
-                Microsoft Certified: Azure Administrator Associate
+                {certification.name}
               </div>
               <h1 style={{
                 fontFamily: "Roboto, 'IBM Plex Sans', sans-serif", fontWeight: 700, fontSize: 46, lineHeight: 1.1,
-                margin: "14px 0 10px", letterSpacing: "-.01em", background: "linear-gradient(90deg,#0078d4,#50e6ff)",
+                margin: "14px 0 10px", letterSpacing: "-.01em", background: t.hero,
                 WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent",
               }}>
-                AZ-104 Simulator
+                {certification.code} Simulator
               </h1>
               <p style={{ margin: 0, color: t.mu, fontSize: 16, lineHeight: 1.55, maxWidth: "52ch" }}>
-                Question bank of 584 items. Choose how you want to work: practise at your own pace with solutions
+                Question bank of {certification.questionCount} items. Choose how you want to work: practise at your own pace with solutions
                 available, or sit a timed simulation under exam conditions.
               </p>
             </div>
             <img
-              src={badgeUrl}
-              alt="Microsoft Certified: Azure Administrator Associate"
+              src={imageUrl(`${certification.id}/badge.png`)}
+              alt={certification.name}
+              // badge.png nella cartella del dataset e' facoltativo: senza, niente immagine rotta.
+              onError={(e) => {
+                e.currentTarget.style.display = "none";
+              }}
               width={128}
               height={128}
               style={{ flexShrink: 0, display: "block" }}
@@ -86,7 +93,7 @@ export function ModeSelectPage() {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 18 }}>
             <button
-              onClick={() => navigate("/practice/setup")}
+              onClick={() => navigate(`/${certification.id}/practice/setup`)}
               style={{
                 textAlign: "left", background: t.card, border: `1px solid ${t.bd}`, borderRadius: 14,
                 padding: "26px 24px 24px", boxShadow: `0 1px 2px ${t.sh}`, color: "inherit",
@@ -109,7 +116,7 @@ export function ModeSelectPage() {
             </button>
 
             <button
-              onClick={() => navigate("/simulation/setup")}
+              onClick={() => navigate(`/${certification.id}/simulation/setup`)}
               style={{
                 textAlign: "left", background: t.card, border: `1px solid ${t.bd}`, borderRadius: 14,
                 padding: "26px 24px 24px", boxShadow: `0 1px 2px ${t.sh}`, color: "inherit",
@@ -126,7 +133,7 @@ export function ModeSelectPage() {
                 <span style={{ fontSize: 19, fontWeight: 600 }}>Simulation</span>
               </div>
               <p style={{ margin: 0, color: t.mu, fontSize: 14, lineHeight: 1.5 }}>
-                {`${EXAM_QUESTION_COUNT} questions, ${EXAM_TIME_LIMIT_MINUTES} minutes on the clock, no solutions until you submit.`}
+                {`${certification.examQuestionCount} questions, ${certification.examTimeLimitMinutes} minutes on the clock, no solutions until you submit.`}
               </p>
             </button>
           </div>
@@ -142,7 +149,7 @@ export function ModeSelectPage() {
                   Your progress
                 </div>
                 <button
-                  onClick={() => navigate("/history")}
+                  onClick={() => navigate(`/${certification.id}/history`)}
                   style={{
                     marginLeft: "auto", padding: "7px 13px", borderRadius: 999, border: `1px solid ${t.bd3}`,
                     background: t.card, color: t.tx2, font: "inherit", fontSize: 13, fontWeight: 600,

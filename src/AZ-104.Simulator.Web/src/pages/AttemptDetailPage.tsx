@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { useTheme } from "../theme/ThemeContext";
 import { getAttempt } from "../api/results";
 import { ApiError } from "../api/client";
 import type { ExamAttemptDetailDto } from "../types/answer";
+import type { CertificationDto } from "../types/certification";
 import { OptionsMenu } from "../components/OptionsMenu";
 import { ReviewQuestionCard } from "../components/review/ReviewQuestionCard";
 import { ReviewGroupCard } from "../components/review/ReviewGroupCard";
@@ -14,16 +15,15 @@ import { pointsEarned } from "../utils/grading";
 import { reviewAnchorId, reviewUnits } from "../utils/reviewUnits";
 import { formatDateTime, formatDuration } from "../utils/format";
 import { MAX_SCORE, PASS_MARK_SCORE } from "../constants";
-import { HEADER_GRADIENT } from "../theme/tokens";
 
 type AttemptFilter = "all" | "wrong" | "studyLater" | "studyLaterOrWrong";
 
 /** Rilettura di un tentativo dello storico, domanda per domanda. */
 export function AttemptDetailPage() {
+  const certification = useOutletContext<CertificationDto>();
   const navigate = useNavigate();
   const { id } = useParams();
-  const { theme, tokens: t } = useTheme();
-  const headerGradient = theme === "dark" ? HEADER_GRADIENT.dark : HEADER_GRADIENT.light;
+  const { tokens: t } = useTheme();
   const [detail, setDetail] = useState<ExamAttemptDetailDto | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<AttemptFilter>("all");
@@ -117,9 +117,9 @@ export function AttemptDetailPage() {
 
   return (
     <div style={{ flex: 1 }}>
-      <div style={{ position: "sticky", top: 0, zIndex: 5, background: headerGradient, backdropFilter: "blur(8px)", borderBottom: "1px solid rgba(255,255,255,.18)" }}>
+      <div style={{ position: "sticky", top: 0, zIndex: 5, background: t.header, backdropFilter: "blur(8px)", borderBottom: "1px solid rgba(255,255,255,.18)" }}>
         <div style={{ maxWidth: 1000, margin: "0 auto", padding: "16px 24px", display: "flex", alignItems: "center", gap: 14 }}>
-          <button onClick={() => navigate("/history")} style={{ background: "none", border: "none", padding: 0, color: "#e4e7ee", fontSize: 13.5, font: "inherit" }}>
+          <button onClick={() => navigate(`/${certification.id}/history`)} style={{ background: "none", border: "none", padding: 0, color: "#e4e7ee", fontSize: 13.5, font: "inherit" }}>
             ← History
           </button>
           <div style={{ flex: 1 }} />

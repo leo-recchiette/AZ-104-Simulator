@@ -19,8 +19,8 @@ export function ResumeSessionBanner({ style }: ResumeSessionBannerProps) {
     if (restoring || state.status !== "in-progress" || state.questions.length === 0) return null;
     const units = sessionUnits(state.questions);
     const answered = unitsAnswered(state.questions, units, state.answers).filter(Boolean).length;
-    return { total: units.members.length, answered, mode: state.mode, openEnded: state.openEnded };
-  }, [restoring, state.status, state.questions, state.answers, state.mode, state.openEnded]);
+    return { total: units.members.length, answered, mode: state.mode, openEnded: state.openEnded, certificationId: state.certificationId };
+  }, [restoring, state.status, state.questions, state.answers, state.mode, state.openEnded, state.certificationId]);
 
   if (!resumable) return null;
 
@@ -35,7 +35,8 @@ export function ResumeSessionBanner({ style }: ResumeSessionBannerProps) {
           You have a session in progress
         </div>
         <div style={{ fontSize: 13.5, color: t.tx2 }}>
-          {resumable.mode === "practice" ? "Practice" : "Simulation"}
+          {/* C'e' una sola sessione alla volta: il banner compare in ogni certificazione e dice di quale e'. */}
+          {resumable.certificationId} · {resumable.mode === "practice" ? "Practice" : "Simulation"}
           {resumable.openEnded
             ? ` · open-ended · ${resumable.answered} answered`
             : ` · ${resumable.answered} of ${resumable.total} answered`}{" "}
@@ -43,7 +44,7 @@ export function ResumeSessionBanner({ style }: ResumeSessionBannerProps) {
         </div>
       </div>
       <button
-        onClick={() => navigate("/session")}
+        onClick={() => navigate(`/${resumable.certificationId}/session`)}
         style={{
           padding: "11px 20px", borderRadius: 10, border: "none", background: t.ac, color: "#fff",
           font: "inherit", fontSize: 14.5, fontWeight: 600,

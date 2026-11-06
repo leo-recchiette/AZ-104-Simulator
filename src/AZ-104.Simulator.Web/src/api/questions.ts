@@ -1,9 +1,8 @@
 import { request } from "./client";
-import { CERTIFICATION_ID } from "../constants";
 import type { DrawMode, QuestionDto, QuestionType } from "../types/question";
 
-export function getExam(count: number, draw: DrawMode, type?: QuestionType): Promise<QuestionDto[]> {
-  const params = new URLSearchParams({ certificationId: CERTIFICATION_ID, count: String(count), draw });
+export function getExam(certificationId: string, count: number, draw: DrawMode, type?: QuestionType): Promise<QuestionDto[]> {
+  const params = new URLSearchParams({ certificationId, count: String(count), draw });
   if (type) params.set("type", type);
   return request<QuestionDto[]>(`/api/questions/getExam?${params}`);
 }

@@ -20,6 +20,8 @@ var connectionString = builder.Configuration.GetConnectionString("Default")
 builder.Services.AddSingleton(NpgsqlDataSource.Create(connectionString));
 
 builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
+builder.Services.AddScoped<ICertificationRepository, CertificationRepository>();
+builder.Services.AddScoped<ICertificationService, CertificationService>();
 builder.Services.AddScoped<IQuestionService, QuestionService>();
 builder.Services.AddScoped<IExamResultService, ExamResultService>();
 builder.Services.AddScoped<IExamAttemptRepository, ExamAttemptRepository>();

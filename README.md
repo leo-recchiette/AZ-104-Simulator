@@ -1,8 +1,11 @@
-# AZ-104 Simulator
+# Certification Simulator
 
-An exam simulator for the Microsoft AZ-104 (Azure Administrator Associate) certification, built around a question
-bank of 584 items. .NET 10 Web API, PostgreSQL, React + TypeScript — the whole stack runs in Docker, so nothing has
-to be installed locally except Docker itself.
+An exam simulator for IT certifications, one question bank per certification: today Microsoft AZ-104 (Azure
+Administrator Associate, 584 items) and HashiCorp Terraform Associate 004 (167 items). The home page lists them
+with a tab per vendor; each certification has its own Practice, Simulation and history, with its exam rules
+(questions and time limit) and its vendor's colours. .NET 10 Web API, PostgreSQL, React + TypeScript — the whole
+stack runs in Docker, so nothing has to be installed locally except Docker itself. The API lists the certifications
+it finds in the database at `GET /api/certifications/getAllCertifications`.
 
 ## Screenshots
 
@@ -58,8 +61,11 @@ src/
 tests/
   AZ-104.Simulator.Api.Tests/      API unit tests
 db/                                SQL schema
-dataset/<vendor>/<certification>/  source data, one folder per certification (e.g. dataset/microsoft/az-104/):
-                                     questions.json, questions.md (human-readable version), images.zip (exhibits).
+dataset/<vendor>/<certification>/  source data, one folder per certification (dataset/microsoft/az-104/,
+                                     dataset/hashicorp/terraform-associate-004/):
+                                     questions.json, certificationSettings.json (code, name, exam question count, time limit),
+                                     questions.md (human-readable version), images.zip (exhibits),
+                                     badge.png (optional, served at /images/<certification>/badge.png).
                                      The folder name is the certification id stored with its questions
 docs/screenshots/                  the images in this README
 docker-compose.yml
@@ -77,7 +83,8 @@ docker compose up -d
 ```
 
 The first command creates everything it needs on its own — volume, database, schema — waits until it is ready and
-imports the 584 questions: nothing else has to be started by hand beforehand. The second one brings up the API and
+imports the question banks, 584 AZ-104 and 167 Terraform Associate questions: nothing else has to be started by
+hand beforehand. The second one brings up the API and
 the frontend, which by then find a populated database.
 
 The API is served at **http://localhost:5080**, with interactive documentation at **http://localhost:5080/swagger**.
@@ -104,6 +111,31 @@ it with `--build`, otherwise the stale copy gets imported again:
 ```bash
 docker compose --profile setup run --rm --build importer
 ```
+
+### Upgrading a database created before the certifications table
+
+The schema runs only when the `pgdata` volume is created, so a volume from an older version has no `certifications`
+table and the importer stops with `relation "certifications" does not exist`. Rather than `down -v`, which would
+wipe the session history, add the table by hand and reimport:
+
+```bash
+docker compose exec -T db psql -U simulator -d simulator -v ON_ERROR_STOP=1 -1 -c "
+CREATE TABLE certifications (
+    id TEXT PRIMARY KEY,
+    vendor TEXT NOT NULL,
+    code TEXT NOT NULL,
+    name TEXT NOT NULL,
+    exam_question_count INTEGER NOT NULL CHECK (exam_question_count > 0),
+    exam_time_limit_minutes INTEGER NOT NULL CHECK (exam_time_limit_minutes > 0)
+);
+TRUNCATE questions RESTART IDENTITY CASCADE;
+ALTER TABLE questions ADD CONSTRAINT questions_certification_id_fkey
+    FOREIGN KEY (certification_id) REFERENCES certifications (id);"
+docker compose --profile setup run --rm --build importer
+```
+
+The `TRUNCATE` only empties the question tables, which the importer fills again: the history and the session in
+progress have no foreign key to the questions and stay as they are.
 
 ### Optional services
 
@@ -148,7 +180,7 @@ question bank re-imported, since `-v` wiped the database volume.
 
 ```bash
 docker compose build --no-cache                    # optional: force a rebuild with no cache
-docker compose --profile setup run --rm importer   # recreate the schema and reload the 584 questions
+docker compose --profile setup run --rm importer   # recreate the schema and reload the question banks
 docker compose up -d
 ```
 

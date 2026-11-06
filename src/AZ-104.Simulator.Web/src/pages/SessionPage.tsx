@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { useSession } from "../session/SessionContext";
 import { useTheme } from "../theme/ThemeContext";
 import { useElapsedTime } from "../hooks/useElapsedTime";
@@ -13,8 +13,8 @@ import { QuestionNavigator, type QuestionFilter } from "../components/session/Qu
 import { groupMembers, sessionUnits, unitsAnswered, unitsStarted } from "../utils/groups";
 import { isAnswerStarted, isRevealedWrong } from "../utils/questionShape";
 import { OptionsMenu } from "../components/OptionsMenu";
-import { HEADER_GRADIENT } from "../theme/tokens";
-import { MAX_QUESTION_COUNT, PASS_MARK_SCORE } from "../constants";
+import { PASS_MARK_SCORE } from "../constants";
+import type { CertificationDto } from "../types/certification";
 
 // Fuori dal tema: stanno sul banner blu, uguale in light e dark.
 const CLOCK_OK = "#3ddc84";
@@ -44,9 +44,10 @@ function fmt(totalSeconds: number): string {
 }
 
 export function SessionPage() {
+  const certification = useOutletContext<CertificationDto>();
   const navigate = useNavigate();
   const { state, dispatch } = useSession();
-  const { theme, tokens: t } = useTheme();
+  const { tokens: t } = useTheme();
   const [showConfirm, setShowConfirm] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
@@ -97,16 +98,16 @@ export function SessionPage() {
     // Niente da valutare: la sessione si scarta.
     if (scored.length === 0) {
       dispatch({ type: "RESET" });
-      navigate("/");
+      navigate(`/${state.certificationId}`);
       return;
     }
 
     setError(null);
     setSubmitting(true);
     try {
-      const score = await getScore(submissions);
+      const score = await getScore(state.certificationId, submissions);
       dispatch({ type: "FINISH_SESSION", score, timeUsedSeconds: elapsedSecRef.current, questions: scored });
-      navigate("/results");
+      navigate(`/${state.certificationId}/results`);
 
       const answeredAnything = submissions.some((s) => s.userAnswers.some((a) => a && a.trim() !== ""));
 
@@ -116,7 +117,7 @@ export function SessionPage() {
         const endTime = new Date();
         // Dal tempo giocato, non da startedAt: le pause non contano.
         const startTime = new Date(endTime.getTime() - elapsedSecRef.current * 1000);
-        saveAttempt({
+        saveAttempt(state.certificationId, {
           mode: state.mode,
           drawMode: state.drawMode,
           questionCount: scored.length,
@@ -134,7 +135,7 @@ export function SessionPage() {
       setError(err instanceof ApiError ? err.message : "Impossibile calcolare il punteggio.");
       setSubmitting(false);
     }
-  }, [dispatch, navigate, scored, submissions, state.mode, state.drawMode, state.startedAt, state.studyLater]);
+  }, [dispatch, navigate, scored, submissions, state.certificationId, state.mode, state.drawMode, state.startedAt, state.studyLater]);
 
   const paused = state.pausedAt !== null;
   const elapsedMs = useElapsedTime(state.startedAt, state.pausedAt);
@@ -143,7 +144,7 @@ export function SessionPage() {
   const limit = state.timeLimitSeconds;
   const remaining = limit ? Math.max(0, limit - elapsedSec) : 0;
   const showLiveScore = isPractice && state.liveScore;
-  const liveScore = useLiveScore(showLiveScore ? submissions : null);
+  const liveScore = useLiveScore(state.certificationId, showLiveScore ? submissions : null);
 
   useEffect(() => {
     if (!limit) return;
@@ -154,8 +155,8 @@ export function SessionPage() {
   }, [remaining, limit, handleFinish]);
 
   useEffect(() => {
-    if (!question) navigate("/", { replace: true });
-  }, [question, navigate]);
+    if (!question) navigate(`/${state.certificationId}`, { replace: true });
+  }, [question, navigate, state.certificationId]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => arrowKeysRef.current(e);
@@ -171,14 +172,14 @@ export function SessionPage() {
 
     const questionNumber = question.number;
     const timer = setTimeout(() => {
-      checkAnswers([{ questionNumber, userAnswers: value }])
+      checkAnswers(state.certificationId, [{ questionNumber, userAnswers: value }])
         .then(([result]) => {
           if (result) dispatch({ type: "SET_CHECK_RESULT", questionNumber, result });
         })
         .catch((err) => console.error("Auto-reveal non riuscito:", err));
     }, AUTO_REVEAL_DELAY_MS);
     return () => clearTimeout(timer);
-  }, [isPractice, state.autoReveal, state.checkResults, question, value, dispatch]);
+  }, [isPractice, state.autoReveal, state.checkResults, state.certificationId, question, value, dispatch]);
 
   const autoRevealOn = isPractice && state.autoReveal;
   // Per indice. Solo con l'auto-reveal, che e' quando la correzione e' gia' a schermo.
@@ -208,7 +209,7 @@ export function SessionPage() {
   useEffect(() => {
     if (missingChecks.length === 0) return;
     let cancelled = false;
-    checkAnswers(missingChecks)
+    checkAnswers(state.certificationId, missingChecks)
       .then((results) => {
         if (cancelled) return;
         for (const result of results) dispatch({ type: "SET_CHECK_RESULT", questionNumber: result.questionNumber, result });
@@ -217,12 +218,12 @@ export function SessionPage() {
     return () => {
       cancelled = true;
     };
-  }, [missingChecks, dispatch]);
+  }, [missingChecks, dispatch, state.certificationId]);
 
   if (!question) return null;
 
   async function handleReveal() {
-    const [result] = await checkAnswers([{ questionNumber: question.number, userAnswers: value }]);
+    const [result] = await checkAnswers(state.certificationId, [{ questionNumber: question.number, userAnswers: value }]);
     dispatch({ type: "SET_CHECK_RESULT", questionNumber: question.number, result });
   }
 
@@ -262,7 +263,7 @@ export function SessionPage() {
       setError(null);
       setLoadingMore(true);
       try {
-        dispatch({ type: "SET_POOL", questions: await getExam(MAX_QUESTION_COUNT, state.drawMode) });
+        dispatch({ type: "SET_POOL", questions: await getExam(state.certificationId, certification.questionCount, state.drawMode) });
       } catch (err) {
         setError(err instanceof ApiError ? err.message : "Impossibile caricare altre domande.");
         return;
@@ -349,17 +350,16 @@ export function SessionPage() {
   const modeChipBg = isPractice ? "rgba(255,255,255,.22)" : "rgba(255,255,255,.92)";
   const modeChipFg = isPractice ? "#fff" : "#0b3fae";
   const modeLabel = isPractice ? "Practice" : "Simulation";
-  const headerGradient = theme === "dark" ? HEADER_GRADIENT.dark : HEADER_GRADIENT.light;
 
   return (
     <div style={{ height: "100dvh", display: "flex", flexDirection: "column", overflow: "hidden" }}>
       {/* zIndex: il popover di Options sta sopra l'area che scorre. */}
-      <div style={{ flexShrink: 0, position: "relative", zIndex: 5, background: headerGradient, backdropFilter: "blur(8px)", borderBottom: "1px solid rgba(255,255,255,.18)" }}>
+      <div style={{ flexShrink: 0, position: "relative", zIndex: 5, background: t.header, backdropFilter: "blur(8px)", borderBottom: "1px solid rgba(255,255,255,.18)" }}>
         <div style={{ maxWidth: 1000, margin: "0 auto", padding: "14px 24px 12px", display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
             {/* La sessione resta in-progress: la home la ripropone con "Resume". */}
             <button
-              onClick={() => navigate("/")}
+              onClick={() => navigate(`/${state.certificationId}`)}
               title="Back to the home page"
               style={{
                 // "font" e' una shorthand: va prima di size/weight.
@@ -367,7 +367,7 @@ export function SessionPage() {
                 color: "#fff", background: "none", border: "none", padding: 0, cursor: "pointer",
               }}
             >
-              AZ-104
+              {certification.code}
             </button>
             <span style={{ fontSize: 11, letterSpacing: ".08em", textTransform: "uppercase", fontWeight: 600, padding: "4px 8px", borderRadius: 6, background: modeChipBg, color: modeChipFg }}>
               {modeLabel}

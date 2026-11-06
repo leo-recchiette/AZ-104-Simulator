@@ -1,34 +1,34 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { useTheme } from "../theme/ThemeContext";
 import { getAllAttempts } from "../api/results";
 import { ApiError } from "../api/client";
 import type { ExamAttemptDto } from "../types/answer";
+import type { CertificationDto } from "../types/certification";
 import { OptionsMenu } from "../components/OptionsMenu";
 import { formatDateTime, formatDuration } from "../utils/format";
 import { PASS_MARK_SCORE } from "../constants";
-import { HEADER_GRADIENT } from "../theme/tokens";
 
 /** Elenco dei tentativi conclusi; da qui se ne apre uno per rileggerlo. */
 export function HistoryPage() {
+  const certification = useOutletContext<CertificationDto>();
   const navigate = useNavigate();
-  const { theme, tokens: t } = useTheme();
-  const headerGradient = theme === "dark" ? HEADER_GRADIENT.dark : HEADER_GRADIENT.light;
+  const { tokens: t } = useTheme();
   const [attempts, setAttempts] = useState<ExamAttemptDto[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    getAllAttempts()
+    getAllAttempts(certification.id)
       // L'API li da' dal piu' vecchio; qui serve prima il piu' recente.
       .then((all) => setAttempts(all.slice().reverse()))
       .catch((err) => setError(err instanceof ApiError ? err.message : "Impossibile caricare lo storico."));
-  }, []);
+  }, [certification.id]);
 
   return (
     <div style={{ flex: 1 }}>
-      <div style={{ position: "sticky", top: 0, zIndex: 5, background: headerGradient, backdropFilter: "blur(8px)", borderBottom: "1px solid rgba(255,255,255,.18)" }}>
+      <div style={{ position: "sticky", top: 0, zIndex: 5, background: t.header, backdropFilter: "blur(8px)", borderBottom: "1px solid rgba(255,255,255,.18)" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", padding: "16px 24px", display: "flex", alignItems: "center", gap: 14 }}>
-          <button onClick={() => navigate("/")} style={{ background: "none", border: "none", padding: 0, color: "#e4e7ee", fontSize: 13.5, font: "inherit" }}>
+          <button onClick={() => navigate(`/${certification.id}`)} style={{ background: "none", border: "none", padding: 0, color: "#e4e7ee", fontSize: 13.5, font: "inherit" }}>
             ← Home
           </button>
           <div style={{ flex: 1 }} />
@@ -66,7 +66,7 @@ export function HistoryPage() {
             return (
               <button
                 key={a.id}
-                onClick={() => navigate(`/history/${a.id}`)}
+                onClick={() => navigate(`/${certification.id}/history/${a.id}`)}
                 style={{
                   display: "flex", alignItems: "center", gap: 16, textAlign: "left", width: "100%",
                   background: t.card, border: `1px solid ${t.bd}`, borderRadius: 12, padding: "16px 18px",

@@ -1,4 +1,9 @@
 -- Question bank minimo: una domanda per ogni forma di risposta, piu' una scenario series di due domande.
+-- terraform-associate-004 non ha domande qui: c'e' per i test che gliene aggiungono.
+
+INSERT INTO certifications (id, vendor, code, name, exam_question_count, exam_time_limit_minutes) VALUES
+('az-104', 'microsoft', 'AZ-104', 'Microsoft Certified: Azure Administrator Associate', 54, 100),
+('terraform-associate-004', 'hashicorp', 'TA-004', 'HashiCorp Certified: Terraform Associate (004)', 57, 60);
 
 INSERT INTO questions (certification_id, number, type, answer_layout, question, explanation, answer_text, source, group_id, group_type, unordered_answer) VALUES
 ('az-104', 1, 'multiple_choice', NULL,

@@ -20,7 +20,7 @@ internal static class TestDatabase
         var seed = await File.ReadAllTextAsync(Path.Combine(AppContext.BaseDirectory, "Data", "seed.sql"));
 
         await using var connection = new NpgsqlConnection(connectionString);
-        await connection.ExecuteAsync("TRUNCATE questions, exam_attempts, active_session RESTART IDENTITY CASCADE");
+        await connection.ExecuteAsync("TRUNCATE certifications, questions, exam_attempts, active_session RESTART IDENTITY CASCADE");
         await connection.ExecuteAsync(seed);
     }
 

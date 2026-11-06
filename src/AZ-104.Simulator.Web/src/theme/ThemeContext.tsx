@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { LIGHT, DARK, type ThemeTokens } from "./tokens";
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { LIGHT, DARK, VENDOR_TOKENS, type ThemeTokens } from "./tokens";
 
 type ThemeName = "light" | "dark";
 
@@ -46,6 +46,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }
 
   return <ThemeContext.Provider value={{ theme, tokens, toggleTheme }}>{children}</ThemeContext.Provider>;
+}
+
+/** Nelle pagine di una certificazione: i colori del suo vendor sopra il tema (VENDOR_TOKENS). */
+export function VendorTheme({ vendor, children }: { vendor: string; children: ReactNode }) {
+  const base = useTheme();
+  const vendorTokens = VENDOR_TOKENS[vendor]?.[base.theme];
+  const value = useMemo(() => (vendorTokens ? { ...base, tokens: { ...base.tokens, ...vendorTokens } } : base), [base, vendorTokens]);
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
 export function useTheme(): ThemeContextValue {

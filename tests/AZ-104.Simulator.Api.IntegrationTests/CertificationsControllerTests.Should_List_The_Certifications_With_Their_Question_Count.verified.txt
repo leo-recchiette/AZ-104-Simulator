@@ -1,0 +1,24 @@
+﻿{
+  hashicorp: [
+    {
+      vendor: hashicorp,
+      id: terraform-associate-004,
+      code: TA-004,
+      name: HashiCorp Certified: Terraform Associate (004),
+      questionCount: 2,
+      examQuestionCount: 57,
+      examTimeLimitMinutes: 60
+    }
+  ],
+  microsoft: [
+    {
+      vendor: microsoft,
+      id: az-104,
+      code: AZ-104,
+      name: Microsoft Certified: Azure Administrator Associate,
+      questionCount: 7,
+      examQuestionCount: 54,
+      examTimeLimitMinutes: 100
+    }
+  ]
+}

@@ -14,7 +14,6 @@ import { ReviewGroupCard } from "../components/review/ReviewGroupCard";
 import { reviewUnits } from "../utils/reviewUnits";
 import { FilterPill } from "../components/FilterPill";
 import { MAX_SCORE, PASS_MARK_SCORE } from "../constants";
-import { HEADER_GRADIENT } from "../theme/tokens";
 
 interface GradedEntry {
   no: number;
@@ -36,8 +35,7 @@ function fmt(totalSeconds: number): string {
 export function ResultsPage() {
   const navigate = useNavigate();
   const { state, dispatch } = useSession();
-  const { theme, tokens: t } = useTheme();
-  const headerGradient = theme === "dark" ? HEADER_GRADIENT.dark : HEADER_GRADIENT.light;
+  const { tokens: t } = useTheme();
   const [review, setReview] = useState<AnswerCheckResultDto[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showReview, setShowReview] = useState(false);
@@ -49,7 +47,7 @@ export function ResultsPage() {
       questionNumber: q.number,
       userAnswers: state.answers[q.number] ?? [],
     }));
-    checkAnswers(submissions)
+    checkAnswers(state.certificationId, submissions)
       .then(setReview)
       .catch((err) => setError(err instanceof ApiError ? err.message : "Impossibile caricare la revisione."));
     // Va eseguito una sola volta all'arrivo su questa pagina.
@@ -58,7 +56,7 @@ export function ResultsPage() {
 
   function handleRestart() {
     dispatch({ type: "RESET" });
-    navigate("/");
+    navigate(`/${state.certificationId}`);
   }
 
   const score = state.score?.score ?? 0;
@@ -96,7 +94,7 @@ export function ResultsPage() {
   if (showReview) {
     return (
       <div style={{ flex: 1 }}>
-        <div style={{ position: "sticky", top: 0, zIndex: 5, background: headerGradient, backdropFilter: "blur(8px)", borderBottom: "1px solid rgba(255,255,255,.18)" }}>
+        <div style={{ position: "sticky", top: 0, zIndex: 5, background: t.header, backdropFilter: "blur(8px)", borderBottom: "1px solid rgba(255,255,255,.18)" }}>
           <div style={{ maxWidth: 1000, margin: "0 auto", padding: "16px 24px", display: "flex", alignItems: "center", gap: 14 }}>
             <button onClick={() => setShowReview(false)} style={{ background: "none", border: "none", padding: 0, color: "#e4e7ee", fontSize: 13.5, font: "inherit" }}>
               ← Result
