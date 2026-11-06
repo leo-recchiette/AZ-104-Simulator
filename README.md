@@ -9,7 +9,11 @@ it finds in the database at `GET /api/certifications/getAllCertifications`.
 
 ## Screenshots
 
-Home screen: pick a mode and see where your Simulations stand — worst and best score, the average of the last five
+Home screen: the certifications found in the database, one tab per vendor, each with its exam rules.
+
+![Certifications](docs/screenshots/certifications.png)
+
+A certification's page: pick a mode and see where your Simulations stand — worst and best score, the average of the last five
 and how many you have passed in a row. The chart of every session can be zoomed on a period by dragging across it,
 and its score axis fits the scores shown.
 
@@ -113,41 +117,6 @@ it with `--build`, otherwise the stale copy gets imported again:
 docker compose --profile setup run --rm --build importer
 ```
 
-### Upgrading a database created before the certifications table
-
-The schema runs only when the `pgdata` volume is created, so a volume from an older version has no `certifications`
-table and the importer stops with `relation "certifications" does not exist`. Rather than `down -v`, which would
-wipe the session history, add the table by hand and reimport:
-
-```bash
-docker compose exec -T db psql -U simulator -d simulator -v ON_ERROR_STOP=1 -1 -c "
-CREATE TABLE certifications (
-    id TEXT PRIMARY KEY,
-    vendor TEXT NOT NULL,
-    code TEXT NOT NULL,
-    name TEXT NOT NULL,
-    exam_question_count INTEGER NOT NULL CHECK (exam_question_count > 0),
-    exam_time_limit_minutes INTEGER NOT NULL CHECK (exam_time_limit_minutes > 0)
-);
-TRUNCATE questions RESTART IDENTITY CASCADE;
-ALTER TABLE questions ADD CONSTRAINT questions_certification_id_fkey
-    FOREIGN KEY (certification_id) REFERENCES certifications (id);"
-docker compose --profile setup run --rm --build importer
-```
-
-The `TRUNCATE` only empties the question tables, which the importer fills again: the history and the session in
-progress have no foreign key to the questions and stay as they are.
-
-A volume from before sessions were kept per certification still has a single-row `active_session`, and saving a
-session fails with `there is no unique or exclusion constraint matching the ON CONFLICT specification`. The saved
-session is kept, under its certification:
-
-```bash
-docker compose exec -T db psql -U simulator -d simulator -v ON_ERROR_STOP=1 -1 -c "
-ALTER TABLE active_session DROP COLUMN id;
-ALTER TABLE active_session ADD PRIMARY KEY (certification_id);"
-```
-
 ### Optional services
 
 ```bash
@@ -162,38 +131,18 @@ A browser-based SQL client at http://localhost:8081, handy for inspecting the da
 
 ### Starting over (when something gets stuck)
 
-When things jam — an image that won't update, a frontend still serving old code, a corrupted `node_modules` in the
-volume — the quickest way out is to tear everything down and rebuild:
+When something jams (an image that won't update, stale frontend code, a broken `node_modules`), tear everything
+down and start again:
 
 ```bash
 docker compose --profile dev --profile setup down -v --rmi local --remove-orphans
-```
-
-That removes containers, volumes (`pgdata` and `web_node_modules`) and locally built images (`api`, `web`,
-`importer`) in one go. **Mind what `-v` takes with it**: besides the question bank, `pgdata` holds the history of
-your submitted sessions and the session in progress — the importer brings the questions back, not those. Both
-profiles have to be named, or `importer` and `pgweb` are left out of the cleanup. Images pulled from external
-registries (`postgres`, `pgweb`, the .NET and Node base images) are left alone; to drop those as well use
-`--rmi all`, at the cost of downloading them again on the next start.
-
-If a `docker rmi` refuses with something like `image is being used by stopped container`, a stopped container is
-still holding it — often one started by hand with `docker run`, and therefore invisible to `docker compose down`,
-which only manages its own services:
-
-```bash
-docker ps -a                  # lists stopped containers too, with the image each one occupies
-docker rm <container>         # remove the container holding it
-docker rmi <image>            # now the image can go
-```
-
-Coming back from a cleanup takes both steps of the first run, not just `up`: the images have to be rebuilt and the
-question bank re-imported, since `-v` wiped the database volume.
-
-```bash
-docker compose build --no-cache                    # optional: force a rebuild with no cache
-docker compose --profile setup run --rm importer   # recreate the schema and reload the question banks
+docker compose --profile setup run --rm importer
 docker compose up -d
 ```
+
+`-v` also wipes `pgdata`, so the history and the sessions in progress go with it: the importer only brings the
+questions back. If `docker rmi` refuses because a stopped container still uses the image, find it with
+`docker ps -a` and remove it with `docker rm <container>`.
 
 ## Tests
 
@@ -216,13 +165,6 @@ the development database included. The simplest way to run everything is therefo
 
 ```bash
 make setup build test teardown
-```
-
-For the frontend, once `web` is up:
-
-```bash
-docker compose exec web npx tsc -b --noEmit   # type check only
-docker compose exec web npm run lint
 ```
 
 ## Build pipeline
@@ -259,4 +201,7 @@ docker compose --profile dev down     # full cleanup, services behind profiles i
   <img src="https://img.shields.io/badge/AZ--104-PASSED_%C2%B7_842%2F1000-2ea44f?style=for-the-badge" alt="AZ-104 passed with 842/1000">
   <br>
   <sub><i>I passed AZ-104 on 22 October 2026 with a score of 842 :D</i></sub>
+  <br>
+  <br>
+  <img src="https://img.shields.io/badge/TA--004-LOADING...-7b42bc?style=for-the-badge" alt="TA-004 loading">
 </p>
