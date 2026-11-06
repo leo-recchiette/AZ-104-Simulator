@@ -1,18 +1,20 @@
 namespace Simulator.Api.Models.Contracts;
 
 /// <summary>Domande gia' ricostruite, nell'ordine di presentazione.</summary>
-public sealed record ActiveSessionDto(
-    string CertificationId,
-    string Mode,
-    IReadOnlyList<QuestionDto> Questions,
-    IReadOnlyDictionary<int, IReadOnlyList<string>> Answers,
-    IReadOnlyList<int> FlaggedIndexes,
-    int CurrentIndex,
-    int? TimeLimitSeconds,
-    bool AutoReveal,
-    bool OpenEnded,
-    bool LiveScore,
-    string DrawMode,
-    DateTimeOffset StartedAt,
-    DateTimeOffset SavedAt,
-    IReadOnlyList<int> StudyLaterQuestions);
+public sealed record ActiveSessionDto
+{
+    public required string CertificationId { get; init; }
+    public required string Mode { get; init; }
+    public required IReadOnlyList<QuestionDto> Questions { get; init; }
+    public required IReadOnlyDictionary<int, IReadOnlyList<string>> Answers { get; init; }
+    public required IReadOnlyList<int> FlaggedIndexes { get; init; }
+    public required int CurrentIndex { get; init; }
+    public required int? TimeLimitSeconds { get; init; }
+    public required bool AutoReveal { get; init; }
+    public required bool OpenEnded { get; init; }
+    public required bool LiveScore { get; init; }
+    public required string DrawMode { get; init; }
+    public required DateTimeOffset StartedAt { get; init; }
+    public required DateTimeOffset SavedAt { get; init; }
+    public required IReadOnlyList<int> StudyLaterQuestions { get; init; }
+}

@@ -13,16 +13,26 @@ public sealed class QuestionServiceTests
     [TestMethod]
     public async Task Should_Map_RandomQuestions_Into_QuestionDtos()
     {
-        var sut = new QuestionService(Repository(questions: [Question()], options: [Option()]));
+        var sut = new QuestionService(Repository(TestQuestions.Aggregate(Question(), [Option()])));
 
-        var actual = await sut.GetRandomSetAsync("az-104", count: 1, type: null, DrawMode.Random, CancellationToken.None);
+        var actual = await sut.GetRandomSetAsync("az-104", count: 1, DrawMode.Random, CancellationToken.None);
 
-        var expected = new[]
+        var expected = new QuestionDto
         {
-            QuestionDto("C")
+            Number = 1,
+            Type = "multiple_choice",
+            Text = "Domanda di prova",
+            Options = [new OptionDto { Letter = "C", Text = "Opzione corretta" }],
+            SelectCount = 1,
+            DraggableItems = [],
+            SequenceLength = 0,
+            Prompts = [],
+            Images = [],
+            GroupId = null,
+            GroupType = null,
+            VariantGroup = null,
         };
-
-        actual.Should().BeEquivalentTo(expected);
+        actual.Should().BeEquivalentTo([expected]);
     }
 
     [TestMethod]
@@ -30,10 +40,12 @@ public sealed class QuestionServiceTests
     {
         // L'ordine lo decide la query: il service non deve rimescolare.
         var sut = new QuestionService(Repository(
-            questions: [Question(), Grouped(2, "ss01"), Grouped(3, "ss01"), Grouped(50, "ss09")],
-            options: []));
+            TestQuestions.Aggregate(Question()),
+            TestQuestions.Aggregate(Grouped(2, "ss01")),
+            TestQuestions.Aggregate(Grouped(3, "ss01")),
+            TestQuestions.Aggregate(Grouped(50, "ss09"))));
 
-        var actual = await sut.GetRandomSetAsync("az-104", count: 3, type: null, DrawMode.Random, CancellationToken.None);
+        var actual = await sut.GetRandomSetAsync("az-104", count: 3, DrawMode.Random, CancellationToken.None);
 
         actual.Select(q => q.Number).Should().Equal(1, 2, 3, 50);
     }
@@ -42,37 +54,41 @@ public sealed class QuestionServiceTests
     public async Task Should_Forward_The_DrawMode_To_The_Repository()
     {
         // Come pescare lo decide la query: il service deve solo inoltrarlo.
-        var repository = Repository(questions: [Question()], options: []);
+        var repository = Repository(TestQuestions.Aggregate(Question()));
         var sut = new QuestionService(repository);
 
-        await sut.GetRandomSetAsync("az-104", count: 5, type: null, DrawMode.LeastSeen, CancellationToken.None);
+        await sut.GetRandomSetAsync("az-104", count: 5, DrawMode.LeastSeen, CancellationToken.None);
 
-        await repository.Received(1).GetRandomAsync("az-104", 5, null, DrawMode.LeastSeen, Arg.Any<CancellationToken>());
+        await repository.Received(1).GetRandomAsync("az-104", 5, DrawMode.LeastSeen, Arg.Any<CancellationToken>());
+    }
+
+    [TestMethod]
+    public async Task Should_Return_The_Questions_In_The_Requested_Order_Skipping_The_Missing_Ones()
+    {
+        var repository = Substitute.For<IQuestionRepository>();
+        repository.GetByNumbersAsync("az-104", Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<CancellationToken>())
+            .Returns([TestQuestions.Aggregate(Grouped(2, "ss01")), TestQuestions.Aggregate(Grouped(3, "ss01"))]);
+        var sut = new QuestionService(repository);
+
+        var actual = await sut.GetByNumbersAsync("az-104", [3, 999, 2], CancellationToken.None);
+
+        actual.Select(q => q.Number).Should().Equal(3, 2);
     }
 
     #region Utils
 
-    private static IQuestionRepository Repository(IReadOnlyList<Question> questions, IReadOnlyList<Option> options)
+    private static IQuestionRepository Repository(params QuestionAggregate[] questions)
     {
         var repository = Substitute.For<IQuestionRepository>();
-        repository.GetRandomAsync(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<QuestionType?>(), Arg.Any<DrawMode>(), Arg.Any<CancellationToken>()).Returns(questions);
-        repository.GetOptionsAsync(Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<CancellationToken>()).Returns(options);
-        repository.GetAnswerRowsAsync(Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<CancellationToken>()).Returns([]);
-        repository.GetAnswerRowOptionsAsync(Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<CancellationToken>()).Returns([]);
-        repository.GetImagesAsync(Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<CancellationToken>()).Returns([]);
+        repository.GetRandomAsync(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<DrawMode>(), Arg.Any<CancellationToken>()).Returns(questions);
         return repository;
     }
 
-    private static Question Grouped(int number, string groupId) => new()
+    private static Question Grouped(int number, string groupId) => Question() with
     {
         Id = number,
-        CertificationId = "az-104",
         Number = number,
-        Type = QuestionType.MultipleChoice,
         Text = $"Domanda {number}",
-        Explanation = "Spiegazione",
-        AnswerText = "C. Opzione corretta",
-        Source = "text_layer",
         GroupId = groupId,
         GroupType = "scenario_series",
     };
@@ -86,31 +102,15 @@ public sealed class QuestionServiceTests
         Text = "Domanda di prova",
         Explanation = "Spiegazione",
         AnswerText = "C. Opzione corretta",
-        Source = "text_layer",
     };
 
     private static Option Option() => new()
     {
         QuestionId = 1,
-        Ord = 0,
         Letter = "C",
         Text = "Opzione corretta",
         IsCorrect = true,
     };
-
-    private static QuestionDto QuestionDto(string CorrectOption) => new(
-        Number: 1,
-        Type: "multiple_choice",
-        Text: "Domanda di prova",
-        Options: [new OptionDto(CorrectOption, "Opzione corretta")],
-        SelectCount: 1,
-        DraggableItems: [],
-        SequenceLength: 0,
-        Prompts: [],
-        Images: [],
-        GroupId: null,
-        GroupType: null,
-        VariantGroup: null);
 
     #endregion
 }

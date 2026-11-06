@@ -19,23 +19,26 @@ public sealed class ExamAttemptService : IExamAttemptService
 
     public async Task<ExamAttemptDto> SaveAttemptAsync(SaveExamAttemptDto request, CancellationToken cancellationToken)
     {
+        // Il punteggio si ricalcola dalle risposte: e' quello che la review del tentativo rileggera'.
+        var score = await _examResultService.ScoreAsync(request.CertificationId, request.Answers, cancellationToken);
         var attempt = new ExamAttempt
         {
             CertificationId = request.CertificationId,
             Mode = request.Mode,
             DrawMode = request.DrawMode,
-            QuestionCount = request.QuestionCount,
-            Score = request.Score,
-            StartTime = request.StartTime,
-            EndTime = request.EndTime,
+            QuestionCount = request.Answers.Count,
+            Score = score.Score,
+            // Npgsql scrive su timestamptz solo DateTimeOffset con offset zero.
+            StartTime = request.StartTime.ToUniversalTime(),
+            EndTime = request.EndTime.ToUniversalTime(),
         };
-        var studyLater = (request.StudyLaterQuestions ?? []).ToHashSet();
+        var studyLater = request.StudyLaterQuestions.ToHashSet();
         // Ordine di presentazione: per i gruppi non coincide con quello dei numeri.
-        var answers = (request.Answers ?? [])
+        var answers = request.Answers
             .Select(a => new ExamAttemptAnswer
             {
                 QuestionNumber = a.QuestionNumber,
-                UserAnswers = a.UserAnswers ?? [],
+                UserAnswers = a.UserAnswers,
                 StudyLater = studyLater.Contains(a.QuestionNumber),
             })
             .ToList();
@@ -57,15 +60,13 @@ public sealed class ExamAttemptService : IExamAttemptService
             return null;
 
         var submissions = detail.Answers
-            .Select(a => new AnswerSubmissionDto(a.QuestionNumber, a.UserAnswers))
+            .Select(a => new AnswerSubmissionDto { QuestionNumber = a.QuestionNumber, UserAnswers = a.UserAnswers })
             .ToList();
         // ReviewAsync risponde nell'ordine delle submission: il segno da studiare si riprende per posizione.
-        IReadOnlyList<AttemptAnswerDto> answers = submissions.Count == 0
-            ? []
-            : (await _examResultService.ReviewAsync(detail.Attempt.CertificationId, submissions, cancellationToken))
-                .Zip(detail.Answers, (reviewed, saved) => reviewed with { StudyLater = saved.StudyLater })
-                .ToList();
+        var answers = (await _examResultService.ReviewAsync(detail.Attempt.CertificationId, submissions, cancellationToken))
+            .Zip(detail.Answers, (reviewed, saved) => reviewed with { StudyLater = saved.StudyLater })
+            .ToList();
 
-        return new ExamAttemptDetailDto(detail.Attempt.ToDto(), answers);
+        return new ExamAttemptDetailDto { Attempt = detail.Attempt.ToDto(), Answers = answers };
     }
 }

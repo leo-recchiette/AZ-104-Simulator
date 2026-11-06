@@ -15,45 +15,18 @@ public sealed class QuestionService : IQuestionService
         _repository = repository;
     }
 
-    public async Task<IReadOnlyList<QuestionDto>> GetRandomSetAsync(string certificationId, int count, QuestionType? type, DrawMode drawMode, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<QuestionDto>> GetRandomSetAsync(string certificationId, int count, DrawMode drawMode, CancellationToken cancellationToken)
     {
-        var questions = await _repository.GetRandomAsync(certificationId, count, type, drawMode, cancellationToken);
-        return await BuildDtosAsync(questions, cancellationToken);
+        var questions = await _repository.GetRandomAsync(certificationId, count, drawMode, cancellationToken);
+        return questions.Select(q => q.ToQuestionDto()).ToList();
     }
 
     public async Task<IReadOnlyList<QuestionDto>> GetByNumbersAsync(string certificationId, IReadOnlyList<int> numbers, CancellationToken cancellationToken)
     {
-        if (numbers.Count == 0)
-            return [];
-
-        var questions = await _repository.GetByNumbersAsync(certificationId, numbers, cancellationToken);
-        var dtos = await BuildDtosAsync(questions, cancellationToken);
-        var byNumber = dtos.ToDictionary(d => d.Number);
+        var byNumber = (await _repository.GetByNumbersAsync(certificationId, numbers, cancellationToken)).ToDictionary(q => q.Question.Number);
         return numbers
             .Where(byNumber.ContainsKey)
-            .Select(n => byNumber[n])
-            .ToList();
-    }
-
-    private async Task<IReadOnlyList<QuestionDto>> BuildDtosAsync(IReadOnlyList<Question> questions, CancellationToken cancellationToken)
-    {
-        if (questions.Count == 0)
-            return [];
-
-        var ids = questions.Select(q => q.Id).ToList();
-        var options = await _repository.GetOptionsAsync(ids, cancellationToken);
-        var answerRows = await _repository.GetAnswerRowsAsync(ids, cancellationToken);
-        var rowIds = answerRows.Select(r => r.Id).ToList();
-        var rowOptions = await _repository.GetAnswerRowOptionsAsync(rowIds, cancellationToken);
-        var images = await _repository.GetImagesAsync(ids, cancellationToken);
-
-        var optionsByQuestion = options.ToLookup(o => o.QuestionId);
-        var rowsByQuestion = answerRows.ToLookup(r => r.QuestionId);
-        var rowOptionsByAnswerRowId = rowOptions.ToLookup(o => o.AnswerRowId);
-        var imagesByQuestion = images.ToLookup(i => i.QuestionId);
-
-        return questions
-            .Select(q => q.ToQuestionDto(optionsByQuestion[q.Id], rowsByQuestion[q.Id], rowOptionsByAnswerRowId, imagesByQuestion[q.Id]))
+            .Select(n => byNumber[n].ToQuestionDto())
             .ToList();
     }
 }

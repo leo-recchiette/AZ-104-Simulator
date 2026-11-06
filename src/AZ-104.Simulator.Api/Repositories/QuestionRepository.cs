@@ -14,11 +14,11 @@ public sealed class QuestionRepository : IQuestionRepository
         _dataSource = dataSource;
     }
 
+    // Le colonne si legano alle proprieta' per nome (MatchNamesWithUnderscores, in Program.cs): l'alias serve solo
+    // dove il nome e' diverso.
     private const string SelectColumns = """
-        id, certification_id AS "CertificationId", number, type, answer_layout AS "AnswerLayout", question AS "Text",
-        explanation, answer_text AS "AnswerText", note, source,
-        group_id AS "GroupId", group_type AS "GroupType", variant_group AS "VariantGroup",
-        unordered_answer AS "UnorderedAnswer"
+        id, certification_id, number, type, answer_layout, question AS text, explanation, answer_text, note,
+        group_id, group_type, variant_group, unordered_answer
         """;
 
     /// <summary>
@@ -27,10 +27,8 @@ public sealed class QuestionRepository : IQuestionRepository
     /// </summary>
     private const string UnitKey = "COALESCE(group_id, '~' || variant_group, '#' || number)";
 
-    public async Task<IReadOnlyList<Question>> GetRandomAsync(string certificationId, int count, QuestionType? type, DrawMode drawMode, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<QuestionAggregate>> GetRandomAsync(string certificationId, int count, DrawMode drawMode, CancellationToken cancellationToken)
     {
-        var typeFilter = type is null ? "" : "AND q.type = @type::question_type";
-
         // LeastSeen: prima le unita' proposte meno volte nelle sessioni salvate, a caso fra le pari merito.
         // seen conta le sessioni, non le righe: un gruppo ha una riga per domanda in ogni sessione.
         // Una famiglia di varianti conta per intero, e ne esce la variante proposta meno volte.
@@ -71,7 +69,7 @@ public sealed class QuestionRepository : IQuestionRepository
                            row_number() OVER (PARTITION BY q.variant_group ORDER BY {questionTimes}, random()) AS variant_rank
                     FROM questions q
                     {seenQuestionsJoin}
-                    WHERE q.certification_id = @certificationId {typeFilter}
+                    WHERE q.certification_id = @certificationId
                 ) c
                 WHERE variant_group IS NULL OR variant_rank = 1
             ),
@@ -96,16 +94,12 @@ public sealed class QuestionRepository : IQuestionRepository
             ORDER BY u.ord, q.number
             """;
 
-        var command = type is null
-            ? new CommandDefinition(sql, new { certificationId, count }, cancellationToken: cancellationToken)
-            : new CommandDefinition(sql, new { certificationId, count, type = QuestionTypeMapper.ToDb(type.Value) }, cancellationToken: cancellationToken);
-
         await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
-        var rows = await connection.QueryAsync<QuestionRow>(command);
-        return rows.Select(r => r.ToQuestion()).ToList();
+        var rows = await connection.QueryAsync<QuestionRow>(new CommandDefinition(sql, new { certificationId, count }, cancellationToken: cancellationToken));
+        return await LoadAggregatesAsync(rows.Select(r => r.ToQuestion()).ToList(), cancellationToken);
     }
 
-    public async Task<IReadOnlyList<Question>> GetByNumbersAsync(string certificationId, IReadOnlyCollection<int> numbers, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<QuestionAggregate>> GetByNumbersAsync(string certificationId, IReadOnlyCollection<int> numbers, CancellationToken cancellationToken)
     {
         if (numbers.Count == 0)
             return [];
@@ -115,78 +109,50 @@ public sealed class QuestionRepository : IQuestionRepository
 
         await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
         var rows = await connection.QueryAsync<QuestionRow>(command);
-        return rows.Select(r => r.ToQuestion()).ToList();
+        return await LoadAggregatesAsync(rows.Select(r => r.ToQuestion()).ToList(), cancellationToken);
     }
 
-    public async Task<IReadOnlyList<Option>> GetOptionsAsync(IReadOnlyCollection<int> questionIds, CancellationToken cancellationToken)
+    /// <summary>Pool, righe di risposta (con i loro pool) e immagini: tutto quello che serve a mostrare e correggere.</summary>
+    private async Task<IReadOnlyList<QuestionAggregate>> LoadAggregatesAsync(IReadOnlyList<Question> questions, CancellationToken cancellationToken)
     {
-        if (questionIds.Count == 0)
+        if (questions.Count == 0)
             return [];
 
-        const string sql = """
-            SELECT question_id AS "QuestionId", ord AS "Ord", letter, text, is_correct AS "IsCorrect"
-            FROM options
-            WHERE question_id = ANY(@questionIds)
-            ORDER BY question_id, ord
-            """;
-        var command = new CommandDefinition(sql, new { questionIds = questionIds.ToArray() }, cancellationToken: cancellationToken);
+        var ids = questions.Select(q => q.Id).ToArray();
+        var options = await QueryAsync<Option>(
+            "SELECT question_id, letter, text, is_correct FROM options WHERE question_id = ANY(@ids) ORDER BY question_id, ord",
+            new { ids }, cancellationToken);
+        var answerRows = await QueryAsync<AnswerRow>(
+            "SELECT id, question_id, prompt, answer FROM answer_rows WHERE question_id = ANY(@ids) ORDER BY question_id, ord",
+            new { ids }, cancellationToken);
+        var rowOptions = await QueryAsync<AnswerRowOption>(
+            "SELECT answer_row_id, text FROM answer_row_options WHERE answer_row_id = ANY(@rowIds) ORDER BY answer_row_id, ord",
+            new { rowIds = answerRows.Select(r => r.Id).ToArray() }, cancellationToken);
+        var images = await QueryAsync<QuestionImage>(
+            "SELECT question_id, kind, ord, filename FROM question_images WHERE question_id = ANY(@ids) ORDER BY question_id, kind, ord",
+            new { ids }, cancellationToken);
 
-        await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
-        var rows = await connection.QueryAsync<Option>(command);
-        return rows.ToList();
+        var optionsByQuestion = options.ToLookup(o => o.QuestionId);
+        var rowsByQuestion = answerRows.ToLookup(r => r.QuestionId);
+        var rowOptionsByRow = rowOptions.ToLookup(o => o.AnswerRowId);
+        var imagesByQuestion = images.ToLookup(i => i.QuestionId);
+
+        return questions
+            .Select(q => new QuestionAggregate
+            {
+                Question = q,
+                Options = optionsByQuestion[q.Id].ToList(),
+                AnswerRows = rowsByQuestion[q.Id].ToList(),
+                RowOptions = rowsByQuestion[q.Id].SelectMany(r => rowOptionsByRow[r.Id]).ToList(),
+                Images = imagesByQuestion[q.Id].ToList(),
+            })
+            .ToList();
     }
 
-    public async Task<IReadOnlyList<AnswerRow>> GetAnswerRowsAsync(IReadOnlyCollection<int> questionIds, CancellationToken cancellationToken)
+    private async Task<IReadOnlyList<T>> QueryAsync<T>(string sql, object parameters, CancellationToken cancellationToken)
     {
-        if (questionIds.Count == 0)
-            return [];
-
-        const string sql = """
-            SELECT id AS "Id", question_id AS "QuestionId", ord AS "Ord", prompt, answer
-            FROM answer_rows
-            WHERE question_id = ANY(@questionIds)
-            ORDER BY question_id, ord
-            """;
-        var command = new CommandDefinition(sql, new { questionIds = questionIds.ToArray() }, cancellationToken: cancellationToken);
-
         await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
-        var rows = await connection.QueryAsync<AnswerRow>(command);
-        return rows.ToList();
-    }
-
-    public async Task<IReadOnlyList<AnswerRowOption>> GetAnswerRowOptionsAsync(IReadOnlyCollection<int> answerRowIds, CancellationToken cancellationToken)
-    {
-        if (answerRowIds.Count == 0)
-            return [];
-
-        const string sql = """
-            SELECT answer_row_id AS "AnswerRowId", ord AS "Ord", text
-            FROM answer_row_options
-            WHERE answer_row_id = ANY(@answerRowIds)
-            ORDER BY answer_row_id, ord
-            """;
-        var command = new CommandDefinition(sql, new { answerRowIds = answerRowIds.ToArray() }, cancellationToken: cancellationToken);
-
-        await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
-        var rows = await connection.QueryAsync<AnswerRowOption>(command);
-        return rows.ToList();
-    }
-
-    public async Task<IReadOnlyList<QuestionImage>> GetImagesAsync(IReadOnlyCollection<int> questionIds, CancellationToken cancellationToken)
-    {
-        if (questionIds.Count == 0)
-            return [];
-
-        const string sql = """
-            SELECT question_id AS "QuestionId", kind AS "Kind", ord AS "Ord", filename AS "Filename"
-            FROM question_images
-            WHERE question_id = ANY(@questionIds)
-            ORDER BY question_id, kind, ord
-            """;
-        var command = new CommandDefinition(sql, new { questionIds = questionIds.ToArray() }, cancellationToken: cancellationToken);
-
-        await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
-        var rows = await connection.QueryAsync<QuestionImage>(command);
+        var rows = await connection.QueryAsync<T>(new CommandDefinition(sql, parameters, cancellationToken: cancellationToken));
         return rows.ToList();
     }
 }

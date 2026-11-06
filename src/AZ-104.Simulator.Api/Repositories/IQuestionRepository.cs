@@ -2,17 +2,11 @@ using Simulator.Api.Models.Domains;
 
 namespace Simulator.Api.Repositories;
 
+/// <summary>Restituisce domande intere (QuestionAggregate): chi le legge deve sempre mostrarle o correggerle.</summary>
 public interface IQuestionRepository
 {
-    Task<IReadOnlyList<Question>> GetRandomAsync(string certificationId, int count, QuestionType? type, DrawMode drawMode, CancellationToken cancellationToken);
+    Task<IReadOnlyList<QuestionAggregate>> GetRandomAsync(string certificationId, int count, DrawMode drawMode, CancellationToken cancellationToken);
 
-    Task<IReadOnlyList<Question>> GetByNumbersAsync(string certificationId, IReadOnlyCollection<int> numbers, CancellationToken cancellationToken);
-
-    Task<IReadOnlyList<Option>> GetOptionsAsync(IReadOnlyCollection<int> questionIds, CancellationToken cancellationToken);
-
-    Task<IReadOnlyList<AnswerRow>> GetAnswerRowsAsync(IReadOnlyCollection<int> questionIds, CancellationToken cancellationToken);
-
-    Task<IReadOnlyList<AnswerRowOption>> GetAnswerRowOptionsAsync(IReadOnlyCollection<int> answerRowIds, CancellationToken cancellationToken);
-
-    Task<IReadOnlyList<QuestionImage>> GetImagesAsync(IReadOnlyCollection<int> questionIds, CancellationToken cancellationToken);
+    /// <summary>In ordine qualsiasi; i numeri che non esistono non compaiono.</summary>
+    Task<IReadOnlyList<QuestionAggregate>> GetByNumbersAsync(string certificationId, IReadOnlyCollection<int> numbers, CancellationToken cancellationToken);
 }

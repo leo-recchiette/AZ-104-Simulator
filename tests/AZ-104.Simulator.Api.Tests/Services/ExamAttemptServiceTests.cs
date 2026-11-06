@@ -23,35 +23,19 @@ public sealed class ExamAttemptServiceTests
 
         await sut.SaveAttemptAsync(SaveRequest(), CancellationToken.None);
 
+        // Punteggio e numero di domande li calcola il server dalle risposte.
         var expected = new ExamAttempt
         {
             CertificationId = "az-104",
             Mode = "practice",
             DrawMode = "least_seen",
-            QuestionCount = 30,
+            QuestionCount = 2,
             Score = 765,
             StartTime = StartTime,
             EndTime = EndTime,
         };
 
         inserted.Should().BeEquivalentTo(expected);
-    }
-
-    [TestMethod]
-    public async Task Should_Default_To_Random_When_The_Client_Omits_The_DrawMode()
-    {
-        // Client vecchio: pescava sempre a caso, quindi il default dice il vero.
-        ExamAttempt? inserted = null;
-        var repository = Substitute.For<IExamAttemptRepository>();
-        repository
-            .InsertAsync(Arg.Do<ExamAttempt>(attempt => inserted = attempt), Arg.Any<IReadOnlyList<ExamAttemptAnswer>>(), Arg.Any<CancellationToken>())
-            .Returns(Saved());
-        var sut = Sut(repository);
-        var request = new SaveExamAttemptDto("az-104", "exam", 54, 70, StartTime, EndTime, Answers: null);
-
-        await sut.SaveAttemptAsync(request, CancellationToken.None);
-
-        inserted!.DrawMode.Should().Be("random");
     }
 
     [TestMethod]
@@ -93,19 +77,36 @@ public sealed class ExamAttemptServiceTests
     }
 
     [TestMethod]
-    public async Task Should_Save_An_Attempt_That_Carries_No_Answers()
+    public async Task Should_Score_The_Attempt_From_Its_Own_Answers()
     {
-        IReadOnlyList<ExamAttemptAnswer>? inserted = null;
+        var repository = Substitute.For<IExamAttemptRepository>();
+        repository.InsertAsync(Arg.Any<ExamAttempt>(), Arg.Any<IReadOnlyList<ExamAttemptAnswer>>(), Arg.Any<CancellationToken>()).Returns(Saved());
+        var examResultService = ScoringService();
+        var sut = new ExamAttemptService(repository, examResultService);
+        var request = SaveRequest();
+
+        await sut.SaveAttemptAsync(request, CancellationToken.None);
+
+        await examResultService.Received(1).ScoreAsync("az-104", request.Answers, Arg.Any<CancellationToken>());
+    }
+
+    [TestMethod]
+    public async Task Should_Save_The_Times_In_UTC()
+    {
+        // Npgsql scrive su timestamptz solo DateTimeOffset con offset zero.
+        ExamAttempt? inserted = null;
         var repository = Substitute.For<IExamAttemptRepository>();
         repository
-            .InsertAsync(Arg.Any<ExamAttempt>(), Arg.Do<IReadOnlyList<ExamAttemptAnswer>>(answers => inserted = answers), Arg.Any<CancellationToken>())
+            .InsertAsync(Arg.Do<ExamAttempt>(attempt => inserted = attempt), Arg.Any<IReadOnlyList<ExamAttemptAnswer>>(), Arg.Any<CancellationToken>())
             .Returns(Saved());
         var sut = Sut(repository);
+        var start = new DateTimeOffset(2026, 3, 1, 12, 0, 0, TimeSpan.FromHours(2));
 
-        // Client vecchio senza dettaglio: il tentativo si registra lo stesso.
-        await sut.SaveAttemptAsync(SaveRequest() with { Answers = null }, CancellationToken.None);
+        await sut.SaveAttemptAsync(SaveRequest() with { StartTime = start, EndTime = start.AddHours(1) }, CancellationToken.None);
 
-        inserted.Should().BeEmpty();
+        inserted!.StartTime.Offset.Should().Be(TimeSpan.Zero);
+        inserted.StartTime.Should().Be(start);
+        inserted.EndTime.Offset.Should().Be(TimeSpan.Zero);
     }
 
     [TestMethod]
@@ -121,16 +122,18 @@ public sealed class ExamAttemptServiceTests
         var actual = await sut.SaveAttemptAsync(SaveRequest(), CancellationToken.None);
 
         // Id e CompletedAt devono venire dalla insert, non dalla richiesta.
-        var expected = new ExamAttemptDto(
-            Id: 7,
-            CertificationId: "az-104",
-            Mode: "practice",
-            DrawMode: "least_seen",
-            QuestionCount: 30,
-            Score: 765,
-            StartTime: StartTime,
-            EndTime: EndTime,
-            CompletedAt: CompletedAt);
+        var expected = new ExamAttemptDto
+        {
+            Id = 7,
+            CertificationId = "az-104",
+            Mode = "practice",
+            DrawMode = "least_seen",
+            QuestionCount = 2,
+            Score = 765,
+            StartTime = StartTime,
+            EndTime = EndTime,
+            CompletedAt = CompletedAt,
+        };
 
         actual.Should().BeEquivalentTo(expected);
     }
@@ -200,7 +203,7 @@ public sealed class ExamAttemptServiceTests
             new ExamAttemptAnswer { QuestionNumber = 3, UserAnswers = [] },
         };
         var repository = Substitute.For<IExamAttemptRepository>();
-        repository.GetDetailAsync(42, Arg.Any<CancellationToken>()).Returns(new ExamAttemptDetail(Saved(), savedAnswers));
+        repository.GetDetailAsync(42, Arg.Any<CancellationToken>()).Returns(new ExamAttemptDetail { Attempt = Saved(), Answers = savedAnswers });
 
         string? reviewedCertification = null;
         IReadOnlyList<AnswerSubmissionDto>? reviewed = null;
@@ -215,7 +218,7 @@ public sealed class ExamAttemptServiceTests
         // Le domande si cercano nella certificazione del tentativo.
         reviewedCertification.Should().Be("az-104");
         reviewed.Should().BeEquivalentTo(
-            new[] { new AnswerSubmissionDto(7, ["C"]), new AnswerSubmissionDto(3, []) },
+            new[] { Submission(7, ["C"]), Submission(3, []) },
             options => options.WithStrictOrdering());
         actual!.Attempt.Id.Should().Be(42);
         actual.Answers.Select(a => a.QuestionNumber).Should().Equal(7, 3);
@@ -230,7 +233,7 @@ public sealed class ExamAttemptServiceTests
             new ExamAttemptAnswer { QuestionNumber = 3, UserAnswers = [], StudyLater = true },
         };
         var repository = Substitute.For<IExamAttemptRepository>();
-        repository.GetDetailAsync(42, Arg.Any<CancellationToken>()).Returns(new ExamAttemptDetail(Saved(), savedAnswers));
+        repository.GetDetailAsync(42, Arg.Any<CancellationToken>()).Returns(new ExamAttemptDetail { Attempt = Saved(), Answers = savedAnswers });
         var examResultService = Substitute.For<IExamResultService>();
         examResultService
             .ReviewAsync(Arg.Any<string>(), Arg.Any<IReadOnlyList<AnswerSubmissionDto>>(), Arg.Any<CancellationToken>())
@@ -247,14 +250,15 @@ public sealed class ExamAttemptServiceTests
     {
         // Tentativi salvati prima del dettaglio: vanno mostrati lo stesso.
         var repository = Substitute.For<IExamAttemptRepository>();
-        repository.GetDetailAsync(42, Arg.Any<CancellationToken>()).Returns(new ExamAttemptDetail(Saved(), []));
+        repository.GetDetailAsync(42, Arg.Any<CancellationToken>()).Returns(new ExamAttemptDetail { Attempt = Saved(), Answers = [] });
         var examResultService = Substitute.For<IExamResultService>();
+        examResultService.ReviewAsync(Arg.Any<string>(), Arg.Any<IReadOnlyList<AnswerSubmissionDto>>(), Arg.Any<CancellationToken>()).Returns([]);
         var sut = new ExamAttemptService(repository, examResultService);
 
         var actual = await sut.GetAttemptDetailAsync(42, CancellationToken.None);
 
-        actual!.Answers.Should().BeEmpty();
-        await examResultService.DidNotReceiveWithAnyArgs().ReviewAsync(default!, default!, default);
+        actual!.Attempt.Id.Should().Be(42);
+        actual.Answers.Should().BeEmpty();
     }
 
     #region Utils
@@ -263,22 +267,32 @@ public sealed class ExamAttemptServiceTests
     private static readonly DateTimeOffset EndTime = new(2026, 3, 1, 11, 30, 0, TimeSpan.Zero);
     private static readonly DateTimeOffset CompletedAt = new(2026, 3, 1, 11, 30, 5, TimeSpan.Zero);
 
-    private static ExamAttemptService Sut(IExamAttemptRepository repository) =>
-        new(repository, Substitute.For<IExamResultService>());
+    private static ExamAttemptService Sut(IExamAttemptRepository repository) => new(repository, ScoringService());
 
-    private static SaveExamAttemptDto SaveRequest() => new(
-        CertificationId: "az-104",
-        Mode: "practice",
-        QuestionCount: 30,
-        Score: 765,
-        StartTime: StartTime,
-        EndTime: EndTime,
+    /// <summary>Il punteggio che ExamResultService darebbe alle risposte: qui fisso, per riconoscerlo nel tentativo.</summary>
+    private static IExamResultService ScoringService()
+    {
+        var service = Substitute.For<IExamResultService>();
+        service.ScoreAsync(Arg.Any<string>(), Arg.Any<IReadOnlyList<AnswerSubmissionDto>>(), Arg.Any<CancellationToken>()).Returns(new ExamScoreDto { Score = 765 });
+        return service;
+    }
+
+    private static SaveExamAttemptDto SaveRequest() => new()
+    {
+        CertificationId = "az-104",
+        Mode = "practice",
+        StartTime = StartTime,
+        EndTime = EndTime,
         // Anche la domanda in bianco va salvata.
-        Answers: [new AnswerSubmissionDto(7, ["C"]), new AnswerSubmissionDto(3, [])],
-        DrawMode: "least_seen");
+        Answers = [Submission(7, ["C"]), Submission(3, [])],
+        DrawMode = "least_seen",
+        StudyLaterQuestions = [],
+    };
+
+    private static AnswerSubmissionDto Submission(int number, IReadOnlyList<string> userAnswers) => new() { QuestionNumber = number, UserAnswers = userAnswers };
 
     private static AttemptAnswerDto ReviewedAnswer(int number, IReadOnlyList<string> userAnswers) =>
-        new(number, userAnswers, Question: null, CorrectAnswer: null);
+        new() { QuestionNumber = number, UserAnswers = userAnswers, Question = null, CorrectAnswer = null };
 
     private static ExamAttempt Saved() => new()
     {
@@ -306,16 +320,18 @@ public sealed class ExamAttemptServiceTests
         CompletedAt = CompletedAt.AddDays(id),
     };
 
-    private static ExamAttemptDto AttemptDto(int id, int score) => new(
-        Id: id,
-        CertificationId: "az-104",
-        Mode: "exam",
-        DrawMode: "random",
-        QuestionCount: 60,
-        Score: score,
-        StartTime: StartTime.AddDays(id),
-        EndTime: EndTime.AddDays(id),
-        CompletedAt: CompletedAt.AddDays(id));
+    private static ExamAttemptDto AttemptDto(int id, int score) => new()
+    {
+        Id = id,
+        CertificationId = "az-104",
+        Mode = "exam",
+        DrawMode = "random",
+        QuestionCount = 60,
+        Score = score,
+        StartTime = StartTime.AddDays(id),
+        EndTime = EndTime.AddDays(id),
+        CompletedAt = CompletedAt.AddDays(id),
+    };
 
     #endregion
 }

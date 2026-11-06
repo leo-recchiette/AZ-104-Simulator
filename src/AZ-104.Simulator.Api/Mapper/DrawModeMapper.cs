@@ -2,7 +2,7 @@ using Simulator.Api.Models.Domains;
 
 namespace Simulator.Api.Mapper;
 
-/// <summary>Enum C# <-> stringhe di Postgres e del JSON ("random", "least_seen").</summary>
+/// <summary>Stringhe di Postgres e del JSON ("random", "least_seen") -> enum C#.</summary>
 public static class DrawModeMapper
 {
     /// <summary>Senza indicazioni l'estrazione non dipende dallo storico.</summary>
@@ -10,19 +10,16 @@ public static class DrawModeMapper
 
     public static readonly IReadOnlyList<string> Values = ["random", "least_seen"];
 
-    public static bool IsValid(string? value) => value is not null && Values.Contains(value);
-
-    public static DrawMode FromDb(string value) => value switch
+    public static bool TryFromDb(string? value, out DrawMode mode)
     {
-        "random" => DrawMode.Random,
-        "least_seen" => DrawMode.LeastSeen,
-        _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Modalita' di estrazione sconosciuta."),
-    };
+        (var valid, mode) = value switch
+        {
+            "random" => (true, DrawMode.Random),
+            "least_seen" => (true, DrawMode.LeastSeen),
+            _ => (false, default),
+        };
+        return valid;
+    }
 
-    public static string ToDb(DrawMode mode) => mode switch
-    {
-        DrawMode.Random => "random",
-        DrawMode.LeastSeen => "least_seen",
-        _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null),
-    };
+    public static bool IsValid(string? value) => TryFromDb(value, out _);
 }

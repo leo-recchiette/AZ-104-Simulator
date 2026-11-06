@@ -6,26 +6,26 @@ using FluentAssertions;
 namespace Simulator.Api.Tests.Mapper;
 
 [TestClass]
-public sealed class GradedQuestionMapperTests
+public sealed class QuestionAnswerMapperTests
 {
     [TestMethod]
-    public void Should_Map_GradedQuestion_Into_QuestionAnswerDto()
+    public void Should_Map_QuestionAggregate_Into_QuestionAnswerDto()
     {
         var question = Question();
         var options = Array.Empty<Option>();
         var answerRows = new[]
         {
-            AnswerRow(ord: 0, prompt: "Statement 1", answer: "Yes"),
-            AnswerRow(ord: 1, prompt: "Statement 2", answer: "No"),
+            AnswerRow(id: 1, prompt: "Statement 1", answer: "Yes"),
+            AnswerRow(id: 2, prompt: "Statement 2", answer: "No"),
         };
-        var input = new GradedQuestion(question, options, answerRows, []);
+        var input = TestQuestions.Aggregate(question, options, answerRows);
 
         var sut = input.ToAnswerDto();
 
         var expected = QuestionAnswerDto(
             answerRows: [
-                new AnswerRowDto("Statement 1", "Yes"),
-                new AnswerRowDto("Statement 2", "No")]);
+                new AnswerRowDto { Prompt = "Statement 1", Answer = "Yes" },
+                new AnswerRowDto { Prompt = "Statement 2", Answer = "No" }]);
 
         sut.Should().BeEquivalentTo(expected);
     }
@@ -37,11 +37,11 @@ public sealed class GradedQuestionMapperTests
         var question = Question() with { Type = QuestionType.DragAndDrop };
         var options = new[]
         {
-            new Option { QuestionId = 1, Ord = 0, Letter = null, Text = "An Azure Key Vault", IsCorrect = true },
-            new Option { QuestionId = 1, Ord = 1, Letter = null, Text = "An Azure Storage account", IsCorrect = false },
+            new Option { QuestionId = 1, Letter = null, Text = "An Azure Key Vault", IsCorrect = true },
+            new Option { QuestionId = 1, Letter = null, Text = "An Azure Storage account", IsCorrect = false },
         };
-        var answerRows = new[] { AnswerRow(ord: 0, prompt: null, answer: "An Azure Key Vault") };
-        var input = new GradedQuestion(question, options, answerRows, []);
+        var answerRows = new[] { AnswerRow(id: 1, prompt: null, answer: "An Azure Key Vault") };
+        var input = TestQuestions.Aggregate(question, options, answerRows);
 
         var sut = input.ToAnswerDto();
 
@@ -59,7 +59,7 @@ public sealed class GradedQuestionMapperTests
             new QuestionImage { QuestionId = 1, Kind = "answer", Ord = 1, Filename = "q063_post1.png" },
             new QuestionImage { QuestionId = 1, Kind = "answer", Ord = 0, Filename = "q063_post0.png" },
         };
-        var input = new GradedQuestion(question, [], [], images);
+        var input = TestQuestions.Aggregate(question, images: images);
 
         var sut = input.ToAnswerDto();
 
@@ -77,13 +77,12 @@ public sealed class GradedQuestionMapperTests
         Text = "Domanda di prova",
         Explanation = "Spiegazione",
         AnswerText = "Statement 1 -> Yes | Statement 2 -> No",
-        Source = "manual_vision",
     };
 
-    private static AnswerRow AnswerRow(int ord = 0, string? prompt = null, string answer = "") => new()
+    private static AnswerRow AnswerRow(int id = 1, string? prompt = null, string answer = "") => new()
     {
+        Id = id,
         QuestionId = 1,
-        Ord = ord,
         Prompt = prompt,
         Answer = answer,
     };
@@ -95,14 +94,16 @@ public sealed class GradedQuestionMapperTests
         string? note = null,
         IReadOnlyList<string>? correctLetters = null,
         IReadOnlyList<AnswerRowDto>? answerRows = null,
-        IReadOnlyList<string>? images = null) => new(
-            number,
-            explanation,
-            answerText,
-            note,
-            correctLetters ?? [],
-            answerRows ?? [],
-            images ?? []);
+        IReadOnlyList<string>? images = null) => new()
+    {
+        Number = number,
+        Explanation = explanation,
+        AnswerText = answerText,
+        Note = note,
+        CorrectLetters = correctLetters ?? [],
+        AnswerRows = answerRows ?? [],
+        Images = images ?? [],
+    };
 
     #endregion
 }

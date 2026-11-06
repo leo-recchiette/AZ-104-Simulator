@@ -1,5 +1,5 @@
+using Simulator.Api.Mapper;
 using Simulator.Api.Models.Contracts;
-using Simulator.Api.Models.Domains;
 using Simulator.Api.Repositories;
 using Simulator.Api.Services.Interfaces;
 
@@ -30,21 +30,7 @@ public sealed class ActiveSessionService : IActiveSessionService
             return null;
         }
 
-        return new ActiveSessionDto(
-            session.CertificationId,
-            session.Mode,
-            questions,
-            session.Answers,
-            session.FlaggedIndexes,
-            session.CurrentIndex,
-            session.TimeLimitSeconds,
-            session.AutoReveal,
-            session.OpenEnded,
-            session.LiveScore,
-            session.DrawMode,
-            session.StartedAt,
-            session.SavedAt,
-            session.StudyLaterQuestions);
+        return session.ToDto(questions);
     }
 
     public Task SaveAsync(SaveActiveSessionDto request, CancellationToken cancellationToken)
@@ -54,30 +40,13 @@ public sealed class ActiveSessionService : IActiveSessionService
         if (!HasAnyAnswer(request.Answers))
             return _repository.DeleteAsync(request.CertificationId, cancellationToken);
 
-        var session = new ActiveSession
-        {
-            CertificationId = request.CertificationId,
-            Mode = request.Mode,
-            QuestionNumbers = request.QuestionNumbers,
-            Answers = request.Answers,
-            FlaggedIndexes = request.FlaggedIndexes,
-            StudyLaterQuestions = request.StudyLaterQuestions ?? [],
-            CurrentIndex = Math.Clamp(request.CurrentIndex, 0, Math.Max(0, request.QuestionNumbers.Count - 1)),
-            TimeLimitSeconds = request.TimeLimitSeconds,
-            AutoReveal = request.AutoReveal,
-            OpenEnded = request.OpenEnded,
-            LiveScore = request.LiveScore,
-            DrawMode = request.DrawMode,
-            StartedAt = request.StartedAt,
-            SavedAt = request.SavedAt,
-        };
-
-        return _repository.SaveAsync(session, cancellationToken);
+        return _repository.SaveAsync(request.ToActiveSession(), cancellationToken);
     }
 
     public Task DeleteAsync(string certificationId, CancellationToken cancellationToken)
         => _repository.DeleteAsync(certificationId, cancellationToken);
 
+    // answer null: JSON malformato, vale come nessuna risposta.
     private static bool HasAnyAnswer(IReadOnlyDictionary<int, IReadOnlyList<string>> answers)
-        => answers.Values.Any(answer => answer.Any(value => !string.IsNullOrWhiteSpace(value)));
+        => answers.Values.Any(answer => answer is not null && answer.Any(value => !string.IsNullOrWhiteSpace(value)));
 }

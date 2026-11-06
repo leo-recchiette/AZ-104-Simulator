@@ -112,6 +112,39 @@ public partial class ResultsControllerTests : IDisposable
     }
 
     [TestMethod]
+    public async Task Should_Not_Save_An_Attempt_With_No_Answers_At_All()
+    {
+        var response = await _httpClient.PostAsJsonAsync("api/results/saveAttempt", Attempt([], EndTime));
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        (await response.Content.ReadAsStringAsync()).Should().Be("un tentativo senza nemmeno una risposta non viene registrato.");
+    }
+
+    [TestMethod]
+    public async Task Should_Save_An_Attempt_Whose_Times_Are_Not_In_UTC()
+    {
+        // Npgsql rifiuta un DateTimeOffset con offset diverso da zero: il service lo converte prima.
+        var attempt = Attempt(Submissions(), EndTime);
+        var json = System.Text.Json.JsonSerializer.Serialize(attempt).Replace("+00:00", "+02:00");
+        json.Should().Contain("+02:00");
+
+        var response = await _httpClient.PostAsync("api/results/saveAttempt", new StringContent(json, System.Text.Encoding.UTF8, "application/json"));
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [TestMethod]
+    public async Task Should_Reject_A_Missing_Required_Field_With_Plain_Text()
+    {
+        // Come gli altri errori dell'API: testo semplice, non ProblemDetails.
+        var response = await _httpClient.PostAsJsonAsync("api/results/getScore?certificationId=az-104", new[] { new { questionNumber = 1 } });
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        response.Content.Headers.ContentType!.MediaType.Should().Be("text/plain");
+        (await response.Content.ReadAsStringAsync()).Should().StartWith("richiesta non valida:");
+    }
+
+    [TestMethod]
     public async Task Should_Return_NotFound_For_An_Unknown_Attempt()
     {
         var actual = await _httpClient.GetAsync("api/results/getAttempt/42");
@@ -129,8 +162,6 @@ public partial class ResultsControllerTests : IDisposable
         certificationId,
         mode = "exam",
         drawMode = "least_seen",
-        questionCount = answers.Length,
-        score = 538,
         startTime = endTime.AddMinutes(-90),
         endTime,
         answers,

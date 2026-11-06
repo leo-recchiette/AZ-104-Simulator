@@ -14,25 +14,27 @@ public sealed class QuestionMapperTests
         var input = Question(type: QuestionType.MultipleChoice, answerLayout: null);
         var options = new[]
         {
-            Option(ord: 0, letter: "A", text: "Opzione sbagliata", isCorrect: false),
-            Option(ord: 1, letter: "C", text: "Opzione corretta", isCorrect: true),
+            Option(letter: "A", text: "Opzione sbagliata", isCorrect: false),
+            Option(letter: "C", text: "Opzione corretta", isCorrect: true),
         };
 
-        var sut = input.ToQuestionDto(options, [], NoRowOptions(), NoImages());
+        var sut = TestQuestions.Aggregate(input, options).ToQuestionDto();
 
-        var expected = new QuestionDto(
-            Number: 1,
-            Type: "multiple_choice",
-            Text: "Domanda di prova",
-            Options: [new OptionDto("A", "Opzione sbagliata"), new OptionDto("C", "Opzione corretta")],
-            SelectCount: 1,
-            DraggableItems: [],
-            SequenceLength: 0,
-            Prompts: [],
-            Images: [],
-            GroupId: null,
-            GroupType: null,
-            VariantGroup: null);
+        var expected = new QuestionDto
+        {
+            Number = 1,
+            Type = "multiple_choice",
+            Text = "Domanda di prova",
+            Options = [new OptionDto { Letter = "A", Text = "Opzione sbagliata" }, new OptionDto { Letter = "C", Text = "Opzione corretta" }],
+            SelectCount = 1,
+            DraggableItems = [],
+            SequenceLength = 0,
+            Prompts = [],
+            Images = [],
+            GroupId = null,
+            GroupType = null,
+            VariantGroup = null,
+        };
 
         sut.Should().BeEquivalentTo(expected);
     }
@@ -43,13 +45,13 @@ public sealed class QuestionMapperTests
         var input = Question(type: QuestionType.MultipleChoice, answerLayout: null);
         var options = new[]
         {
-            Option(ord: 0, letter: "A", isCorrect: true),
-            Option(ord: 1, letter: "B", isCorrect: false),
-            Option(ord: 2, letter: "C", isCorrect: true),
-            Option(ord: 3, letter: "D", isCorrect: false),
+            Option(letter: "A", isCorrect: true),
+            Option(letter: "B", isCorrect: false),
+            Option(letter: "C", isCorrect: true),
+            Option(letter: "D", isCorrect: false),
         };
 
-        var sut = input.ToQuestionDto(options, [], NoRowOptions(), NoImages());
+        var sut = TestQuestions.Aggregate(input, options).ToQuestionDto();
 
         sut.SelectCount.Should().Be(2);
     }
@@ -60,31 +62,33 @@ public sealed class QuestionMapperTests
         var input = Question(type: QuestionType.DragAndDrop, answerLayout: "ordered_answer");
         var options = new[]
         {
-            Option(ord: 0, letter: null, text: "An Azure Key Vault", isCorrect: true),
-            Option(ord: 1, letter: null, text: "An Azure Storage account", isCorrect: false),
-            Option(ord: 2, letter: null, text: "An access policy", isCorrect: true),
+            Option(letter: null, text: "An Azure Key Vault", isCorrect: true),
+            Option(letter: null, text: "An Azure Storage account", isCorrect: false),
+            Option(letter: null, text: "An access policy", isCorrect: true),
         };
         var sequence = new[]
         {
-            AnswerRow(id: 30, ord: 0, prompt: null, answer: "An Azure Key Vault"),
-            AnswerRow(id: 31, ord: 1, prompt: null, answer: "An access policy"),
+            AnswerRow(id: 30, prompt: null, answer: "An Azure Key Vault"),
+            AnswerRow(id: 31, prompt: null, answer: "An access policy"),
         };
 
-        var sut = input.ToQuestionDto(options, sequence, NoRowOptions(), NoImages());
+        var sut = TestQuestions.Aggregate(input, options, sequence).ToQuestionDto();
 
-        var expected = new QuestionDto(
-            Number: 1,
-            Type: "drag_and_drop",
-            Text: "Domanda di prova",
-            Options: [],
-            SelectCount: 0,
-            DraggableItems: ["An Azure Key Vault", "An Azure Storage account", "An access policy"],
-            SequenceLength: 2,
-            Prompts: [],
-            Images: [],
-            GroupId: null,
-            GroupType: null,
-            VariantGroup: null);
+        var expected = new QuestionDto
+        {
+            Number = 1,
+            Type = "drag_and_drop",
+            Text = "Domanda di prova",
+            Options = [],
+            SelectCount = 0,
+            DraggableItems = ["An Azure Key Vault", "An Azure Storage account", "An access policy"],
+            SequenceLength = 2,
+            Prompts = [],
+            Images = [],
+            GroupId = null,
+            GroupType = null,
+            VariantGroup = null,
+        };
 
         sut.Should().BeEquivalentTo(expected);
     }
@@ -95,22 +99,22 @@ public sealed class QuestionMapperTests
         var sequence = Question(type: QuestionType.DragAndDrop, answerLayout: "ordered_answer") with { UnorderedAnswer = true };
         var hotspot = Question(type: QuestionType.Hotspot, answerLayout: "selection") with { UnorderedAnswer = true };
 
-        sequence.ToQuestionDto([], [], NoRowOptions(), NoImages()).UnorderedAnswer.Should().BeTrue();
-        hotspot.ToQuestionDto([], [], NoRowOptions(), NoImages()).UnorderedAnswer.Should().BeFalse();
+        TestQuestions.Aggregate(sequence).ToQuestionDto().UnorderedAnswer.Should().BeTrue();
+        TestQuestions.Aggregate(hotspot).ToQuestionDto().UnorderedAnswer.Should().BeFalse();
     }
 
     [TestMethod]
     public void Should_Map_Selection_Into_Prompts_With_Their_Own_Options()
     {
         var input = Question(type: QuestionType.Hotspot, answerLayout: "selection");
-        var row1 = AnswerRow(id: 10, ord: 0, prompt: "To add a backend pool to LB1", answer: "Network Contributor on LB1");
-        var row2 = AnswerRow(id: 11, ord: 1, prompt: "To add a health probe to LB2", answer: "Network Contributor on LB2");
+        var row1 = AnswerRow(id: 10, prompt: "To add a backend pool to LB1", answer: "Network Contributor on LB1");
+        var row2 = AnswerRow(id: 11, prompt: "To add a health probe to LB2", answer: "Network Contributor on LB2");
         var rowOptions = new[]
         {
-            RowOption(answerRowId: 10, ord: 0, text: "Contributor on LB1"),
-            RowOption(answerRowId: 10, ord: 1, text: "Network Contributor on LB1"),
-            RowOption(answerRowId: 11, ord: 0, text: "Contributor on LB2"),
-            RowOption(answerRowId: 11, ord: 1, text: "Network Contributor on LB2"),
+            RowOption(answerRowId: 10, text: "Contributor on LB1"),
+            RowOption(answerRowId: 10, text: "Network Contributor on LB1"),
+            RowOption(answerRowId: 11, text: "Contributor on LB2"),
+            RowOption(answerRowId: 11, text: "Network Contributor on LB2"),
         };
 
         var images = new[]
@@ -120,24 +124,26 @@ public sealed class QuestionMapperTests
             Image(kind: "answer", ord: 0, filename: "q001_post0.png"),
         };
 
-        var sut = input.ToQuestionDto([], [row1, row2], rowOptions.ToLookup(o => o.AnswerRowId), images);
+        var sut = TestQuestions.Aggregate(input, answerRows: [row1, row2], rowOptions: rowOptions, images: images).ToQuestionDto();
 
-        var expected = new QuestionDto(
-            Number: 1,
-            Type: "hotspot",
-            Text: "Domanda di prova",
-            Options: [],
-            SelectCount: 0,
-            DraggableItems: [],
-            SequenceLength: 0,
-            Prompts: [
-                new PromptOptionsDto("To add a backend pool to LB1", ["Contributor on LB1", "Network Contributor on LB1"], 1),
-                new PromptOptionsDto("To add a health probe to LB2", ["Contributor on LB2", "Network Contributor on LB2"], 1),
+        var expected = new QuestionDto
+        {
+            Number = 1,
+            Type = "hotspot",
+            Text = "Domanda di prova",
+            Options = [],
+            SelectCount = 0,
+            DraggableItems = [],
+            SequenceLength = 0,
+            Prompts = [
+                new PromptOptionsDto { Prompt = "To add a backend pool to LB1", Options = ["Contributor on LB1", "Network Contributor on LB1"], SelectCount = 1 },
+                new PromptOptionsDto { Prompt = "To add a health probe to LB2", Options = ["Contributor on LB2", "Network Contributor on LB2"], SelectCount = 1 },
             ],
-            Images: ["az-104/q001_pre0.png", "az-104/q001_pre1.png"],
-            GroupId: null,
-            GroupType: null,
-            VariantGroup: null);
+            Images = ["az-104/q001_pre0.png", "az-104/q001_pre1.png"],
+            GroupId = null,
+            GroupType = null,
+            VariantGroup = null,
+        };
 
         sut.Should().BeEquivalentTo(expected);
     }
@@ -147,15 +153,15 @@ public sealed class QuestionMapperTests
     {
         // Domanda 242: "Allowed permissions" vuole Read e List insieme.
         var input = Question(type: QuestionType.Hotspot, answerLayout: "selection");
-        var row = AnswerRow(id: 40, ord: 0, prompt: "Allowed permissions", answer: "{Read,List}");
+        var row = AnswerRow(id: 40, prompt: "Allowed permissions", answer: "{Read,List}");
         var rowOptions = new[]
         {
-            RowOption(answerRowId: 40, ord: 0, text: "Read"),
-            RowOption(answerRowId: 40, ord: 1, text: "Write"),
-            RowOption(answerRowId: 40, ord: 2, text: "List"),
+            RowOption(answerRowId: 40, text: "Read"),
+            RowOption(answerRowId: 40, text: "Write"),
+            RowOption(answerRowId: 40, text: "List"),
         };
 
-        var sut = input.ToQuestionDto([], [row], rowOptions.ToLookup(o => o.AnswerRowId), NoImages());
+        var sut = TestQuestions.Aggregate(input, answerRows: [row], rowOptions: rowOptions).ToQuestionDto();
 
         sut.Prompts.Single().SelectCount.Should().Be(2);
     }
@@ -164,23 +170,25 @@ public sealed class QuestionMapperTests
     public void Should_Map_YesNo_Into_Prompts_With_Constant_YesNo_Options()
     {
         var input = Question(type: QuestionType.HotspotYesNo, answerLayout: "yes_no");
-        var row = AnswerRow(id: 20, ord: 0, prompt: "Statement 1", answer: "Yes");
+        var row = AnswerRow(id: 20, prompt: "Statement 1", answer: "Yes");
 
-        var sut = input.ToQuestionDto([], [row], NoRowOptions(), NoImages());
+        var sut = TestQuestions.Aggregate(input, answerRows: [row]).ToQuestionDto();
 
-        var expected = new QuestionDto(
-            Number: 1,
-            Type: "hotspot_yes_no",
-            Text: "Domanda di prova",
-            Options: [],
-            SelectCount: 0,
-            DraggableItems: [],
-            SequenceLength: 0,
-            Prompts: [new PromptOptionsDto("Statement 1", ["Yes", "No"], 1)],
-            Images: [],
-            GroupId: null,
-            GroupType: null,
-            VariantGroup: null);
+        var expected = new QuestionDto
+        {
+            Number = 1,
+            Type = "hotspot_yes_no",
+            Text = "Domanda di prova",
+            Options = [],
+            SelectCount = 0,
+            DraggableItems = [],
+            SequenceLength = 0,
+            Prompts = [new PromptOptionsDto { Prompt = "Statement 1", Options = ["Yes", "No"], SelectCount = 1 }],
+            Images = [],
+            GroupId = null,
+            GroupType = null,
+            VariantGroup = null,
+        };
 
         sut.Should().BeEquivalentTo(expected);
     }
@@ -191,7 +199,7 @@ public sealed class QuestionMapperTests
         // Il client lo usa per non riproporre una variante gia' vista quando ripesca il bank.
         var input = Question(type: QuestionType.MultipleChoice, answerLayout: null) with { VariantGroup = "v17" };
 
-        var sut = input.ToQuestionDto([], [], NoRowOptions(), NoImages());
+        var sut = TestQuestions.Aggregate(input).ToQuestionDto();
 
         sut.VariantGroup.Should().Be("v17");
     }
@@ -208,35 +216,29 @@ public sealed class QuestionMapperTests
         Text = "Domanda di prova",
         Explanation = "Spiegazione",
         AnswerText = "risposta",
-        Source = "text_layer",
     };
 
-    private static Option Option(int ord = 0, string? letter = "A", string text = "", bool isCorrect = false) => new()
+    private static Option Option(string? letter = "A", string text = "", bool isCorrect = false) => new()
     {
         QuestionId = 1,
-        Ord = ord,
         Letter = letter,
         Text = text,
         IsCorrect = isCorrect,
     };
 
-    private static AnswerRow AnswerRow(int id = 0, int ord = 0, string? prompt = null, string answer = "") => new()
+    private static AnswerRow AnswerRow(int id = 0, string? prompt = null, string answer = "") => new()
     {
         Id = id,
         QuestionId = 1,
-        Ord = ord,
         Prompt = prompt,
         Answer = answer,
     };
 
-    private static AnswerRowOption RowOption(int answerRowId, int ord, string text) => new()
+    private static AnswerRowOption RowOption(int answerRowId, string text) => new()
     {
         AnswerRowId = answerRowId,
-        Ord = ord,
         Text = text,
     };
-
-    private static ILookup<int, AnswerRowOption> NoRowOptions() => Array.Empty<AnswerRowOption>().ToLookup(o => o.AnswerRowId);
 
     private static QuestionImage Image(string kind, int ord, string filename) => new()
     {
@@ -245,8 +247,6 @@ public sealed class QuestionMapperTests
         Ord = ord,
         Filename = filename,
     };
-
-    private static IReadOnlyList<QuestionImage> NoImages() => [];
 
     #endregion
 }

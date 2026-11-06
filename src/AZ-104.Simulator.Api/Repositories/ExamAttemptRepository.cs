@@ -13,11 +13,7 @@ public sealed class ExamAttemptRepository : IExamAttemptRepository
         _dataSource = dataSource;
     }
 
-    private const string SelectAttemptColumns = """
-        id AS "Id", certification_id AS "CertificationId", mode AS "Mode", draw_mode AS "DrawMode", question_count AS "QuestionCount",
-        score AS "Score", start_time AS "StartTime", end_time AS "EndTime",
-        completed_at AS "CompletedAt"
-        """;
+    private const string SelectAttemptColumns = "id, certification_id, mode, draw_mode, question_count, score, start_time, end_time, completed_at";
 
     public async Task<ExamAttempt> InsertAsync(ExamAttempt attempt, IReadOnlyList<ExamAttemptAnswer> answers, CancellationToken cancellationToken)
     {
@@ -33,25 +29,22 @@ public sealed class ExamAttemptRepository : IExamAttemptRepository
         var saved = await connection.QuerySingleAsync<ExamAttempt>(
             new CommandDefinition(insertAttempt, attempt, transaction, cancellationToken: cancellationToken));
 
-        if (answers.Count > 0)
-        {
-            // Dapper esegue la INSERT una volta per elemento, dentro la transazione.
-            const string insertOne = """
-                INSERT INTO exam_attempt_answers (attempt_id, ord, question_number, user_answers, study_later)
-                VALUES (@AttemptId, @Ord, @QuestionNumber, @UserAnswers, @StudyLater)
-                """;
-            var rows = answers
-                .Select((answer, index) => new
-                {
-                    AttemptId = saved.Id,
-                    Ord = index,
-                    answer.QuestionNumber,
-                    UserAnswers = answer.UserAnswers.ToArray(),
-                    answer.StudyLater,
-                })
-                .ToList();
-            await connection.ExecuteAsync(new CommandDefinition(insertOne, rows, transaction, cancellationToken: cancellationToken));
-        }
+        // Dapper esegue la INSERT una volta per elemento, dentro la transazione.
+        const string insertOne = """
+            INSERT INTO exam_attempt_answers (attempt_id, ord, question_number, user_answers, study_later)
+            VALUES (@AttemptId, @Ord, @QuestionNumber, @UserAnswers, @StudyLater)
+            """;
+        var rows = answers
+            .Select((answer, index) => new
+            {
+                AttemptId = saved.Id,
+                Ord = index,
+                answer.QuestionNumber,
+                UserAnswers = answer.UserAnswers.ToArray(),
+                answer.StudyLater,
+            })
+            .ToList();
+        await connection.ExecuteAsync(new CommandDefinition(insertOne, rows, transaction, cancellationToken: cancellationToken));
 
         await transaction.CommitAsync(cancellationToken);
         return saved;
@@ -80,7 +73,7 @@ public sealed class ExamAttemptRepository : IExamAttemptRepository
             WHERE id = @id
             """;
         const string answersSql = """
-            SELECT question_number AS "QuestionNumber", user_answers AS "UserAnswers", study_later AS "StudyLater"
+            SELECT question_number, user_answers, study_later
             FROM exam_attempt_answers
             WHERE attempt_id = @id
             ORDER BY ord ASC
@@ -95,6 +88,6 @@ public sealed class ExamAttemptRepository : IExamAttemptRepository
 
         var answers = await connection.QueryAsync<ExamAttemptAnswer>(
             new CommandDefinition(answersSql, new { id }, cancellationToken: cancellationToken));
-        return new ExamAttemptDetail(attempt, answers.ToList());
+        return new ExamAttemptDetail { Attempt = attempt, Answers = answers.ToList() };
     }
 }

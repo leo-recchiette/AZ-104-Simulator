@@ -32,11 +32,10 @@ export interface ExamScoreDto {
   score: number;
 }
 
+/** Punteggio e numero di domande li calcola il server dalle risposte. */
 export interface SaveExamAttemptDto {
   mode: "practice" | "exam";
   drawMode: DrawMode;
-  questionCount: number;
-  score: number;
   /** ISO 8601. */
   startTime: string;
   /** ISO 8601. */

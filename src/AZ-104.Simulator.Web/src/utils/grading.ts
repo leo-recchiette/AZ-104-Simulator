@@ -9,7 +9,8 @@ export interface LetterGrade {
 /** Deve restare allineato a ScoreService.Score. */
 export function gradeMultipleChoice(submitted: string[], correctLetters: string[], allLetters: string[]): LetterGrade[] {
   const correctSet = new Set(correctLetters.map((l) => l.toUpperCase()));
-  const givenSet = new Set(submitted.map((l) => l.toUpperCase()));
+  // trim come ScoreService.
+  const givenSet = new Set(submitted.map((l) => l.trim().toUpperCase()));
   return allLetters.map((letter) => ({
     letter,
     selected: givenSet.has(letter.toUpperCase()),

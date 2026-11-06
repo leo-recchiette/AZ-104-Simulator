@@ -8,34 +8,30 @@ namespace Simulator.Api.Tests.Extensions;
 public sealed class AnswerSubmissionDtoExtensionsTests
 {
     [TestMethod]
-    public void Should_Treat_A_Missing_Answer_List_As_Blank()
-    {
-        new AnswerSubmissionDto(1, null!).IsBlank().Should().BeTrue();
-    }
-
-    [TestMethod]
     public void Should_Treat_An_Empty_Answer_List_As_Blank()
     {
-        new AnswerSubmissionDto(1, []).IsBlank().Should().BeTrue();
+        Submission([]).IsBlank().Should().BeTrue();
     }
 
     [TestMethod]
     public void Should_Treat_Untouched_Rows_As_Blank()
     {
         // Le righe non compilate arrivano come stringhe vuote.
-        new AnswerSubmissionDto(1, ["", "  "]).IsBlank().Should().BeTrue();
+        Submission(["", "  "]).IsBlank().Should().BeTrue();
     }
 
     [TestMethod]
     public void Should_Not_Be_Blank_When_A_Single_Row_Was_Filled()
     {
         // Una riga su tre basta a non scartare il tentativo.
-        new AnswerSubmissionDto(1, ["", "Yes", ""]).IsBlank().Should().BeFalse();
+        Submission(["", "Yes", ""]).IsBlank().Should().BeFalse();
     }
 
     [TestMethod]
     public void Should_Not_Be_Blank_When_Letters_Were_Selected()
     {
-        new AnswerSubmissionDto(1, ["B", "D"]).IsBlank().Should().BeFalse();
+        Submission(["B", "D"]).IsBlank().Should().BeFalse();
     }
+
+    private static AnswerSubmissionDto Submission(string[] userAnswers) => new() { QuestionNumber = 1, UserAnswers = userAnswers };
 }

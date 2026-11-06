@@ -19,83 +19,64 @@ public sealed class ExamResultService : IExamResultService
 
     public async Task<ExamScoreDto> ScoreAsync(string certificationId, IReadOnlyList<AnswerSubmissionDto> submissions, CancellationToken cancellationToken)
     {
-        var graded = await LoadGradedQuestionsAsync(certificationId, submissions.Select(s => s.QuestionNumber), cancellationToken);
+        var questions = await LoadAsync(certificationId, submissions, cancellationToken);
 
         var earnedTotal = 0;
         var pointsTotal = 0;
         foreach (var submission in submissions)
         {
             // Un numero inesistente non entra ne' nei punti ne' nel totale.
-            if (!graded.TryGetValue(submission.QuestionNumber, out var question))
+            if (!questions.TryGetValue(submission.QuestionNumber, out var question))
                 continue;
 
-            var (earned, total) = _scorer.Score(question.Type, question.Options, question.AnswerRows, submission.UserAnswers ?? [], question.UnorderedAnswer);
+            var (earned, total) = _scorer.Score(question, submission.UserAnswers);
             earnedTotal += earned;
             pointsTotal += total;
         }
 
         // Lineare: quello di Microsoft e' scalato sulla difficolta' delle domande, qui non riproducibile.
         var score = pointsTotal == 0 ? 0 : (int)Math.Round((double)ExamScoreDto.MaxScore * earnedTotal / pointsTotal);
-        return new ExamScoreDto(score);
+        return new ExamScoreDto { Score = score };
     }
 
     public async Task<IReadOnlyList<AnswerCheckResultDto>> CheckAnswersAsync(string certificationId, IReadOnlyList<AnswerSubmissionDto> submissions, CancellationToken cancellationToken)
     {
-        var graded = await LoadGradedQuestionsAsync(certificationId, submissions.Select(s => s.QuestionNumber), cancellationToken);
+        var questions = await LoadAsync(certificationId, submissions, cancellationToken);
 
         return submissions
-            .Select(submission =>
+            .Select(submission => new AnswerCheckResultDto
             {
-                if (!graded.TryGetValue(submission.QuestionNumber, out var question))
-                    return new AnswerCheckResultDto(submission.QuestionNumber, submission.UserAnswers, null);
-
-                var correctAnswer = question.ToAnswerDto();
-                return new AnswerCheckResultDto(submission.QuestionNumber, submission.UserAnswers, correctAnswer);
+                QuestionNumber = submission.QuestionNumber,
+                UserAnswers = submission.UserAnswers,
+                CorrectAnswer = questions.GetValueOrDefault(submission.QuestionNumber)?.ToAnswerDto(),
             })
             .ToList();
     }
 
     public async Task<IReadOnlyList<AttemptAnswerDto>> ReviewAsync(string certificationId, IReadOnlyList<AnswerSubmissionDto> submissions, CancellationToken cancellationToken)
     {
-        var graded = await LoadGradedQuestionsAsync(certificationId, submissions.Select(s => s.QuestionNumber), cancellationToken);
-
-        // Pool row-scoped: servono solo per rileggere le domande 'selection'.
-        var rowIds = graded.Values.SelectMany(g => g.AnswerRows).Select(r => r.Id).ToList();
-        var rowOptions = await _repository.GetAnswerRowOptionsAsync(rowIds, cancellationToken);
-        var rowOptionsByAnswerRowId = rowOptions.ToLookup(o => o.AnswerRowId);
+        var questions = await LoadAsync(certificationId, submissions, cancellationToken);
 
         return submissions
             .Select(submission =>
             {
-                var userAnswers = submission.UserAnswers ?? [];
                 // Domanda sparita dopo un reimport: resta solo la risposta data.
-                if (!graded.TryGetValue(submission.QuestionNumber, out var question))
-                    return new AttemptAnswerDto(submission.QuestionNumber, userAnswers, null, null);
-
-                var questionDto = question.Source.ToQuestionDto(
-                    question.Options, question.AnswerRows, rowOptionsByAnswerRowId, question.Images);
-                return new AttemptAnswerDto(submission.QuestionNumber, userAnswers, questionDto, question.ToAnswerDto());
+                var question = questions.GetValueOrDefault(submission.QuestionNumber);
+                return new AttemptAnswerDto
+                {
+                    QuestionNumber = submission.QuestionNumber,
+                    UserAnswers = submission.UserAnswers,
+                    Question = question?.ToQuestionDto(),
+                    CorrectAnswer = question?.ToAnswerDto(),
+                };
             })
             .ToList();
     }
 
-    private async Task<Dictionary<int, GradedQuestion>> LoadGradedQuestionsAsync(
-        string certificationId, IEnumerable<int> numbers, CancellationToken cancellationToken)
+    private async Task<Dictionary<int, QuestionAggregate>> LoadAsync(string certificationId, IReadOnlyList<AnswerSubmissionDto> submissions, CancellationToken cancellationToken)
     {
-        var distinctNumbers = numbers.Distinct().ToList();
-        var questions = await _repository.GetByNumbersAsync(certificationId, distinctNumbers, cancellationToken);
-
-        var ids = questions.Select(q => q.Id).ToList();
-        var options = await _repository.GetOptionsAsync(ids, cancellationToken);
-        var answerRows = await _repository.GetAnswerRowsAsync(ids, cancellationToken);
-        var images = await _repository.GetImagesAsync(ids, cancellationToken);
-
-        var optionsByQuestion = options.ToLookup(o => o.QuestionId);
-        var rowsByQuestion = answerRows.ToLookup(r => r.QuestionId);
-        var imagesByQuestion = images.ToLookup(i => i.QuestionId);
-
-        return questions.ToDictionary(
-            q => q.Number,
-            q => new GradedQuestion(q, optionsByQuestion[q.Id].ToList(), rowsByQuestion[q.Id].ToList(), imagesByQuestion[q.Id].ToList()));
+        var numbers = submissions.Select(s => s.QuestionNumber).Distinct().ToList();
+        var questions = await _repository.GetByNumbersAsync(certificationId, numbers, cancellationToken);
+        return questions.ToDictionary(q => q.Question.Number);
     }
 }

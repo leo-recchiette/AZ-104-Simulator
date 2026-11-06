@@ -109,7 +109,6 @@ CREATE INDEX idx_options_question ON options (question_id);
 CREATE INDEX idx_answer_rows_question ON answer_rows (question_id);
 CREATE INDEX idx_answer_row_options_row ON answer_row_options (answer_row_id);
 CREATE INDEX idx_question_images_question ON question_images (question_id);
-CREATE INDEX idx_questions_type ON questions (type);
 
 -- Storico indipendente dal question bank: un reimport non lo azzera.
 CREATE TABLE exam_attempts (

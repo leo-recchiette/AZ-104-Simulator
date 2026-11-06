@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Dapper;
+using Simulator.Api.Mapper;
 using Simulator.Api.Models.Domains;
 using Npgsql;
 
@@ -17,12 +18,8 @@ public sealed class ActiveSessionRepository : IActiveSessionRepository
     public async Task<ActiveSession?> GetAsync(string certificationId, CancellationToken cancellationToken)
     {
         const string sql = """
-            SELECT certification_id AS "CertificationId", mode AS "Mode", question_numbers AS "QuestionNumbers", answers::text AS "Answers",
-                   flagged_indexes AS "FlaggedIndexes", study_later_questions AS "StudyLaterQuestions",
-                   current_index AS "CurrentIndex",
-                   time_limit_seconds AS "TimeLimitSeconds", auto_reveal AS "AutoReveal",
-                   open_ended AS "OpenEnded", live_score AS "LiveScore", draw_mode AS "DrawMode",
-                   started_at AS "StartedAt", saved_at AS "SavedAt"
+            SELECT certification_id, mode, question_numbers, answers::text AS answers, flagged_indexes, study_later_questions,
+                   current_index, time_limit_seconds, auto_reveal, open_ended, live_score, draw_mode, started_at, saved_at
             FROM active_session
             WHERE certification_id = @certificationId
             """;
@@ -30,27 +27,7 @@ public sealed class ActiveSessionRepository : IActiveSessionRepository
         await using var connection = await _dataSource.OpenConnectionAsync(cancellationToken);
         var row = await connection.QuerySingleOrDefaultAsync<ActiveSessionRow>(
             new CommandDefinition(sql, new { certificationId }, cancellationToken: cancellationToken));
-        if (row is null)
-            return null;
-
-        var answers = JsonSerializer.Deserialize<Dictionary<int, IReadOnlyList<string>>>(row.Answers) ?? [];
-        return new ActiveSession
-        {
-            CertificationId = row.CertificationId,
-            Mode = row.Mode,
-            QuestionNumbers = row.QuestionNumbers,
-            Answers = answers,
-            FlaggedIndexes = row.FlaggedIndexes,
-            StudyLaterQuestions = row.StudyLaterQuestions,
-            CurrentIndex = row.CurrentIndex,
-            TimeLimitSeconds = row.TimeLimitSeconds,
-            AutoReveal = row.AutoReveal,
-            OpenEnded = row.OpenEnded,
-            LiveScore = row.LiveScore,
-            DrawMode = row.DrawMode,
-            StartedAt = row.StartedAt,
-            SavedAt = row.SavedAt,
-        };
+        return row?.ToActiveSession();
     }
 
     public async Task SaveAsync(ActiveSession session, CancellationToken cancellationToken)

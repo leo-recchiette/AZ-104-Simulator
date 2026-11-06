@@ -15,7 +15,6 @@ internal static class QuestionRowMapper
         Explanation = row.Explanation,
         AnswerText = row.AnswerText,
         Note = row.Note,
-        Source = row.Source,
         GroupId = row.GroupId,
         GroupType = row.GroupType,
         VariantGroup = row.VariantGroup,

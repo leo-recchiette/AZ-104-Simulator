@@ -104,16 +104,30 @@ public sealed class ActiveSessionServiceTests
     }
 
     [TestMethod]
-    public async Task Should_Save_No_Study_Later_Marks_When_The_Client_Omits_Them()
+    public async Task Should_Save_The_Client_Clock_In_UTC()
     {
+        // Npgsql scrive su timestamptz solo DateTimeOffset con offset zero.
+        var repository = Substitute.For<IActiveSessionRepository>();
+        var sut = new ActiveSessionService(repository, QuestionService());
+        var startedAt = new DateTimeOffset(2026, 10, 20, 11, 0, 0, TimeSpan.FromHours(2));
+
+        await sut.SaveAsync(SaveRequest([7, 3], currentIndex: 0) with { StartedAt = startedAt }, CancellationToken.None);
+
+        await repository.Received(1).SaveAsync(
+            Arg.Is<ActiveSession>(s => s.StartedAt.Offset == TimeSpan.Zero && s.StartedAt == startedAt),
+            Arg.Any<CancellationToken>());
+    }
+
+    [TestMethod]
+    public async Task Should_Treat_A_Null_Answer_As_No_Answer()
+    {
+        // JSON malformato ({"6": null}): niente da salvare, invece di un 500.
         var repository = Substitute.For<IActiveSessionRepository>();
         var sut = new ActiveSessionService(repository, QuestionService());
 
-        await sut.SaveAsync(SaveRequest([7, 3], currentIndex: 0) with { StudyLaterQuestions = null }, CancellationToken.None);
+        await sut.SaveAsync(SaveRequest([7, 3], currentIndex: 0, answers: new Dictionary<int, IReadOnlyList<string>> { [6] = null! }), CancellationToken.None);
 
-        await repository.Received(1).SaveAsync(
-            Arg.Is<ActiveSession>(s => s.StudyLaterQuestions.Count == 0),
-            Arg.Any<CancellationToken>());
+        await repository.DidNotReceive().SaveAsync(Arg.Any<ActiveSession>(), Arg.Any<CancellationToken>());
     }
 
     [TestMethod]
@@ -188,8 +202,21 @@ public sealed class ActiveSessionServiceTests
         return service;
     }
 
-    private static QuestionDto Dto(int number) =>
-        new(number, "multiple_choice", $"Domanda {number}", [], 0, [], 0, [], [], null, null, null);
+    private static QuestionDto Dto(int number) => new()
+    {
+        Number = number,
+        Type = "multiple_choice",
+        Text = $"Domanda {number}",
+        Options = [],
+        SelectCount = 0,
+        DraggableItems = [],
+        SequenceLength = 0,
+        Prompts = [],
+        Images = [],
+        GroupId = null,
+        GroupType = null,
+        VariantGroup = null,
+    };
 
     private static ActiveSession Session(IReadOnlyList<int> numbers) => new()
     {
@@ -212,22 +239,23 @@ public sealed class ActiveSessionServiceTests
     private static SaveActiveSessionDto SaveRequest(
         IReadOnlyList<int> questionNumbers,
         int currentIndex,
-        IReadOnlyDictionary<int, IReadOnlyList<string>>? answers = null) =>
-        new(
-            "az-104",
-            "practice",
-            questionNumbers,
-            answers ?? new Dictionary<int, IReadOnlyList<string>> { [7] = ["A"] },
-            [1],
-            currentIndex,
-            1800,
-            AutoReveal: true,
-            OpenEnded: true,
-            LiveScore: true,
-            DateTimeOffset.UnixEpoch,
-            DateTimeOffset.UnixEpoch.AddMinutes(5),
-            DrawMode: "least_seen",
-            StudyLaterQuestions: [3]);
+        IReadOnlyDictionary<int, IReadOnlyList<string>>? answers = null) => new()
+    {
+        CertificationId = "az-104",
+        Mode = "practice",
+        QuestionNumbers = questionNumbers,
+        Answers = answers ?? new Dictionary<int, IReadOnlyList<string>> { [7] = ["A"] },
+        FlaggedIndexes = [1],
+        CurrentIndex = currentIndex,
+        TimeLimitSeconds = 1800,
+        AutoReveal = true,
+        OpenEnded = true,
+        LiveScore = true,
+        StartedAt = DateTimeOffset.UnixEpoch,
+        SavedAt = DateTimeOffset.UnixEpoch.AddMinutes(5),
+        DrawMode = "least_seen",
+        StudyLaterQuestions = [3],
+    };
 
     #endregion
 }

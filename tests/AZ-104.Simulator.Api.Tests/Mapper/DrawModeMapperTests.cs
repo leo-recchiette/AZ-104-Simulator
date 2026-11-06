@@ -10,33 +10,17 @@ public sealed class DrawModeMapperTests
     [TestMethod]
     public void Should_Map_String_Into_DrawMode()
     {
-        var input = "least_seen";
+        DrawModeMapper.TryFromDb("least_seen", out var actual).Should().BeTrue();
 
-        var sut = DrawModeMapper.FromDb(input);
-
-        var expected = DrawMode.LeastSeen;
-
-        sut.Should().Be(expected);
-    }
-
-    [TestMethod]
-    public void Should_Map_DrawMode_Into_String()
-    {
-        var input = DrawMode.LeastSeen;
-
-        var sut = DrawModeMapper.ToDb(input);
-
-        var expected = "least_seen";
-
-        sut.Should().Be(expected);
+        actual.Should().Be(DrawMode.LeastSeen);
     }
 
     [TestMethod]
     public void Should_Default_To_Random()
     {
-        var sut = DrawModeMapper.FromDb(DrawModeMapper.Default);
+        DrawModeMapper.TryFromDb(DrawModeMapper.Default, out var actual).Should().BeTrue();
 
-        sut.Should().Be(DrawMode.Random);
+        actual.Should().Be(DrawMode.Random);
     }
 
     [TestMethod]
@@ -44,8 +28,6 @@ public sealed class DrawModeMapperTests
     {
         DrawModeMapper.IsValid("leastSeen").Should().BeFalse();
         DrawModeMapper.IsValid(null).Should().BeFalse();
-        var act = () => DrawModeMapper.FromDb("leastSeen");
-
-        act.Should().Throw<ArgumentOutOfRangeException>();
+        DrawModeMapper.TryFromDb("leastSeen", out _).Should().BeFalse();
     }
 }

@@ -10,92 +10,70 @@ namespace Simulator.Api.Tests.Services;
 [TestClass]
 public sealed class ExamResultServiceTests
 {
-    private readonly ExamResultService _sut = Sut(questions: [Question()], options: [Option()]);
+    private readonly ExamResultService _sut = Sut(MultipleChoice(1, "Domanda di prova", correctLetter: "C"));
 
-    private readonly ExamResultService _sutWithTenQuestions = Sut(Questions(), Options());
+    private readonly ExamResultService _sutWithTenQuestions = Sut(Enumerable.Range(1, 10).Select(n => MultipleChoice(n, $"Domanda {n}", correctLetter: "A")).ToArray());
 
     [TestMethod]
     public async Task Should_Calculate_Score_Ignoring_Unknown_Questions()
     {
-        var submissions = new[]
-        {
-            new AnswerSubmissionDto(QuestionNumber: 1, UserAnswers: ["C"]),
-            new AnswerSubmissionDto(QuestionNumber: 999, UserAnswers: ["X"]),
-        };
+        var submissions = new[] { Submission(1, "C"), Submission(999, "X") };
 
         var actual = await _sut.ScoreAsync("az-104", submissions, CancellationToken.None);
 
-        var expected = new ExamScoreDto(Score: 1000);
-
-        actual.Should().BeEquivalentTo(expected);
+        actual.Should().BeEquivalentTo(new ExamScoreDto { Score = 1000 });
     }
 
     [TestMethod]
     public async Task Should_Map_Answers_Into_CheckResults()
     {
-        var submissions = new[] { new AnswerSubmissionDto(QuestionNumber: 1, UserAnswers: ["A"]) };
+        var actual = await _sut.CheckAnswersAsync("az-104", [Submission(1, "A")], CancellationToken.None);
 
-        var actual = await _sut.CheckAnswersAsync("az-104", submissions, CancellationToken.None);
-
-        var expected = new[] { AnswerCheckResultDto(userAnswers: ["A"], correctAnswer: QuestionAnswerDto()) };
-
-        actual.Should().BeEquivalentTo(expected);
+        var expected = new AnswerCheckResultDto { QuestionNumber = 1, UserAnswers = ["A"], CorrectAnswer = ExpectedAnswer() };
+        actual.Should().BeEquivalentTo([expected]);
     }
 
     [TestMethod]
     public async Task Should_Calculate_Score_When_Two_Of_Ten_Are_Wrong()
     {
-        var submissions = Submissions(wrongNumbers: [9, 10]);
+        var actual = await _sutWithTenQuestions.ScoreAsync("az-104", Submissions(wrongNumbers: [9, 10]), CancellationToken.None);
 
-        var actual = await _sutWithTenQuestions.ScoreAsync("az-104", submissions, CancellationToken.None);
-
-        var expected = new ExamScoreDto(Score: 800);
-
-        actual.Should().BeEquivalentTo(expected);
+        actual.Should().BeEquivalentTo(new ExamScoreDto { Score = 800 });
     }
 
     [TestMethod]
     public async Task Should_Calculate_Score_When_Three_Of_Ten_Are_Correct()
     {
-        var submissions = Submissions(wrongNumbers: [4, 5, 6, 7, 8, 9, 10]);
+        var actual = await _sutWithTenQuestions.ScoreAsync("az-104", Submissions(wrongNumbers: [4, 5, 6, 7, 8, 9, 10]), CancellationToken.None);
 
-        var actual = await _sutWithTenQuestions.ScoreAsync("az-104", submissions, CancellationToken.None);
-
-        var expected = new ExamScoreDto(Score: 300);
-
-        actual.Should().BeEquivalentTo(expected);
+        actual.Should().BeEquivalentTo(new ExamScoreDto { Score = 300 });
     }
 
     [TestMethod]
     public async Task Should_Include_Question_Text_In_Review()
     {
-        var submissions = new[] { new AnswerSubmissionDto(QuestionNumber: 1, UserAnswers: ["A"]) };
-
-        var actual = await _sut.ReviewAsync("az-104", submissions, CancellationToken.None);
+        var actual = await _sut.ReviewAsync("az-104", [Submission(1, "A")], CancellationToken.None);
 
         actual.Should().ContainSingle();
         actual[0].UserAnswers.Should().BeEquivalentTo(["A"]);
         actual[0].Question!.Text.Should().Be("Domanda di prova");
-        actual[0].Question!.Options.Should().BeEquivalentTo([new OptionDto("C", "Opzione corretta")]);
-        actual[0].CorrectAnswer.Should().BeEquivalentTo(QuestionAnswerDto());
+        actual[0].Question!.Options.Should().BeEquivalentTo([new OptionDto { Letter = "C", Text = "Opzione corretta" }]);
+        actual[0].CorrectAnswer.Should().BeEquivalentTo(ExpectedAnswer());
     }
 
     [TestMethod]
     public async Task Should_Review_Unknown_Question_Without_Text_Nor_Solution()
     {
-        var submissions = new[] { new AnswerSubmissionDto(QuestionNumber: 999, UserAnswers: ["B"]) };
+        var actual = await _sut.ReviewAsync("az-104", [Submission(999, "B")], CancellationToken.None);
 
-        var actual = await _sut.ReviewAsync("az-104", submissions, CancellationToken.None);
-
-        var expected = new[] { new AttemptAnswerDto(QuestionNumber: 999, UserAnswers: ["B"], Question: null, CorrectAnswer: null) };
-
-        actual.Should().BeEquivalentTo(expected);
+        var expected = new AttemptAnswerDto { QuestionNumber = 999, UserAnswers = ["B"], Question = null, CorrectAnswer = null };
+        actual.Should().BeEquivalentTo([expected]);
     }
 
     [TestMethod]
     public async Task Should_Keep_Submission_Order_In_Review()
     {
-        var submissions = new[] { 3, 1, 2 }.Select(n => new AnswerSubmissionDto(n, ["A"])).ToList();
+        var submissions = new[] { 3, 1, 2 }.Select(n => Submission(n, "A")).ToList();
 
         var actual = await _sutWithTenQuestions.ReviewAsync("az-104", submissions, CancellationToken.None);
 
@@ -105,92 +83,42 @@ public sealed class ExamResultServiceTests
 
     #region Utils
 
-    /// <summary>Il repository ignora i filtri e restituisce sempre le liste passate.</summary>
-    private static ExamResultService Sut(IReadOnlyList<Question> questions, IReadOnlyList<Option> options)
+    /// <summary>Il repository ignora i numeri chiesti e restituisce sempre le domande passate.</summary>
+    private static ExamResultService Sut(params QuestionAggregate[] questions)
     {
         var repository = Substitute.For<IQuestionRepository>();
         repository.GetByNumbersAsync("az-104", Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<CancellationToken>()).Returns(questions);
-        repository.GetOptionsAsync(Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<CancellationToken>()).Returns(options);
-        repository.GetAnswerRowsAsync(Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<CancellationToken>()).Returns([]);
-        repository.GetImagesAsync(Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<CancellationToken>()).Returns([]);
-        // Stubbati sempre, cosi' i test non dipendono da quali metodi chiama il service.
-        repository.GetAnswerRowOptionsAsync(Arg.Any<IReadOnlyCollection<int>>(), Arg.Any<CancellationToken>()).Returns([]);
         return new ExamResultService(repository, new ScoreService());
     }
 
-    private static Question Question() => new()
+    private static QuestionAggregate MultipleChoice(int number, string text, string correctLetter) => TestQuestions.Aggregate(
+        new Question
+        {
+            Id = number,
+            CertificationId = "az-104",
+            Number = number,
+            Type = QuestionType.MultipleChoice,
+            Text = text,
+            Explanation = "Spiegazione",
+            AnswerText = $"{correctLetter}. Opzione corretta",
+        },
+        [new Option { QuestionId = number, Letter = correctLetter, Text = "Opzione corretta", IsCorrect = true }]);
+
+    private static QuestionAnswerDto ExpectedAnswer() => new()
     {
-        Id = 1,
-        CertificationId = "az-104",
         Number = 1,
-        Type = QuestionType.MultipleChoice,
-        Text = "Domanda di prova",
         Explanation = "Spiegazione",
         AnswerText = "C. Opzione corretta",
-        Source = "text_layer",
+        Note = null,
+        CorrectLetters = ["C"],
+        AnswerRows = [],
+        Images = [],
     };
 
-    private static Option Option() => new()
-    {
-        QuestionId = 1,
-        Ord = 0,
-        Letter = "C",
-        Text = "Opzione corretta",
-        IsCorrect = true,
-    };
-
-    private static QuestionAnswerDto QuestionAnswerDto(
-        int number = 1,
-        string explanation = "Spiegazione",
-        string answerText = "C. Opzione corretta",
-        string? note = null,
-        IReadOnlyList<string>? correctLetters = null,
-        IReadOnlyList<AnswerRowDto>? answerRows = null,
-        IReadOnlyList<string>? images = null) => new(
-            number, explanation, answerText, note,
-            correctLetters ?? ["C"],
-            answerRows ?? [],
-            images ?? []);
-
-    private static AnswerCheckResultDto AnswerCheckResultDto(
-        int questionNumber = 1,
-        IReadOnlyList<string>? userAnswers = null,
-        QuestionAnswerDto? correctAnswer = null) => new(
-            questionNumber,
-            userAnswers ?? [],
-            correctAnswer);
-
-    private static IReadOnlyList<Question> Questions() =>
-        Enumerable.Range(1, 10)
-            .Select(number => new Question
-            {
-                Id = number,
-                CertificationId = "az-104",
-                Number = number,
-                Type = QuestionType.MultipleChoice,
-                Text = $"Domanda {number}",
-                Explanation = "Spiegazione",
-                AnswerText = "A. Opzione corretta",
-                Source = "text_layer",
-            })
-            .ToList();
-
-    private static IReadOnlyList<Option> Options() =>
-        Enumerable.Range(1, 10)
-            .Select(number => new Option
-            {
-                QuestionId = number,
-                Ord = 0,
-                Letter = "A",
-                Text = "Opzione corretta",
-                IsCorrect = true,
-            })
-            .ToList();
+    private static AnswerSubmissionDto Submission(int number, string answer) => new() { QuestionNumber = number, UserAnswers = [answer] };
 
     private static IReadOnlyList<AnswerSubmissionDto> Submissions(IReadOnlyCollection<int> wrongNumbers) =>
-        Enumerable.Range(1, 10)
-            .Select(number => new AnswerSubmissionDto(number, [wrongNumbers.Contains(number) ? "B" : "A"]))
-            .ToList();
+        Enumerable.Range(1, 10).Select(n => Submission(n, wrongNumbers.Contains(n) ? "B" : "A")).ToList();
 
     #endregion
 }

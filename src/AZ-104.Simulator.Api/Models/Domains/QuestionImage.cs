@@ -1,7 +1,7 @@
 namespace Simulator.Api.Models.Domains;
 
 /// <summary>Kind: 'question' (prima della risposta) o 'answer' (solo dopo).</summary>
-public sealed class QuestionImage
+public sealed record QuestionImage
 {
     public required int QuestionId { get; init; }
     public required string Kind { get; init; }

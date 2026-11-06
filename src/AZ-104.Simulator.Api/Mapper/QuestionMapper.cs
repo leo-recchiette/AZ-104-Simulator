@@ -11,35 +11,35 @@ public static class QuestionMapper
     private const string QuestionImageKind = "question";
     private static readonly string[] YesNoOptions = ["Yes", "No"];
 
-    public static QuestionDto ToQuestionDto(
-        this Question question,
-        IEnumerable<Option> options,
-        IEnumerable<AnswerRow> answerRows,
-        ILookup<int, AnswerRowOption> rowOptionsByAnswerRowId,
-        IEnumerable<QuestionImage> images)
+    public static QuestionDto ToQuestionDto(this QuestionAggregate aggregate)
     {
+        var question = aggregate.Question;
         var isMultipleChoice = question.Type == QuestionType.MultipleChoice;
         var isOrderedAnswer = question.AnswerLayout == OrderedAnswer;
         var isYesNo = question.AnswerLayout == YesNo;
 
-        return new QuestionDto(
-            Number: question.Number,
-            Type: QuestionTypeMapper.ToDb(question.Type),
-            Text: question.Text,
-            Options: isMultipleChoice ? options.Select(o => new OptionDto(o.Letter!, o.Text)).ToList() : [],
-            SelectCount: isMultipleChoice ? options.Count(o => o.IsCorrect) : 0,
-            DraggableItems: isOrderedAnswer ? options.Select(o => o.Text).ToList() : [],
-            SequenceLength: isOrderedAnswer ? answerRows.Count() : 0,
-            Prompts: isMultipleChoice || isOrderedAnswer
+        return new QuestionDto
+        {
+            Number = question.Number,
+            Type = QuestionTypeMapper.ToDb(question.Type),
+            Text = question.Text,
+            Options = isMultipleChoice ? aggregate.Options.Select(o => new OptionDto { Letter = o.Letter!, Text = o.Text }).ToList() : [],
+            SelectCount = isMultipleChoice ? aggregate.Options.Count(o => o.IsCorrect) : 0,
+            DraggableItems = isOrderedAnswer ? aggregate.Options.Select(o => o.Text).ToList() : [],
+            SequenceLength = isOrderedAnswer ? aggregate.AnswerRows.Count : 0,
+            Prompts = isMultipleChoice || isOrderedAnswer
                 ? []
-                : answerRows.Where(r => r.Prompt is not null).Select(r => new PromptOptionsDto(
-                    r.Prompt!,
-                    isYesNo ? YesNoOptions : rowOptionsByAnswerRowId[r.Id].Select(o => o.Text).ToList(),
-                    r.Answer.CorrectValueCount())).ToList(),
-            Images: images.Where(i => i.Kind == QuestionImageKind).OrderBy(i => i.Ord).Select(i => i.ToPath(question.CertificationId)).ToList(),
-            GroupId: question.GroupId,
-            GroupType: question.GroupType,
-            VariantGroup: question.VariantGroup,
-            UnorderedAnswer: isOrderedAnswer && question.UnorderedAnswer);
+                : aggregate.AnswerRows.Where(r => r.Prompt is not null).Select(r => new PromptOptionsDto
+                {
+                    Prompt = r.Prompt!,
+                    Options = isYesNo ? YesNoOptions : aggregate.RowOptions.Where(o => o.AnswerRowId == r.Id).Select(o => o.Text).ToList(),
+                    SelectCount = r.Answer.CorrectValueCount(),
+                }).ToList(),
+            Images = aggregate.Images.Where(i => i.Kind == QuestionImageKind).OrderBy(i => i.Ord).Select(i => i.ToPath(question.CertificationId)).ToList(),
+            GroupId = question.GroupId,
+            GroupType = question.GroupType,
+            VariantGroup = question.VariantGroup,
+            UnorderedAnswer = isOrderedAnswer && question.UnorderedAnswer,
+        };
     }
 }

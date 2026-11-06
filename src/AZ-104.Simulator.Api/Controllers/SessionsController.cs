@@ -9,8 +9,6 @@ namespace Simulator.Api.Controllers;
 [Route("api/sessions")]
 public sealed class SessionsController : ControllerBase
 {
-    private static readonly string[] ValidModes = ["practice", "exam"];
-
     private readonly IActiveSessionService _activeSessionService;
 
     public SessionsController(IActiveSessionService activeSessionService)
@@ -32,7 +30,7 @@ public sealed class SessionsController : ControllerBase
     {
         var error = request switch
         {
-            { Mode: var mode } when !ValidModes.Contains(mode) => $"mode deve essere uno tra: {string.Join(", ", ValidModes)}.",
+            { Mode: var mode } when !SessionModeMapper.IsValid(mode) => $"mode deve essere uno tra: {string.Join(", ", SessionModeMapper.Values)}.",
             { QuestionNumbers.Count: 0 } => "questionNumbers non puo' essere vuoto.",
             { TimeLimitSeconds: <= 0 } => "timeLimitSeconds, se presente, deve essere positivo.",
             { DrawMode: var draw } when !DrawModeMapper.IsValid(draw) => $"drawMode deve essere uno tra: {string.Join(", ", DrawModeMapper.Values)}.",

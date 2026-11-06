@@ -10,17 +10,19 @@ namespace Simulator.Api.Models.Contracts;
 /// UnorderedAnswer: gli elementi di DraggableItems formano un insieme, l'ordine non conta.
 /// VariantGroup serve al client per non riproporre una variante gia' vista quando ripesca il bank.
 /// </summary>
-public sealed record QuestionDto(
-    int Number,
-    string Type,
-    string Text,
-    IReadOnlyList<OptionDto> Options,
-    int SelectCount,
-    IReadOnlyList<string> DraggableItems,
-    int SequenceLength,
-    IReadOnlyList<PromptOptionsDto> Prompts,
-    IReadOnlyList<string> Images,
-    string? GroupId,
-    string? GroupType,
-    string? VariantGroup,
-    bool UnorderedAnswer = false);
+public sealed record QuestionDto
+{
+    public required int Number { get; init; }
+    public required string Type { get; init; }
+    public required string Text { get; init; }
+    public required IReadOnlyList<OptionDto> Options { get; init; }
+    public required int SelectCount { get; init; }
+    public required IReadOnlyList<string> DraggableItems { get; init; }
+    public required int SequenceLength { get; init; }
+    public required IReadOnlyList<PromptOptionsDto> Prompts { get; init; }
+    public required IReadOnlyList<string> Images { get; init; }
+    public required string? GroupId { get; init; }
+    public required string? GroupType { get; init; }
+    public required string? VariantGroup { get; init; }
+    public bool UnorderedAnswer { get; init; }
+}

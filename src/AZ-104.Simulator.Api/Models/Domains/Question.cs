@@ -20,9 +20,6 @@ public sealed record Question
 
     public string? Note { get; init; }
 
-    /// <summary>'text_layer' | 'manual_vision' | 'ocr'.</summary>
-    public required string Source { get; init; }
-
     public string? GroupId { get; init; }
 
     /// <summary>'scenario_series' | 'case_study'. Valorizzato se e solo se lo e' GroupId.</summary>

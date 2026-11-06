@@ -122,8 +122,6 @@ export function SessionPage() {
         saveAttempt(state.certificationId, {
           mode: state.mode,
           drawMode: state.drawMode,
-          questionCount: scored.length,
-          score: score.score,
           startTime: startTime.toISOString(),
           endTime: endTime.toISOString(),
           answers: submissions,

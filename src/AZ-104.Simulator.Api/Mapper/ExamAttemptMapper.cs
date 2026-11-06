@@ -5,14 +5,16 @@ namespace Simulator.Api.Mapper;
 
 public static class ExamAttemptMapper
 {
-    public static ExamAttemptDto ToDto(this ExamAttempt attempt) => new(
-        attempt.Id, 
-        attempt.CertificationId,
-        attempt.Mode, 
-        attempt.DrawMode,
-        attempt.QuestionCount,
-        attempt.Score,
-        attempt.StartTime, 
-        attempt.EndTime, 
-        attempt.CompletedAt);
+    public static ExamAttemptDto ToDto(this ExamAttempt attempt) => new()
+    {
+        Id = attempt.Id,
+        CertificationId = attempt.CertificationId,
+        Mode = attempt.Mode,
+        DrawMode = attempt.DrawMode,
+        QuestionCount = attempt.QuestionCount,
+        Score = attempt.Score,
+        StartTime = attempt.StartTime,
+        EndTime = attempt.EndTime,
+        CompletedAt = attempt.CompletedAt,
+    };
 }

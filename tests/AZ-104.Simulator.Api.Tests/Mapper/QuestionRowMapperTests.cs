@@ -31,21 +31,22 @@ public sealed class QuestionRowMapperTests
 
     #region Utils
 
-    private static QuestionRow QuestionRow() => new(
-        Id: 1,
-        CertificationId: "az-104",
-        Number: 20,
-        Type: "drag_and_drop",
-        AnswerLayout: "ordered_answer",
-        Text: "Testo della domanda",
-        Explanation: "Spiegazione",
-        AnswerText: "1. An Azure Key Vault -> 2. An access policy",
-        Note: null,
-        Source: "manual_vision",
-        GroupId: "ss01",
-        GroupType: "scenario_series",
-        VariantGroup: null,
-        UnorderedAnswer: true);
+    private static QuestionRow QuestionRow() => new()
+    {
+        Id = 1,
+        CertificationId = "az-104",
+        Number = 20,
+        Type = "drag_and_drop",
+        AnswerLayout = "ordered_answer",
+        Text = "Testo della domanda",
+        Explanation = "Spiegazione",
+        AnswerText = "1. An Azure Key Vault -> 2. An access policy",
+        Note = null,
+        GroupId = "ss01",
+        GroupType = "scenario_series",
+        VariantGroup = null,
+        UnorderedAnswer = true,
+    };
 
     private static Question Question() => new()
     {
@@ -58,7 +59,6 @@ public sealed class QuestionRowMapperTests
         Explanation = "Spiegazione",
         AnswerText = "1. An Azure Key Vault -> 2. An access policy",
         Note = null,
-        Source = "manual_vision",
         GroupId = "ss01",
         GroupType = "scenario_series",
         UnorderedAnswer = true,

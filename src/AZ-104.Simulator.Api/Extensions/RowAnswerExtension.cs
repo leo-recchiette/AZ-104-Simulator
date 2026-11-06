@@ -12,7 +12,8 @@ public static class RowAnswerExtension
             return string.Equals(given, correct, StringComparison.OrdinalIgnoreCase);
 
         var correctSet = new HashSet<string>(MultiValues(correct), StringComparer.OrdinalIgnoreCase);
-        var givenSet = new HashSet<string>(given.Split('\n').Select(s => s.Trim()), StringComparer.OrdinalIgnoreCase);
+        // Senza i segmenti vuoti, come grading.ts: "a\nb\n" vale {a,b}.
+        var givenSet = new HashSet<string>(given.Split('\n').Select(s => s.Trim()).Where(s => s.Length > 0), StringComparer.OrdinalIgnoreCase);
         return correctSet.SetEquals(givenSet);
     }
 
