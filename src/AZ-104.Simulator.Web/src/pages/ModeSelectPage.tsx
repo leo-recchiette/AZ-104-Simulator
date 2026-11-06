@@ -64,9 +64,10 @@ export function ModeSelectPage() {
               <div style={{ fontSize: 11, letterSpacing: ".14em", textTransform: "uppercase", color: t.fa, fontWeight: 600 }}>
                 {certification.name}
               </div>
+              {/* backgroundImage e non background: aggiornando la shorthand al cambio di tema React azzererebbe il clip sul testo. */}
               <h1 style={{
                 fontFamily: "Roboto, 'IBM Plex Sans', sans-serif", fontWeight: 700, fontSize: 46, lineHeight: 1.1,
-                margin: "14px 0 10px", letterSpacing: "-.01em", background: t.hero,
+                margin: "14px 0 10px", letterSpacing: "-.01em", backgroundImage: t.hero,
                 WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent",
               }}>
                 {certification.code} Simulator
@@ -83,9 +84,9 @@ export function ModeSelectPage() {
               onError={(e) => {
                 e.currentTarget.style.display = "none";
               }}
-              width={128}
+              // Solo l'altezza: i badge non sono tutti quadrati (TA-004 e' 300x360).
               height={128}
-              style={{ flexShrink: 0, display: "block" }}
+              style={{ width: "auto", flexShrink: 0, display: "block" }}
             />
           </div>
 
