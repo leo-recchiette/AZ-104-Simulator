@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { useSession } from "../session/SessionContext";
 import { useTheme } from "../theme/ThemeContext";
 import { useElapsedTime } from "../hooks/useElapsedTime";
@@ -13,8 +13,8 @@ import { QuestionNavigator, type QuestionFilter } from "../components/session/Qu
 import { groupMembers, sessionUnits, unitsAnswered, unitsStarted } from "../utils/groups";
 import { isAnswerStarted, isRevealedWrong } from "../utils/questionShape";
 import { OptionsMenu } from "../components/OptionsMenu";
-import { HEADER_GRADIENT } from "../theme/tokens";
-import { MAX_QUESTION_COUNT, PASS_MARK_SCORE } from "../constants";
+import { PASS_MARK_SCORE } from "../constants";
+import type { CertificationDto } from "../types/certification";
 
 // Fuori dal tema: stanno sul banner blu, uguale in light e dark.
 const CLOCK_OK = "#3ddc84";
@@ -44,9 +44,10 @@ function fmt(totalSeconds: number): string {
 }
 
 export function SessionPage() {
+  const certification = useOutletContext<CertificationDto>();
   const navigate = useNavigate();
   const { state, dispatch } = useSession();
-  const { theme, tokens: t } = useTheme();
+  const { tokens: t } = useTheme();
   const [showConfirm, setShowConfirm] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
@@ -106,7 +107,7 @@ export function SessionPage() {
     try {
       const score = await getScore(state.certificationId, submissions);
       dispatch({ type: "FINISH_SESSION", score, timeUsedSeconds: elapsedSecRef.current, questions: scored });
-      navigate("/results");
+      navigate(`/${state.certificationId}/results`);
 
       const answeredAnything = submissions.some((s) => s.userAnswers.some((a) => a && a.trim() !== ""));
 
@@ -262,7 +263,7 @@ export function SessionPage() {
       setError(null);
       setLoadingMore(true);
       try {
-        dispatch({ type: "SET_POOL", questions: await getExam(state.certificationId, MAX_QUESTION_COUNT, state.drawMode) });
+        dispatch({ type: "SET_POOL", questions: await getExam(state.certificationId, certification.questionCount, state.drawMode) });
       } catch (err) {
         setError(err instanceof ApiError ? err.message : "Impossibile caricare altre domande.");
         return;
@@ -349,7 +350,7 @@ export function SessionPage() {
   const modeChipBg = isPractice ? "rgba(255,255,255,.22)" : "rgba(255,255,255,.92)";
   const modeChipFg = isPractice ? "#fff" : "#0b3fae";
   const modeLabel = isPractice ? "Practice" : "Simulation";
-  const headerGradient = theme === "dark" ? HEADER_GRADIENT.dark : HEADER_GRADIENT.light;
+  const headerGradient = t.header;
 
   return (
     <div style={{ height: "100dvh", display: "flex", flexDirection: "column", overflow: "hidden" }}>

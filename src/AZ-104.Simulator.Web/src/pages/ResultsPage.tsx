@@ -14,7 +14,6 @@ import { ReviewGroupCard } from "../components/review/ReviewGroupCard";
 import { reviewUnits } from "../utils/reviewUnits";
 import { FilterPill } from "../components/FilterPill";
 import { MAX_SCORE, PASS_MARK_SCORE } from "../constants";
-import { HEADER_GRADIENT } from "../theme/tokens";
 
 interface GradedEntry {
   no: number;
@@ -36,8 +35,8 @@ function fmt(totalSeconds: number): string {
 export function ResultsPage() {
   const navigate = useNavigate();
   const { state, dispatch } = useSession();
-  const { theme, tokens: t } = useTheme();
-  const headerGradient = theme === "dark" ? HEADER_GRADIENT.dark : HEADER_GRADIENT.light;
+  const { tokens: t } = useTheme();
+  const headerGradient = t.header;
   const [review, setReview] = useState<AnswerCheckResultDto[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showReview, setShowReview] = useState(false);

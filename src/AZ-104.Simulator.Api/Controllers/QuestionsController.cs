@@ -10,8 +10,6 @@ namespace Simulator.Api.Controllers;
 [Route("api/questions")]
 public sealed class QuestionsController : ControllerBase
 {
-    private const int MaxCount = 584; // dimensione dell'intero question bank
-
     private readonly IQuestionService _questionService;
 
     public QuestionsController(IQuestionService questionService)
@@ -28,8 +26,9 @@ public sealed class QuestionsController : ControllerBase
         [FromQuery] string draw = DrawModeMapper.Default,
         CancellationToken cancellationToken = default)
     {
-        if (count is < 1 or > MaxCount)
-            return BadRequest($"count deve essere fra 1 e {MaxCount}.");
+        // Nessun massimo: oltre la dimensione del bank il LIMIT restituisce semplicemente tutto.
+        if (count < 1)
+            return BadRequest("count deve essere almeno 1.");
 
         if (!DrawModeMapper.IsValid(draw))
             return BadRequest($"draw deve essere uno tra: {string.Join(", ", DrawModeMapper.Values)}.");

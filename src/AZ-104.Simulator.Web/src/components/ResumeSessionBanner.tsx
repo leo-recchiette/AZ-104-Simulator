@@ -44,7 +44,7 @@ export function ResumeSessionBanner({ style }: ResumeSessionBannerProps) {
         </div>
       </div>
       <button
-        onClick={() => navigate("/session")}
+        onClick={() => navigate(`/${resumable.certificationId}/session`)}
         style={{
           padding: "11px 20px", borderRadius: 10, border: "none", background: t.ac, color: "#fff",
           font: "inherit", fontSize: 14.5, fontWeight: 600,

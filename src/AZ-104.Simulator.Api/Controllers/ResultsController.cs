@@ -10,7 +10,6 @@ namespace Simulator.Api.Controllers;
 [Route("api/results")]
 public sealed class ResultsController : ControllerBase
 {
-    private const int MaxCount = 584; // dimensione dell'intero question bank
     private static readonly string[] ValidModes = ["practice", "exam"];
 
     private readonly IExamResultService _examResultService;
@@ -30,8 +29,6 @@ public sealed class ResultsController : ControllerBase
     {
         if (submissions.Count == 0)
             return BadRequest("la lista di risposte non puo' essere vuota.");
-        if (submissions.Count > MaxCount)
-            return BadRequest($"non piu' di {MaxCount} risposte per richiesta.");
 
         var score = await _examResultService.ScoreAsync(certificationId, submissions, cancellationToken);
         return Ok(score);
@@ -45,8 +42,6 @@ public sealed class ResultsController : ControllerBase
     {
         if (submissions.Count == 0)
             return BadRequest("la lista di risposte non puo' essere vuota.");
-        if (submissions.Count > MaxCount)
-            return BadRequest($"non piu' di {MaxCount} risposte per richiesta.");
 
         var results = await _examResultService.CheckAnswersAsync(certificationId, submissions, cancellationToken);
         return Ok(results);
@@ -61,11 +56,9 @@ public sealed class ResultsController : ControllerBase
         {
             { Mode: var mode } when !ValidModes.Contains(mode) => $"mode deve essere uno tra: {string.Join(", ", ValidModes)}.",
             { DrawMode: var draw } when !DrawModeMapper.IsValid(draw) => $"drawMode deve essere uno tra: {string.Join(", ", DrawModeMapper.Values)}.",
-            { QuestionCount: < 1 or > MaxCount } => $"questionCount deve essere fra 1 e {MaxCount}.",
+            { QuestionCount: < 1 } => "questionCount deve essere almeno 1.",
             { Score: < 0 or > ExamScoreDto.MaxScore } => $"score deve essere fra 0 e {ExamScoreDto.MaxScore}.",
             { StartTime: var start, EndTime: var end } when end < start => "endTime non puo' precedere startTime.",
-            { Answers.Count: > MaxCount } => $"non piu' di {MaxCount} risposte per tentativo.",
-            { StudyLaterQuestions.Count: > MaxCount } => $"non piu' di {MaxCount} domande da studiare per tentativo.",
             { Answers: { Count: > 0 } answers } when answers.All(a => a.IsBlank()) => "un tentativo senza nemmeno una risposta non viene registrato.",
             _ => null,
         };

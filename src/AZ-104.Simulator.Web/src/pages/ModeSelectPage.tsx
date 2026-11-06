@@ -8,7 +8,6 @@ import { FloatingThemeToggle } from "../components/FloatingThemeToggle";
 import { ResumeSessionBanner } from "../components/ResumeSessionBanner";
 import { ProgressChart } from "../components/ProgressChart";
 import { MAX_SCORE, PASS_MARK_SCORE } from "../constants";
-import { MODE_BG_GRADIENT } from "../theme/tokens";
 import { formatDateShort } from "../utils/format";
 import { imageUrl } from "../utils/images";
 
@@ -18,7 +17,7 @@ const RECENT_COUNT = 5;
 export function ModeSelectPage() {
   const certification = useOutletContext<CertificationDto>();
   const navigate = useNavigate();
-  const { theme, tokens: t } = useTheme();
+  const { tokens: t } = useTheme();
   const [history, setHistory] = useState<ExamAttemptDto[]>([]);
   // Periodo zoomato nel grafico: null = tutto. Vale anche per le statistiche.
   const [range, setRange] = useState<[number, number] | null>(null);
@@ -30,7 +29,6 @@ export function ModeSelectPage() {
       .catch((err) => console.error("Impossibile caricare lo storico dei tentativi:", err));
   }, [certification.id]);
 
-  const modeBgGrad = theme === "dark" ? MODE_BG_GRADIENT.dark : MODE_BG_GRADIENT.light;
 
   const shown = useMemo(() => (range ? history.slice(range[0], range[1] + 1) : history), [history, range]);
 
@@ -54,9 +52,9 @@ export function ModeSelectPage() {
   return (
     <>
       <FloatingThemeToggle />
-      <div style={{ flex: 1, position: "relative", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 24px", background: `${modeBgGrad}, ${t.bg}` }}>
-        <div style={{ position: "absolute", top: -180, left: -120, width: 520, height: 520, borderRadius: "50%", background: "radial-gradient(circle, rgba(0,120,212,.32), transparent 70%)", filter: "blur(10px)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", bottom: -220, right: -160, width: 640, height: 640, borderRadius: "50%", background: "radial-gradient(circle, rgba(80,230,255,.18), transparent 70%)", filter: "blur(10px)", pointerEvents: "none" }} />
+      <div style={{ flex: 1, position: "relative", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 24px", background: `${t.modeBg}, ${t.bg}` }}>
+        <div style={{ position: "absolute", top: -180, left: -120, width: 520, height: 520, borderRadius: "50%", background: `radial-gradient(circle, ${t.glowA}, transparent 70%)`, filter: "blur(10px)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: -220, right: -160, width: 640, height: 640, borderRadius: "50%", background: `radial-gradient(circle, ${t.glowB}, transparent 70%)`, filter: "blur(10px)", pointerEvents: "none" }} />
         <div style={{ width: "100%", maxWidth: 760, position: "relative" }}>
           <button onClick={() => navigate("/")} style={{ background: "none", border: "none", padding: 0, color: t.mu, fontSize: 13, marginBottom: 18, font: "inherit" }}>
             ← All certifications
@@ -68,7 +66,7 @@ export function ModeSelectPage() {
               </div>
               <h1 style={{
                 fontFamily: "Roboto, 'IBM Plex Sans', sans-serif", fontWeight: 700, fontSize: 46, lineHeight: 1.1,
-                margin: "14px 0 10px", letterSpacing: "-.01em", background: "linear-gradient(90deg,#0078d4,#50e6ff)",
+                margin: "14px 0 10px", letterSpacing: "-.01em", background: t.hero,
                 WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent",
               }}>
                 {certification.code} Simulator

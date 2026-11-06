@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 
@@ -40,6 +41,23 @@ public partial class SessionsControllerTests : IDisposable
         var actual = await _httpClient.GetStringAsync("api/sessions/getCurrentSession");
 
         await VerifyJson(actual);
+    }
+
+    [TestMethod]
+    public async Task Should_Restore_A_Session_With_The_Questions_Of_Its_Own_Certification()
+    {
+        // Stesso numero 1 dell'AZ-104 del seed: la sessione deve ripescare la domanda Terraform.
+        await TestDatabase.ExecuteAsync(_webApplicationFactory.Services, """
+            INSERT INTO questions (certification_id, number, type, question, explanation, answer_text, source) VALUES
+            ('terraform-associate-004', 1, 'multiple_choice', 'Which command initializes a working directory?', 'Explanation', 'A. terraform init', 'text_layer')
+            """);
+        await SaveAsync(Session(certificationId: "terraform-associate-004", questionNumbers: [1], answers: new Dictionary<int, string[]> { [1] = ["A"] }));
+
+        var actual = await _httpClient.GetFromJsonAsync<JsonObject>("api/sessions/getCurrentSession");
+
+        actual!["certificationId"]!.GetValue<string>().Should().Be("terraform-associate-004");
+        actual["questions"]!.AsArray().Select(q => q!["text"]!.GetValue<string>())
+            .Should().Equal("Which command initializes a working directory?");
     }
 
     [TestMethod]
@@ -89,11 +107,12 @@ public partial class SessionsControllerTests : IDisposable
         => _httpClient.PutAsJsonAsync("api/sessions/saveCurrentSession", session);
 
     private static object Session(
+        string certificationId = "az-104",
         string mode = "practice",
         int[]? questionNumbers = null,
         Dictionary<int, string[]>? answers = null) => new
     {
-        certificationId = "az-104",
+        certificationId,
         mode,
         questionNumbers = questionNumbers ?? [6, 7, 1],
         answers = answers ?? new Dictionary<int, string[]> { [6] = ["A"], [1] = ["A", "C"] },

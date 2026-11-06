@@ -1,4 +1,4 @@
 ﻿{
   StatusCode: BadRequest,
-  Body: count deve essere fra 1 e 584.
+  Body: count deve essere almeno 1.
 }

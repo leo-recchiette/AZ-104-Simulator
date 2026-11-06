@@ -15,7 +15,6 @@ import { pointsEarned } from "../utils/grading";
 import { reviewAnchorId, reviewUnits } from "../utils/reviewUnits";
 import { formatDateTime, formatDuration } from "../utils/format";
 import { MAX_SCORE, PASS_MARK_SCORE } from "../constants";
-import { HEADER_GRADIENT } from "../theme/tokens";
 
 type AttemptFilter = "all" | "wrong" | "studyLater" | "studyLaterOrWrong";
 
@@ -24,8 +23,8 @@ export function AttemptDetailPage() {
   const certification = useOutletContext<CertificationDto>();
   const navigate = useNavigate();
   const { id } = useParams();
-  const { theme, tokens: t } = useTheme();
-  const headerGradient = theme === "dark" ? HEADER_GRADIENT.dark : HEADER_GRADIENT.light;
+  const { tokens: t } = useTheme();
+  const headerGradient = t.header;
   const [detail, setDetail] = useState<ExamAttemptDetailDto | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<AttemptFilter>("all");

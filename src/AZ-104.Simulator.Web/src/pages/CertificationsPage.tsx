@@ -6,12 +6,12 @@ import type { CertificationsByVendor } from "../types/certification";
 import { FloatingThemeToggle } from "../components/FloatingThemeToggle";
 import { FilterPill } from "../components/FilterPill";
 import { imageUrl } from "../utils/images";
-import { MODE_BG_GRADIENT } from "../theme/tokens";
+import { VENDOR_LABELS } from "../constants";
 
 /** Home: i question bank trovati dall'API, un tab per vendor. */
 export function CertificationsPage() {
   const navigate = useNavigate();
-  const { theme, tokens: t } = useTheme();
+  const { tokens: t } = useTheme();
   const [catalog, setCatalog] = useState<CertificationsByVendor | null>(null);
   const [error, setError] = useState(false);
   const [vendor, setVendor] = useState<string | null>(null);
@@ -31,7 +31,7 @@ export function CertificationsPage() {
   return (
     <>
       <FloatingThemeToggle />
-      <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 24px", background: `${theme === "dark" ? MODE_BG_GRADIENT.dark : MODE_BG_GRADIENT.light}, ${t.bg}` }}>
+      <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 24px", background: `${t.modeBg}, ${t.bg}` }}>
         <div style={{ width: "100%", maxWidth: 760 }}>
           <h1 style={{ fontFamily: "'Source Serif 4', Georgia, serif", fontWeight: 600, fontSize: 34, margin: "0 0 8px" }}>Certifications</h1>
           <p style={{ margin: "0 0 28px", color: t.mu, fontSize: 15.5 }}>Choose the question bank to work on.</p>
@@ -43,7 +43,7 @@ export function CertificationsPage() {
             <>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 20 }}>
                 {vendors.map((v) => (
-                  <FilterPill key={v} active={v === selected} onClick={() => setVendor(v)} label={v.charAt(0).toUpperCase() + v.slice(1)} />
+                  <FilterPill key={v} active={v === selected} onClick={() => setVendor(v)} label={VENDOR_LABELS[v] ?? v.charAt(0).toUpperCase() + v.slice(1)} />
                 ))}
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 18 }}>

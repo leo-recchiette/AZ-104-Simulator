@@ -10,7 +10,7 @@ import { ResumeSessionBanner } from "../components/ResumeSessionBanner";
 import { DrawModeToggle } from "../components/DrawModeToggle";
 import type { DrawMode } from "../types/question";
 import type { CertificationDto } from "../types/certification";
-import { MAX_QUESTION_COUNT, PRACTICE_DEFAULT_DRAW_MODE } from "../constants";
+import { PRACTICE_DEFAULT_DRAW_MODE } from "../constants";
 
 const COUNT_OPTIONS = [10, 20, 30, 40, 50, 60, 70, 80];
 const MINUTE_OPTIONS = [15, 30, 45, 60, 90, 120];
@@ -49,7 +49,7 @@ export function PracticeSetupPage() {
     setLoading(true);
     try {
       // A oltranza serve l'intero bank: si propone un'unita' alla volta.
-      const questions = await getExam(certification.id, openEnded ? MAX_QUESTION_COUNT : count, drawMode);
+      const questions = await getExam(certification.id, openEnded ? certification.questionCount : count, drawMode);
       // 200 con []: question bank vuoto, non un errore dell'API.
       if (questions.length === 0) {
         setEmptyBank(true);
@@ -57,7 +57,7 @@ export function PracticeSetupPage() {
         return;
       }
       dispatch({ type: "START_SESSION", certificationId: certification.id, mode: "practice", drawMode, questions, timeLimitSeconds: timed ? minutes * 60 : null, autoReveal, openEnded, liveScore });
-      navigate("/session");
+      navigate(`/${certification.id}/session`);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Impossibile caricare le domande.");
       setLoading(false);

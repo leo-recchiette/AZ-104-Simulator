@@ -9,7 +9,6 @@ namespace Simulator.Api.Controllers;
 [Route("api/sessions")]
 public sealed class SessionsController : ControllerBase
 {
-    private const int MaxCount = 584; // dimensione dell'intero question bank
     private static readonly string[] ValidModes = ["practice", "exam"];
 
     private readonly IActiveSessionService _activeSessionService;
@@ -35,7 +34,6 @@ public sealed class SessionsController : ControllerBase
         {
             { Mode: var mode } when !ValidModes.Contains(mode) => $"mode deve essere uno tra: {string.Join(", ", ValidModes)}.",
             { QuestionNumbers.Count: 0 } => "questionNumbers non puo' essere vuoto.",
-            { QuestionNumbers.Count: > MaxCount } => $"non piu' di {MaxCount} domande per sessione.",
             { TimeLimitSeconds: <= 0 } => "timeLimitSeconds, se presente, deve essere positivo.",
             { DrawMode: var draw } when !DrawModeMapper.IsValid(draw) => $"drawMode deve essere uno tra: {string.Join(", ", DrawModeMapper.Values)}.",
             _ => null,

@@ -42,7 +42,7 @@ export function SimulationSetupPage() {
         return;
       }
       dispatch({ type: "START_SESSION", certificationId: certification.id, mode: "exam", drawMode, questions, timeLimitSeconds: certification.examTimeLimitMinutes * 60 });
-      navigate("/session");
+      navigate(`/${certification.id}/session`);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Impossibile caricare le domande.");
       setLoading(false);

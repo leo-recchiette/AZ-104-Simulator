@@ -8,14 +8,13 @@ import type { CertificationDto } from "../types/certification";
 import { OptionsMenu } from "../components/OptionsMenu";
 import { formatDateTime, formatDuration } from "../utils/format";
 import { PASS_MARK_SCORE } from "../constants";
-import { HEADER_GRADIENT } from "../theme/tokens";
 
 /** Elenco dei tentativi conclusi; da qui se ne apre uno per rileggerlo. */
 export function HistoryPage() {
   const certification = useOutletContext<CertificationDto>();
   const navigate = useNavigate();
-  const { theme, tokens: t } = useTheme();
-  const headerGradient = theme === "dark" ? HEADER_GRADIENT.dark : HEADER_GRADIENT.light;
+  const { tokens: t } = useTheme();
+  const headerGradient = t.header;
   const [attempts, setAttempts] = useState<ExamAttemptDto[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 

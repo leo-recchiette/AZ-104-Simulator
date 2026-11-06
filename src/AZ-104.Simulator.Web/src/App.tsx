@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { Navigate, Outlet, Route, Routes, useParams } from "react-router-dom";
+import { Navigate, Outlet, Route, Routes, useOutletContext, useParams } from "react-router-dom";
 import { useSession } from "./session/SessionContext";
-import { useTheme } from "./theme/ThemeContext";
+import { useTheme, VendorTheme } from "./theme/ThemeContext";
 import { getAllCertifications } from "./api/certifications";
 import type { CertificationDto } from "./types/certification";
 import { CertificationsPage } from "./pages/CertificationsPage";
@@ -13,11 +13,15 @@ import { ResultsPage } from "./pages/ResultsPage";
 import { HistoryPage } from "./pages/HistoryPage";
 import { AttemptDetailPage } from "./pages/AttemptDetailPage";
 
-/** Aspetta il ripristino prima di decidere, altrimenti un reload rimanderebbe al catalogo. */
+/**
+ * Aspetta il ripristino prima di decidere, altrimenti un reload rimanderebbe indietro. Senza sessione, o con la
+ * sessione di un'altra certificazione (URL scritto a mano), si torna alla pagina della certificazione.
+ */
 function RequireSession({ children }: { children: ReactNode }) {
+  const certification = useOutletContext<CertificationDto>();
   const { state, restoring } = useSession();
   if (restoring) return <LoadingScreen text="Restoring your session..." />;
-  if (state.questions.length === 0) return <Navigate to="/" replace />;
+  if (state.questions.length === 0 || state.certificationId !== certification.id) return <Navigate to={`/${certification.id}`} replace />;
   return <>{children}</>;
 }
 
@@ -41,7 +45,11 @@ function CertificationLayout() {
 
   if (certification === undefined) return <LoadingScreen text="Loading..." />;
   if (certification === null) return <Navigate to="/" replace />;
-  return <Outlet context={certification} />;
+  return (
+    <VendorTheme vendor={certification.vendor}>
+      <Outlet context={certification} />
+    </VendorTheme>
+  );
 }
 
 function LoadingScreen({ text }: { text: string }) {
@@ -66,24 +74,23 @@ export function App() {
           {/* Fuori da RequireSession: lo storico si legge dal database, non dalla sessione in corso. */}
           <Route path="history" element={<HistoryPage />} />
           <Route path="history/:id" element={<AttemptDetailPage />} />
+          <Route
+            path="session"
+            element={
+              <RequireSession>
+                <SessionPage />
+              </RequireSession>
+            }
+          />
+          <Route
+            path="results"
+            element={
+              <RequireSession>
+                <ResultsPage />
+              </RequireSession>
+            }
+          />
         </Route>
-        {/* La sessione porta con se' la sua certificazione: niente id nella rotta. */}
-        <Route
-          path="/session"
-          element={
-            <RequireSession>
-              <SessionPage />
-            </RequireSession>
-          }
-        />
-        <Route
-          path="/results"
-          element={
-            <RequireSession>
-              <ResultsPage />
-            </RequireSession>
-          }
-        />
       </Routes>
     </div>
   );
