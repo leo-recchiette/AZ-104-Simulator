@@ -14,14 +14,18 @@ CREATE TYPE question_type AS ENUM (
     'hotspot_yes_no'
 );
 
--- Una riga per cartella del dataset, riscritta dall'importer insieme alle domande: le regole della
--- simulazione d'esame vengono da certificationSettings.json, accanto a questions.json. La soglia (700 su 1000) e'
+-- Una riga per cartella del dataset, riscritta dall'importer insieme alle domande: codice, nome e regole
+-- della simulazione d'esame vengono da certificationSettings.json, accanto a questions.json. La soglia (700 su 1000) e'
 -- la stessa per tutte e non si salva.
 CREATE TABLE certifications (
     -- Es. 'az-104': il nome della cartella della certificazione.
     id                      TEXT    PRIMARY KEY,
     -- Es. 'microsoft': la cartella che contiene quella della certificazione.
     vendor                  TEXT    NOT NULL,
+    -- Es. 'AZ-104'.
+    code                    TEXT    NOT NULL,
+    -- Es. 'Microsoft Certified: Azure Administrator Associate'.
+    name                    TEXT    NOT NULL,
     -- Unita', non domande: una scenario series conta come una.
     exam_question_count     INTEGER NOT NULL CHECK (exam_question_count > 0),
     exam_time_limit_minutes INTEGER NOT NULL CHECK (exam_time_limit_minutes > 0)

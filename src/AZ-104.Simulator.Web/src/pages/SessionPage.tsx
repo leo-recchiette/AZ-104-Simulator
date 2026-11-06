@@ -14,7 +14,7 @@ import { groupMembers, sessionUnits, unitsAnswered, unitsStarted } from "../util
 import { isAnswerStarted, isRevealedWrong } from "../utils/questionShape";
 import { OptionsMenu } from "../components/OptionsMenu";
 import { HEADER_GRADIENT } from "../theme/tokens";
-import { CERTIFICATION_HOME, MAX_QUESTION_COUNT, PASS_MARK_SCORE } from "../constants";
+import { MAX_QUESTION_COUNT, PASS_MARK_SCORE } from "../constants";
 
 // Fuori dal tema: stanno sul banner blu, uguale in light e dark.
 const CLOCK_OK = "#3ddc84";
@@ -97,14 +97,14 @@ export function SessionPage() {
     // Niente da valutare: la sessione si scarta.
     if (scored.length === 0) {
       dispatch({ type: "RESET" });
-      navigate(CERTIFICATION_HOME);
+      navigate(`/${state.certificationId}`);
       return;
     }
 
     setError(null);
     setSubmitting(true);
     try {
-      const score = await getScore(submissions);
+      const score = await getScore(state.certificationId, submissions);
       dispatch({ type: "FINISH_SESSION", score, timeUsedSeconds: elapsedSecRef.current, questions: scored });
       navigate("/results");
 
@@ -116,7 +116,7 @@ export function SessionPage() {
         const endTime = new Date();
         // Dal tempo giocato, non da startedAt: le pause non contano.
         const startTime = new Date(endTime.getTime() - elapsedSecRef.current * 1000);
-        saveAttempt({
+        saveAttempt(state.certificationId, {
           mode: state.mode,
           drawMode: state.drawMode,
           questionCount: scored.length,
@@ -134,7 +134,7 @@ export function SessionPage() {
       setError(err instanceof ApiError ? err.message : "Impossibile calcolare il punteggio.");
       setSubmitting(false);
     }
-  }, [dispatch, navigate, scored, submissions, state.mode, state.drawMode, state.startedAt, state.studyLater]);
+  }, [dispatch, navigate, scored, submissions, state.certificationId, state.mode, state.drawMode, state.startedAt, state.studyLater]);
 
   const paused = state.pausedAt !== null;
   const elapsedMs = useElapsedTime(state.startedAt, state.pausedAt);
@@ -143,7 +143,7 @@ export function SessionPage() {
   const limit = state.timeLimitSeconds;
   const remaining = limit ? Math.max(0, limit - elapsedSec) : 0;
   const showLiveScore = isPractice && state.liveScore;
-  const liveScore = useLiveScore(showLiveScore ? submissions : null);
+  const liveScore = useLiveScore(state.certificationId, showLiveScore ? submissions : null);
 
   useEffect(() => {
     if (!limit) return;
@@ -154,8 +154,8 @@ export function SessionPage() {
   }, [remaining, limit, handleFinish]);
 
   useEffect(() => {
-    if (!question) navigate(CERTIFICATION_HOME, { replace: true });
-  }, [question, navigate]);
+    if (!question) navigate(`/${state.certificationId}`, { replace: true });
+  }, [question, navigate, state.certificationId]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => arrowKeysRef.current(e);
@@ -171,14 +171,14 @@ export function SessionPage() {
 
     const questionNumber = question.number;
     const timer = setTimeout(() => {
-      checkAnswers([{ questionNumber, userAnswers: value }])
+      checkAnswers(state.certificationId, [{ questionNumber, userAnswers: value }])
         .then(([result]) => {
           if (result) dispatch({ type: "SET_CHECK_RESULT", questionNumber, result });
         })
         .catch((err) => console.error("Auto-reveal non riuscito:", err));
     }, AUTO_REVEAL_DELAY_MS);
     return () => clearTimeout(timer);
-  }, [isPractice, state.autoReveal, state.checkResults, question, value, dispatch]);
+  }, [isPractice, state.autoReveal, state.checkResults, state.certificationId, question, value, dispatch]);
 
   const autoRevealOn = isPractice && state.autoReveal;
   // Per indice. Solo con l'auto-reveal, che e' quando la correzione e' gia' a schermo.
@@ -208,7 +208,7 @@ export function SessionPage() {
   useEffect(() => {
     if (missingChecks.length === 0) return;
     let cancelled = false;
-    checkAnswers(missingChecks)
+    checkAnswers(state.certificationId, missingChecks)
       .then((results) => {
         if (cancelled) return;
         for (const result of results) dispatch({ type: "SET_CHECK_RESULT", questionNumber: result.questionNumber, result });
@@ -217,12 +217,12 @@ export function SessionPage() {
     return () => {
       cancelled = true;
     };
-  }, [missingChecks, dispatch]);
+  }, [missingChecks, dispatch, state.certificationId]);
 
   if (!question) return null;
 
   async function handleReveal() {
-    const [result] = await checkAnswers([{ questionNumber: question.number, userAnswers: value }]);
+    const [result] = await checkAnswers(state.certificationId, [{ questionNumber: question.number, userAnswers: value }]);
     dispatch({ type: "SET_CHECK_RESULT", questionNumber: question.number, result });
   }
 
@@ -262,7 +262,7 @@ export function SessionPage() {
       setError(null);
       setLoadingMore(true);
       try {
-        dispatch({ type: "SET_POOL", questions: await getExam(MAX_QUESTION_COUNT, state.drawMode) });
+        dispatch({ type: "SET_POOL", questions: await getExam(state.certificationId, MAX_QUESTION_COUNT, state.drawMode) });
       } catch (err) {
         setError(err instanceof ApiError ? err.message : "Impossibile caricare altre domande.");
         return;
@@ -359,7 +359,7 @@ export function SessionPage() {
           <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
             {/* La sessione resta in-progress: la home la ripropone con "Resume". */}
             <button
-              onClick={() => navigate(CERTIFICATION_HOME)}
+              onClick={() => navigate(`/${state.certificationId}`)}
               title="Back to the home page"
               style={{
                 // "font" e' una shorthand: va prima di size/weight.

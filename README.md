@@ -62,8 +62,9 @@ tests/
 db/                                SQL schema
 dataset/<vendor>/<certification>/  source data, one folder per certification (dataset/microsoft/az-104/,
                                      dataset/hashicorp/terraform-associate-004/):
-                                     questions.json, certificationSettings.json (exam question count and time limit),
-                                     questions.md (human-readable version), images.zip (exhibits).
+                                     questions.json, certificationSettings.json (code, name, exam question count, time limit),
+                                     questions.md (human-readable version), images.zip (exhibits),
+                                     badge.png (optional, served at /images/<certification>/badge.png).
                                      The folder name is the certification id stored with its questions
 docs/screenshots/                  the images in this README
 docker-compose.yml

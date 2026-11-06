@@ -5,7 +5,7 @@ import { getAllCertifications } from "../api/certifications";
 import type { CertificationsByVendor } from "../types/certification";
 import { FloatingThemeToggle } from "../components/FloatingThemeToggle";
 import { FilterPill } from "../components/FilterPill";
-import { CERTIFICATION_HOME, CERTIFICATION_ID } from "../constants";
+import { imageUrl } from "../utils/images";
 import { MODE_BG_GRADIENT } from "../theme/tokens";
 
 /** Home: i question bank trovati dall'API, un tab per vendor. */
@@ -26,8 +26,7 @@ export function CertificationsPage() {
   }, []);
 
   const vendors = catalog ? Object.keys(catalog) : [];
-  // Finche' non se ne sceglie uno: il tab di CERTIFICATION_ID, l'unica con le sue pagine; altrimenti il primo.
-  const selected = vendor ?? vendors.find((v) => catalog?.[v].some((c) => c.id === CERTIFICATION_ID)) ?? vendors[0];
+  const selected = vendor ?? vendors[0];
 
   return (
     <>
@@ -48,28 +47,37 @@ export function CertificationsPage() {
                 ))}
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 18 }}>
-                {catalog[selected].map((c) => {
-                  // shortcut: solo CERTIFICATION_ID ha le sue pagine, finche' la certificazione non arriva dalla rotta.
-                  const available = c.id === CERTIFICATION_ID;
-                  return (
-                    <button
-                      key={c.id}
-                      disabled={!available}
-                      onClick={() => navigate(CERTIFICATION_HOME)}
-                      style={{
-                        textAlign: "left", background: t.card, border: `1px solid ${t.bd}`, borderRadius: 14,
-                        padding: "22px 22px 20px", boxShadow: `0 1px 2px ${t.sh}`, color: "inherit", font: "inherit",
-                        opacity: available ? 1 : 0.55,
-                      }}
-                    >
-                      <div style={{ fontSize: 19, fontWeight: 600 }}>{c.id}</div>
-                      <p style={{ margin: "10px 0 0", color: t.tx2, fontSize: 13 }}>
-                        {`${c.questionCount} questions · exam: ${c.examQuestionCount} questions, ${c.examTimeLimitMinutes} min`}
-                      </p>
-                      {!available && <p style={{ margin: "6px 0 0", color: t.fa, fontSize: 12.5 }}>Not available yet</p>}
-                    </button>
-                  );
-                })}
+                {catalog[selected].map((c) => (
+                  <button
+                    key={c.id}
+                    onClick={() => navigate(`/${c.id}`)}
+                    style={{
+                      textAlign: "left", background: t.card, border: `1px solid ${t.bd}`, borderRadius: 14,
+                      padding: "22px 22px 20px", boxShadow: `0 1px 2px ${t.sh}`, color: "inherit", font: "inherit",
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                      {/* alt vuoto: codice e nome sono scritti accanto. badge.png e' facoltativo: senza, niente immagine rotta. */}
+                      <img
+                        src={imageUrl(`${c.id}/badge.png`)}
+                        alt=""
+                        width={64}
+                        height={64}
+                        style={{ flexShrink: 0, display: "block" }}
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
+                      <div>
+                        <div style={{ fontSize: 19, fontWeight: 600 }}>{c.code}</div>
+                        <div style={{ color: t.mu, fontSize: 13.5, lineHeight: 1.45, marginTop: 2 }}>{c.name}</div>
+                      </div>
+                    </div>
+                    <p style={{ margin: "14px 0 0", color: t.tx2, fontSize: 13 }}>
+                      {`${c.questionCount} questions · exam: ${c.examQuestionCount} questions, ${c.examTimeLimitMinutes} min`}
+                    </p>
+                  </button>
+                ))}
               </div>
             </>
           )}

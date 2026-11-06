@@ -9,7 +9,7 @@ const LIVE_SCORE_DELAY_MS = 400;
  * Il punteggio che darebbe l'invio adesso: stessa getScore e stesse submission di handleFinish,
  * cosi' non puo' divergere. null = niente da valutare o disattivato. Mai nel SessionContext.
  */
-export function useLiveScore(submissions: AnswerSubmissionDto[] | null): number | null {
+export function useLiveScore(certificationId: string, submissions: AnswerSubmissionDto[] | null): number | null {
   const [score, setScore] = useState<number | null>(null);
   const active = submissions !== null && submissions.length > 0;
 
@@ -17,7 +17,7 @@ export function useLiveScore(submissions: AnswerSubmissionDto[] | null): number 
     if (!submissions || submissions.length === 0) return;
     let cancelled = false;
     const timer = setTimeout(() => {
-      getScore(submissions)
+      getScore(certificationId, submissions)
         .then((result) => {
           if (!cancelled) setScore(result.score);
         })
@@ -28,7 +28,7 @@ export function useLiveScore(submissions: AnswerSubmissionDto[] | null): number 
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [submissions]);
+  }, [certificationId, submissions]);
 
   return active ? score : null;
 }

@@ -27,7 +27,8 @@ DATABASE_URL = os.environ.get(
 
 MULTIPLE_CHOICE = "multiple_choice"
 ORDERED_ANSWER = "ordered_answer"
-SETTINGS_FIELDS = ("exam_question_count", "exam_time_limit_minutes")
+SETTINGS_TEXT_FIELDS = ("code", "name")
+SETTINGS_INT_FIELDS = ("exam_question_count", "exam_time_limit_minutes")
 
 
 def find_datasets(root: Path) -> dict[str, Path]:
@@ -46,11 +47,14 @@ def load_questions(path: Path) -> list[dict]:
 
 
 def load_settings(path: Path) -> dict:
-    """certificationSettings.json accanto a questions.json: le regole della simulazione d'esame, obbligatorie."""
+    """certificationSettings.json accanto a questions.json: codice, nome e regole della simulazione d'esame, obbligatori."""
     if not path.exists():
         raise SystemExit(f"manca {path}")
     settings = json.loads(path.read_text(encoding="utf-8"))
-    for field in SETTINGS_FIELDS:
+    for field in SETTINGS_TEXT_FIELDS:
+        if type(settings.get(field)) is not str or not settings[field].strip():
+            raise SystemExit(f"{path}: {field} deve essere un testo non vuoto")
+    for field in SETTINGS_INT_FIELDS:
         # type() e non isinstance(): True e' un int per Python.
         if type(settings.get(field)) is not int or settings[field] < 1:
             raise SystemExit(f"{path}: {field} deve essere un intero positivo")
@@ -232,8 +236,18 @@ def import_all(
             vendor = datasets[certification_id].parent.parent.name
             rules = settings[certification_id]
             cur.execute(
-                "INSERT INTO certifications (id, vendor, exam_question_count, exam_time_limit_minutes) VALUES (%s, %s, %s, %s)",
-                (certification_id, vendor, rules["exam_question_count"], rules["exam_time_limit_minutes"]),
+                """
+                INSERT INTO certifications (id, vendor, code, name, exam_question_count, exam_time_limit_minutes)
+                VALUES (%s, %s, %s, %s, %s, %s)
+                """,
+                (
+                    certification_id,
+                    vendor,
+                    rules["code"],
+                    rules["name"],
+                    rules["exam_question_count"],
+                    rules["exam_time_limit_minutes"],
+                ),
             )
             for q in questions:
                 question_id = insert_question(cur, certification_id, q)

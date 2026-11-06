@@ -4,6 +4,10 @@ export interface CertificationDto {
   vendor: string;
   /** Nome della cartella del dataset: e' il certificationId che chiedono gli altri endpoint. */
   id: string;
+  /** Es. 'AZ-104'. */
+  code: string;
+  /** Es. 'Microsoft Certified: Azure Administrator Associate'. */
+  name: string;
   questionCount: number;
   /** Unita' della simulazione, non domande: un gruppo conta come una. */
   examQuestionCount: number;

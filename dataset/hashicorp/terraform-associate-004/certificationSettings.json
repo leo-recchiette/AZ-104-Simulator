@@ -1,4 +1,6 @@
 {
+  "code": "TA-004",
+  "name": "HashiCorp Certified: Terraform Associate (004)",
   "exam_question_count": 57,
   "exam_time_limit_minutes": 60
 }

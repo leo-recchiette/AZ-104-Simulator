@@ -5,6 +5,8 @@ import { leadingUnitSize } from "../utils/groups";
 export type SessionMode = "practice" | "exam";
 
 export interface SessionState {
+  /** La certificazione della sessione: vuota finche' non ne parte una. */
+  certificationId: string;
   mode: SessionMode | null;
   questions: QuestionDto[];
   currentIndex: number;
@@ -42,7 +44,7 @@ export interface SessionState {
 }
 
 export type SessionAction =
-  | { type: "START_SESSION"; mode: SessionMode; drawMode: DrawMode; questions: QuestionDto[]; timeLimitSeconds: number | null; autoReveal?: boolean; openEnded?: boolean; liveScore?: boolean }
+  | { type: "START_SESSION"; certificationId: string; mode: SessionMode; drawMode: DrawMode; questions: QuestionDto[]; timeLimitSeconds: number | null; autoReveal?: boolean; openEnded?: boolean; liveScore?: boolean }
   | { type: "RESTORE_SESSION"; state: SessionState }
   | { type: "SET_ANSWER"; questionNumber: number; answer: string[] }
   | { type: "GO_NEXT" }
@@ -62,6 +64,7 @@ export type SessionAction =
   | { type: "RESET" };
 
 export const initialSessionState: SessionState = {
+  certificationId: "",
   mode: null,
   questions: [],
   currentIndex: 0,
@@ -91,6 +94,7 @@ export function sessionReducer(state: SessionState, action: SessionAction): Sess
       const shown = openEnded ? leadingUnitSize(action.questions) : action.questions.length;
       return {
         ...initialSessionState,
+        certificationId: action.certificationId,
         mode: action.mode,
         questions: action.questions.slice(0, shown),
         timeLimitSeconds: action.timeLimitSeconds,

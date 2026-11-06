@@ -16,7 +16,7 @@ public sealed class CertificationRepository : ICertificationRepository
     public async Task<IReadOnlyList<Certification>> GetAllAsync(CancellationToken cancellationToken)
     {
         const string sql = """
-            SELECT c.vendor AS "Vendor", c.id AS "Id", count(*)::int AS "QuestionCount",
+            SELECT c.vendor AS "Vendor", c.id AS "Id", c.code AS "Code", c.name AS "Name", count(*)::int AS "QuestionCount",
                    c.exam_question_count AS "ExamQuestionCount", c.exam_time_limit_minutes AS "ExamTimeLimitMinutes"
             FROM certifications c
             JOIN questions q ON q.certification_id = c.id

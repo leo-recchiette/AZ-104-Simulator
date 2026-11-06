@@ -21,6 +21,7 @@ function hasAnyAnswer(state: SessionState): boolean {
 function toSaveDto(state: SessionState): SaveActiveSessionDto | null {
   if (state.mode === null || state.startedAt === null || state.questions.length === 0) return null;
   return {
+    certificationId: state.certificationId,
     mode: state.mode,
     questionNumbers: state.questions.map((q) => q.number),
     answers: state.answers,
@@ -55,6 +56,7 @@ function fromDto(dto: ActiveSessionDto): SessionState {
 
   return {
     ...initialSessionState,
+    certificationId: dto.certificationId,
     mode: dto.mode,
     questions: dto.questions,
     currentIndex: Math.min(dto.currentIndex, Math.max(0, dto.questions.length - 1)),

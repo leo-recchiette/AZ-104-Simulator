@@ -1,33 +1,26 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { useTheme } from "../theme/ThemeContext";
 import { useSession } from "../session/SessionContext";
 import { getExam } from "../api/questions";
 import { ApiError } from "../api/client";
 import type { DrawMode } from "../types/question";
+import type { CertificationDto } from "../types/certification";
 import { FloatingThemeToggle } from "../components/FloatingThemeToggle";
 import { EmptyBankDialog } from "../components/EmptyBankDialog";
 import { ResumeSessionBanner } from "../components/ResumeSessionBanner";
 import { DrawModeToggle } from "../components/DrawModeToggle";
-import {
-  CERTIFICATION_HOME,
-  EXAM_QUESTION_COUNT,
-  EXAM_TIME_LIMIT_MINUTES,
-  EXAM_TIME_LIMIT_SECONDS,
-  MAX_SCORE,
-  PASS_MARK_SCORE,
-  SIMULATION_DEFAULT_DRAW_MODE,
-} from "../constants";
-
-/** Le condizioni d'esame sono fisse: qui si sceglie solo come pescare. */
-const RULES = [
-  { label: "Questions", value: `${EXAM_QUESTION_COUNT}, a scenario series counts as one` },
-  { label: "Time limit", value: `${EXAM_TIME_LIMIT_MINUTES} minutes` },
-  { label: "Solutions", value: "After you submit" },
-  { label: "Passing score", value: `${PASS_MARK_SCORE} out of ${MAX_SCORE}` },
-];
+import { MAX_SCORE, PASS_MARK_SCORE, SIMULATION_DEFAULT_DRAW_MODE } from "../constants";
 
 export function SimulationSetupPage() {
+  const certification = useOutletContext<CertificationDto>();
+  // Le condizioni d'esame sono quelle della certificazione: qui si sceglie solo come pescare.
+  const rules = [
+    { label: "Questions", value: `${certification.examQuestionCount}, a scenario series counts as one` },
+    { label: "Time limit", value: `${certification.examTimeLimitMinutes} minutes` },
+    { label: "Solutions", value: "After you submit" },
+    { label: "Passing score", value: `${PASS_MARK_SCORE} out of ${MAX_SCORE}` },
+  ];
   const navigate = useNavigate();
   const { tokens: t } = useTheme();
   const { dispatch } = useSession();
@@ -41,14 +34,14 @@ export function SimulationSetupPage() {
     setError(null);
     setLoading(true);
     try {
-      const questions = await getExam(EXAM_QUESTION_COUNT, drawMode);
+      const questions = await getExam(certification.id, certification.examQuestionCount, drawMode);
       // 200 con []: question bank vuoto, non un errore dell'API.
       if (questions.length === 0) {
         setEmptyBank(true);
         setLoading(false);
         return;
       }
-      dispatch({ type: "START_SESSION", mode: "exam", drawMode, questions, timeLimitSeconds: EXAM_TIME_LIMIT_SECONDS });
+      dispatch({ type: "START_SESSION", certificationId: certification.id, mode: "exam", drawMode, questions, timeLimitSeconds: certification.examTimeLimitMinutes * 60 });
       navigate("/session");
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Impossibile caricare le domande.");
@@ -62,7 +55,7 @@ export function SimulationSetupPage() {
       {emptyBank && <EmptyBankDialog onClose={() => setEmptyBank(false)} />}
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 24px" }}>
         <div style={{ width: "100%", maxWidth: 620, background: t.card, border: `1px solid ${t.bd}`, borderRadius: 16, padding: "34px 32px", boxShadow: `0 2px 10px ${t.sh}` }}>
-          <button onClick={() => navigate(CERTIFICATION_HOME)} style={{ background: "none", border: "none", padding: 0, color: t.mu, fontSize: 13, marginBottom: 18, font: "inherit" }}>
+          <button onClick={() => navigate(`/${certification.id}`)} style={{ background: "none", border: "none", padding: 0, color: t.mu, fontSize: 13, marginBottom: 18, font: "inherit" }}>
             ← Back
           </button>
           <h2 style={{ fontFamily: "'Source Serif 4', Georgia, serif", fontWeight: 600, fontSize: 28, margin: "0 0 6px" }}>
@@ -74,7 +67,7 @@ export function SimulationSetupPage() {
 
           <ResumeSessionBanner style={{ marginBottom: 26 }} />
 
-          {RULES.map((rule) => (
+          {rules.map((rule) => (
             <div key={rule.label} style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 16, padding: "12px 0", borderTop: `1px solid ${t.bd2}` }}>
               <div style={{ fontSize: 13, fontWeight: 600 }}>{rule.label}</div>
               <div style={{ fontSize: 13.5, color: t.tx2, textAlign: "right" }}>{rule.value}</div>
@@ -94,7 +87,7 @@ export function SimulationSetupPage() {
               opacity: loading ? 0.8 : 1,
             }}
           >
-            {loading ? "Loading..." : `Start simulation · ${EXAM_QUESTION_COUNT} questions · ${EXAM_TIME_LIMIT_MINUTES} min`}
+            {loading ? "Loading..." : `Start simulation · ${certification.examQuestionCount} questions · ${certification.examTimeLimitMinutes} min`}
           </button>
         </div>
       </div>

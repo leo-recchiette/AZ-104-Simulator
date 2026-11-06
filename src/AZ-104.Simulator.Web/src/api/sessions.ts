@@ -1,5 +1,4 @@
 import { requestOptional, requestVoid } from "./client";
-import { CERTIFICATION_ID } from "../constants";
 import type { ActiveSessionDto, SaveActiveSessionDto } from "../types/session";
 
 /** null quando non c'e' nessuna sessione da riprendere (il server risponde 204). */
@@ -11,7 +10,7 @@ export function getActiveSession(): Promise<ActiveSessionDto | null> {
 export function saveActiveSession(session: SaveActiveSessionDto, keepalive = false): Promise<void> {
   return requestVoid("/api/sessions/saveCurrentSession", {
     method: "PUT",
-    body: JSON.stringify({ ...session, certificationId: CERTIFICATION_ID }),
+    body: JSON.stringify(session),
     keepalive,
   });
 }

@@ -1,8 +1,9 @@
-import type { ReactNode } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { useEffect, useState, type ReactNode } from "react";
+import { Navigate, Outlet, Route, Routes, useParams } from "react-router-dom";
 import { useSession } from "./session/SessionContext";
 import { useTheme } from "./theme/ThemeContext";
-import { CERTIFICATION_HOME } from "./constants";
+import { getAllCertifications } from "./api/certifications";
+import type { CertificationDto } from "./types/certification";
 import { CertificationsPage } from "./pages/CertificationsPage";
 import { ModeSelectPage } from "./pages/ModeSelectPage";
 import { PracticeSetupPage } from "./pages/PracticeSetupPage";
@@ -12,19 +13,42 @@ import { ResultsPage } from "./pages/ResultsPage";
 import { HistoryPage } from "./pages/HistoryPage";
 import { AttemptDetailPage } from "./pages/AttemptDetailPage";
 
-/** Aspetta il ripristino prima di decidere, altrimenti un reload rimanderebbe alla home. */
+/** Aspetta il ripristino prima di decidere, altrimenti un reload rimanderebbe al catalogo. */
 function RequireSession({ children }: { children: ReactNode }) {
   const { state, restoring } = useSession();
-  if (restoring) return <RestoringScreen />;
-  if (state.questions.length === 0) return <Navigate to={CERTIFICATION_HOME} replace />;
+  if (restoring) return <LoadingScreen text="Restoring your session..." />;
+  if (state.questions.length === 0) return <Navigate to="/" replace />;
   return <>{children}</>;
 }
 
-function RestoringScreen() {
+/**
+ * Le pagine di una certificazione: la cerca nel catalogo e la passa alle figlie con useOutletContext.
+ * Rilegge il catalogo anche dopo un reload, quando non si e' passati dalla home.
+ */
+function CertificationLayout() {
+  const { certificationId } = useParams();
+  // undefined = in caricamento, null = non esiste (o il catalogo non si carica): si torna al catalogo.
+  const [certification, setCertification] = useState<CertificationDto | null>();
+
+  useEffect(() => {
+    getAllCertifications()
+      .then((catalog) => setCertification(Object.values(catalog).flat().find((c) => c.id === certificationId) ?? null))
+      .catch((err) => {
+        console.error("Impossibile caricare la certificazione:", err);
+        setCertification(null);
+      });
+  }, [certificationId]);
+
+  if (certification === undefined) return <LoadingScreen text="Loading..." />;
+  if (certification === null) return <Navigate to="/" replace />;
+  return <Outlet context={certification} />;
+}
+
+function LoadingScreen({ text }: { text: string }) {
   const { tokens: t } = useTheme();
   return (
     <div style={{ flex: 1, display: "grid", placeItems: "center", padding: 48, color: t.mu, fontSize: 14 }}>
-      Restoring your session...
+      {text}
     </div>
   );
 }
@@ -35,12 +59,15 @@ export function App() {
     <div style={{ minHeight: "100dvh", display: "flex", flexDirection: "column", background: t.bg, color: t.tx, transition: "background .2s, color .2s" }}>
       <Routes>
         <Route path="/" element={<CertificationsPage />} />
-        <Route path={CERTIFICATION_HOME} element={<ModeSelectPage />} />
-        <Route path="/practice/setup" element={<PracticeSetupPage />} />
-        <Route path="/simulation/setup" element={<SimulationSetupPage />} />
-        {/* Fuori da RequireSession: lo storico si legge dal database, non dalla sessione in corso. */}
-        <Route path="/history" element={<HistoryPage />} />
-        <Route path="/history/:id" element={<AttemptDetailPage />} />
+        <Route path="/:certificationId" element={<CertificationLayout />}>
+          <Route index element={<ModeSelectPage />} />
+          <Route path="practice/setup" element={<PracticeSetupPage />} />
+          <Route path="simulation/setup" element={<SimulationSetupPage />} />
+          {/* Fuori da RequireSession: lo storico si legge dal database, non dalla sessione in corso. */}
+          <Route path="history" element={<HistoryPage />} />
+          <Route path="history/:id" element={<AttemptDetailPage />} />
+        </Route>
+        {/* La sessione porta con se' la sua certificazione: niente id nella rotta. */}
         <Route
           path="/session"
           element={

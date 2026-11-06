@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { useTheme } from "../theme/ThemeContext";
 import { useSession } from "../session/SessionContext";
 import { getExam } from "../api/questions";
@@ -9,7 +9,8 @@ import { EmptyBankDialog } from "../components/EmptyBankDialog";
 import { ResumeSessionBanner } from "../components/ResumeSessionBanner";
 import { DrawModeToggle } from "../components/DrawModeToggle";
 import type { DrawMode } from "../types/question";
-import { CERTIFICATION_HOME, MAX_QUESTION_COUNT, PRACTICE_DEFAULT_DRAW_MODE } from "../constants";
+import type { CertificationDto } from "../types/certification";
+import { MAX_QUESTION_COUNT, PRACTICE_DEFAULT_DRAW_MODE } from "../constants";
 
 const COUNT_OPTIONS = [10, 20, 30, 40, 50, 60, 70, 80];
 const MINUTE_OPTIONS = [15, 30, 45, 60, 90, 120];
@@ -20,6 +21,7 @@ const LENGTH_OPTIONS = [
 ];
 
 export function PracticeSetupPage() {
+  const certification = useOutletContext<CertificationDto>();
   const navigate = useNavigate();
   const { tokens: t } = useTheme();
   const { dispatch } = useSession();
@@ -47,14 +49,14 @@ export function PracticeSetupPage() {
     setLoading(true);
     try {
       // A oltranza serve l'intero bank: si propone un'unita' alla volta.
-      const questions = await getExam(openEnded ? MAX_QUESTION_COUNT : count, drawMode);
+      const questions = await getExam(certification.id, openEnded ? MAX_QUESTION_COUNT : count, drawMode);
       // 200 con []: question bank vuoto, non un errore dell'API.
       if (questions.length === 0) {
         setEmptyBank(true);
         setLoading(false);
         return;
       }
-      dispatch({ type: "START_SESSION", mode: "practice", drawMode, questions, timeLimitSeconds: timed ? minutes * 60 : null, autoReveal, openEnded, liveScore });
+      dispatch({ type: "START_SESSION", certificationId: certification.id, mode: "practice", drawMode, questions, timeLimitSeconds: timed ? minutes * 60 : null, autoReveal, openEnded, liveScore });
       navigate("/session");
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Impossibile caricare le domande.");
@@ -72,7 +74,7 @@ export function PracticeSetupPage() {
       {emptyBank && <EmptyBankDialog onClose={() => setEmptyBank(false)} />}
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 24px" }}>
         <div style={{ width: "100%", maxWidth: 620, background: t.card, border: `1px solid ${t.bd}`, borderRadius: 16, padding: "34px 32px", boxShadow: `0 2px 10px ${t.sh}` }}>
-          <button onClick={() => navigate(CERTIFICATION_HOME)} style={{ background: "none", border: "none", padding: 0, color: t.mu, fontSize: 13, marginBottom: 18, font: "inherit" }}>
+          <button onClick={() => navigate(`/${certification.id}`)} style={{ background: "none", border: "none", padding: 0, color: t.mu, fontSize: 13, marginBottom: 18, font: "inherit" }}>
             ← Back
           </button>
           <h2 style={{ fontFamily: "'Source Serif 4', Georgia, serif", fontWeight: 600, fontSize: 28, margin: "0 0 6px" }}>

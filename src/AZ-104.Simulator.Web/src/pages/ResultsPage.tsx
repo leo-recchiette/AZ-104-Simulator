@@ -13,7 +13,7 @@ import { ReviewQuestionCard } from "../components/review/ReviewQuestionCard";
 import { ReviewGroupCard } from "../components/review/ReviewGroupCard";
 import { reviewUnits } from "../utils/reviewUnits";
 import { FilterPill } from "../components/FilterPill";
-import { CERTIFICATION_HOME, MAX_SCORE, PASS_MARK_SCORE } from "../constants";
+import { MAX_SCORE, PASS_MARK_SCORE } from "../constants";
 import { HEADER_GRADIENT } from "../theme/tokens";
 
 interface GradedEntry {
@@ -49,7 +49,7 @@ export function ResultsPage() {
       questionNumber: q.number,
       userAnswers: state.answers[q.number] ?? [],
     }));
-    checkAnswers(submissions)
+    checkAnswers(state.certificationId, submissions)
       .then(setReview)
       .catch((err) => setError(err instanceof ApiError ? err.message : "Impossibile caricare la revisione."));
     // Va eseguito una sola volta all'arrivo su questa pagina.
@@ -58,7 +58,7 @@ export function ResultsPage() {
 
   function handleRestart() {
     dispatch({ type: "RESET" });
-    navigate(CERTIFICATION_HOME);
+    navigate(`/${state.certificationId}`);
   }
 
   const score = state.score?.score ?? 0;

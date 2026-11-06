@@ -14,9 +14,9 @@ public sealed class CertificationServiceTests
     {
         var repository = Substitute.For<ICertificationRepository>();
         repository.GetAllAsync(Arg.Any<CancellationToken>()).Returns([
-            new Certification { Vendor = "hashicorp", Id = "terraform-associate-004", QuestionCount = 167, ExamQuestionCount = 57, ExamTimeLimitMinutes = 60 },
-            new Certification { Vendor = "microsoft", Id = "az-104", QuestionCount = 584, ExamQuestionCount = 54, ExamTimeLimitMinutes = 100 },
-            new Certification { Vendor = "microsoft", Id = "az-900", QuestionCount = 300, ExamQuestionCount = 40, ExamTimeLimitMinutes = 45 },
+            new Certification { Vendor = "hashicorp", Id = "terraform-associate-004", Code = "TA-004", Name = "Terraform Associate", QuestionCount = 167, ExamQuestionCount = 57, ExamTimeLimitMinutes = 60 },
+            new Certification { Vendor = "microsoft", Id = "az-104", Code = "AZ-104", Name = "Azure Administrator", QuestionCount = 584, ExamQuestionCount = 54, ExamTimeLimitMinutes = 100 },
+            new Certification { Vendor = "microsoft", Id = "az-900", Code = "AZ-900", Name = "Azure Fundamentals", QuestionCount = 300, ExamQuestionCount = 40, ExamTimeLimitMinutes = 45 },
         ]);
         var sut = new CertificationService(repository);
 
