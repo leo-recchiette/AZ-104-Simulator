@@ -21,9 +21,7 @@ export function MultipleChoiceAnswer({ options, selectCount, value, onChange, co
   const { tokens: t } = useTheme();
   const revealed = correctLetters !== undefined;
   const grades = revealed ? gradeMultipleChoice(value, correctLetters, options.map((o) => o.letter)) : null;
-  // Un'API non ancora aggiornata non manda selectCount: nessun tetto, come prima.
-  const limit = selectCount > 0 ? selectCount : options.length;
-  const single = limit === 1;
+  const single = selectCount === 1;
 
   function choose(letter: string) {
     if (locked) return;
@@ -31,7 +29,7 @@ export function MultipleChoiceAnswer({ options, selectCount, value, onChange, co
       onChange([letter]);
       return;
     }
-    onChange(value.includes(letter) ? value.filter((l) => l !== letter) : [...value, letter].slice(-limit));
+    onChange(value.includes(letter) ? value.filter((l) => l !== letter) : [...value, letter].slice(-selectCount));
   }
 
   return (
@@ -66,7 +64,7 @@ export function MultipleChoiceAnswer({ options, selectCount, value, onChange, co
             style={{
               display: "flex", alignItems: "flex-start", gap: 14, textAlign: "left",
               padding: "15px 17px", borderRadius: 11, border: `1.5px solid ${bd}`, background: bg,
-              color: "inherit", transition: "border-color .15s, background .15s", font: "inherit",
+              color: "inherit", transition: "border-color .15s, background .15s",
               cursor: locked ? "default" : "pointer",
             }}
           >

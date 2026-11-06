@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import { useTheme } from "../../theme/ThemeContext";
 import type { AnswerRowDto } from "../../types/answer";
+import { gradeRows, gradeUnordered } from "../../utils/grading";
 
 interface SequenceAnswerProps {
   draggableItems: string[];
@@ -19,11 +20,11 @@ export function SequenceAnswer({ draggableItems, sequenceLength, unordered, valu
   const { tokens: t } = useTheme();
   const revealed = answerRows !== undefined;
   const chosen = value;
-  // 0 se l'API non la manda: vale l'intero pool.
-  const slots = sequenceLength > 0 ? sequenceLength : draggableItems.length;
+  // Come il punteggio (gradeRows/gradeUnordered): maiuscole e spazi ai lati non contano.
+  const positionOk = revealed && !unordered ? gradeRows(chosen, answerRows) : [];
 
   function append(label: string) {
-    if (locked || chosen.includes(label) || chosen.length >= slots) return;
+    if (locked || chosen.includes(label) || chosen.length >= sequenceLength) return;
     onChange([...chosen, label]);
   }
   function moveUp(i: number) {
@@ -55,11 +56,11 @@ export function SequenceAnswer({ draggableItems, sequenceLength, unordered, valu
               <button
                 key={label}
                 onClick={() => append(label)}
-                disabled={used || locked || chosen.length >= slots}
+                disabled={used || locked || chosen.length >= sequenceLength}
                 style={{
                   textAlign: "left", padding: "12px 14px", borderRadius: 10,
                   border: `1px dashed ${used ? t.bd2 : t.bd3}`, background: used ? t.bg : t.card,
-                  fontSize: 13.5, lineHeight: 1.45, color: used ? t.dis : t.tx2, font: "inherit",
+                  fontSize: 13.5, lineHeight: 1.45, color: used ? t.dis : t.tx2,
                 }}
               >
                 {label}
@@ -70,14 +71,14 @@ export function SequenceAnswer({ draggableItems, sequenceLength, unordered, valu
       </div>
       <div>
         <div style={{ fontSize: 11, letterSpacing: ".1em", textTransform: "uppercase", fontWeight: 600, color: t.fa, marginBottom: 10 }}>
-          {unordered ? "Your answer" : "Your sequence"} ({chosen.length} of {slots})
+          {unordered ? "Your answer" : "Your sequence"} ({chosen.length} of {sequenceLength})
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 8, minHeight: 60 }}>
           {chosen.map((label, i) => {
             let bd = t.bd;
             let bg = t.card;
             if (revealed) {
-              const ok = unordered ? answerRows.some((row) => row.answer === label) : answerRows[i]?.answer === label;
+              const ok = unordered ? gradeUnordered([label], answerRows).some(Boolean) : (positionOk[i] ?? false);
               bd = ok ? t.ok : t.er;
               bg = ok ? t.okbg : t.erbg;
             }
@@ -117,5 +118,5 @@ export function SequenceAnswer({ draggableItems, sequenceLength, unordered, valu
 }
 
 function arrowButtonStyle(bd: string, bg: string, fg: string): CSSProperties {
-  return { width: 24, height: 24, borderRadius: 6, border: `1px solid ${bd}`, background: bg, fontSize: 11, color: fg, padding: 0, font: "inherit" };
+  return { width: 24, height: 24, borderRadius: 6, border: `1px solid ${bd}`, background: bg, fontSize: 11, color: fg, padding: 0 };
 }

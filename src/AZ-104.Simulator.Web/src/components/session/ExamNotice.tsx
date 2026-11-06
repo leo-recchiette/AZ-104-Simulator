@@ -18,7 +18,6 @@ export function ExamNotice({ text }: ExamNoticeProps) {
         style={{
           display: "flex", alignItems: "center", gap: 8, width: "100%", background: "none", border: "none",
           padding: "11px 14px", color: t.warn, textAlign: "left", cursor: "pointer",
-          // Nessun font:"inherit": la shorthand azzererebbe fontSize/fontWeight dichiarati qui.
           fontSize: 12.5, fontWeight: 600,
         }}
       >

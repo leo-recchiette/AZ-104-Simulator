@@ -1,5 +1,6 @@
 import { useEffect, type ReactNode } from "react";
 import { useTheme } from "../theme/ThemeContext";
+import { HEADING_FONT } from "../theme/fonts";
 
 const PANEL_WIDTH = "min(340px, 84vw)";
 const SLIDE = "transform .28s ease";
@@ -61,7 +62,7 @@ export function NavigatorPanel({ id, open, onOpen, onClose, title, subtitle, fil
           <div style={{ flexShrink: 0, padding: "18px 16px 12px", borderBottom: `1px solid ${t.bd}` }}>
             <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontFamily: "'Source Serif 4', Georgia, serif", fontWeight: 600, fontSize: 18, color: t.tx }}>
+                <div style={{ fontFamily: HEADING_FONT, fontWeight: 600, fontSize: 18, color: t.tx }}>
                   {title}
                 </div>
                 <div style={{ fontSize: 12.5, color: t.mu, marginTop: 4 }}>{subtitle}</div>
@@ -71,7 +72,7 @@ export function NavigatorPanel({ id, open, onOpen, onClose, title, subtitle, fil
                 aria-label="Close the question list"
                 style={{
                   flex: "none", width: 30, height: 30, borderRadius: 8, border: `1px solid ${t.bd3}`,
-                  background: t.card, color: t.tx2, fontSize: 14, lineHeight: 1, font: "inherit",
+                  background: t.card, color: t.tx2, fontSize: 14, lineHeight: 1,
                 }}
               >
                 ✕
@@ -152,7 +153,6 @@ export function NavigatorEntry({
         display: "flex", alignItems: "center", gap: 9, padding: "9px 11px", borderRadius: 9,
         border: `1.5px solid ${current ? t.ac : t.bd3}`, background: current ? t.acs : t.card,
         color: current ? t.ac : t.tx2, textAlign: "left",
-        // Nessun font:"inherit": la shorthand azzererebbe fontSize/fontWeight dichiarati qui.
         fontSize: 13.5, fontWeight: current ? 600 : 500,
       }}
     >

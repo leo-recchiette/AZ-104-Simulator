@@ -15,6 +15,7 @@ import { pointsEarned } from "../utils/grading";
 import { reviewAnchorId, reviewUnits } from "../utils/reviewUnits";
 import { formatDateTime, formatDuration } from "../utils/format";
 import { MAX_SCORE, PASS_MARK_SCORE } from "../constants";
+import { HEADING_FONT } from "../theme/fonts";
 
 type AttemptFilter = "all" | "wrong" | "studyLater" | "studyLaterOrWrong";
 
@@ -34,15 +35,16 @@ export function AttemptDetailPage() {
   useEffect(() => {
     const attemptId = Number(id);
     if (!Number.isInteger(attemptId)) {
-      setError("Identificativo del tentativo non valido.");
+      setError("Invalid attempt id.");
       return;
     }
     getAttempt(attemptId)
-      .then(setDetail)
+      // getAttempt non chiede la certificazione: un tentativo di un'altra non si mostra con il tema e lo storico di questa.
+      .then((found) => (found.attempt.certificationId === certification.id ? setDetail(found) : setError("This attempt does not exist.")))
       .catch((err) =>
-        setError(err instanceof ApiError && err.status === 404 ? "Questo tentativo non esiste." : "Impossibile caricare il tentativo."),
+        setError(err instanceof ApiError && err.status === 404 ? "This attempt does not exist." : "Could not load the attempt."),
       );
-  }, [id]);
+  }, [id, certification.id]);
 
   // I punti per domanda non sono salvati: si ricalcolano.
   const graded = useMemo(() => {
@@ -119,7 +121,7 @@ export function AttemptDetailPage() {
     <div style={{ flex: 1 }}>
       <div style={{ position: "sticky", top: 0, zIndex: 5, background: t.header, backdropFilter: "blur(8px)", borderBottom: "1px solid rgba(255,255,255,.18)" }}>
         <div style={{ maxWidth: 1000, margin: "0 auto", padding: "16px 24px", display: "flex", alignItems: "center", gap: 14 }}>
-          <button onClick={() => navigate(`/${certification.id}/history`)} style={{ background: "none", border: "none", padding: 0, color: "#e4e7ee", fontSize: 13.5, font: "inherit" }}>
+          <button onClick={() => navigate(`/${certification.id}/history`)} style={{ background: "none", border: "none", padding: 0, color: "#e4e7ee", fontSize: 13.5 }}>
             ← History
           </button>
           <div style={{ flex: 1 }} />
@@ -139,7 +141,7 @@ export function AttemptDetailPage() {
                 {attempt.mode === "practice" ? "Practice" : "Simulation"} · {formatDateTime(attempt.endTime)}
               </div>
               <div style={{ display: "flex", alignItems: "flex-end", gap: 14, margin: "12px 0 0", flexWrap: "wrap" }}>
-                <span style={{ fontFamily: "'Source Serif 4', Georgia, serif", fontSize: 46, fontWeight: 600, lineHeight: 1, letterSpacing: "-.02em" }}>
+                <span style={{ fontFamily: HEADING_FONT, fontSize: 46, fontWeight: 600, lineHeight: 1, letterSpacing: "-.02em" }}>
                   {attempt.score}
                   <span style={{ fontSize: 17, fontWeight: 500, color: t.fa, letterSpacing: 0 }}> / {MAX_SCORE}</span>
                 </span>

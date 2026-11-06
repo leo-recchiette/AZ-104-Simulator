@@ -8,9 +8,11 @@ import { FloatingThemeToggle } from "../components/FloatingThemeToggle";
 import { EmptyBankDialog } from "../components/EmptyBankDialog";
 import { ResumeSessionBanner } from "../components/ResumeSessionBanner";
 import { DrawModeToggle } from "../components/DrawModeToggle";
+import { SwitchRow } from "../components/SwitchRow";
 import type { DrawMode } from "../types/question";
 import type { CertificationDto } from "../types/certification";
 import { PRACTICE_DEFAULT_DRAW_MODE } from "../constants";
+import { HEADING_FONT } from "../theme/fonts";
 
 const COUNT_OPTIONS = [10, 20, 30, 40, 50, 60, 70, 80];
 const MINUTE_OPTIONS = [15, 30, 45, 60, 90, 120];
@@ -38,8 +40,8 @@ export function PracticeSetupPage() {
   const [emptyBank, setEmptyBank] = useState(false);
 
   // Il punteggio live svelerebbe le risposte prima della soluzione: senza auto-reveal si spegne.
-  function toggleAutoReveal() {
-    const next = !autoReveal;
+  // Il punteggio live svela le risposte: senza auto-reveal si spegne anche lui.
+  function changeAutoReveal(next: boolean) {
     setAutoReveal(next);
     if (!next) setLiveScore(false);
   }
@@ -59,7 +61,7 @@ export function PracticeSetupPage() {
       dispatch({ type: "START_SESSION", certificationId: certification.id, mode: "practice", drawMode, questions, timeLimitSeconds: timed ? minutes * 60 : null, autoReveal, openEnded, liveScore });
       navigate(`/${certification.id}/session`);
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Impossibile caricare le domande.");
+      setError(err instanceof ApiError ? err.message : "Could not load the questions.");
       setLoading(false);
     }
   }
@@ -74,10 +76,10 @@ export function PracticeSetupPage() {
       {emptyBank && <EmptyBankDialog onClose={() => setEmptyBank(false)} />}
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 24px" }}>
         <div style={{ width: "100%", maxWidth: 620, background: t.card, border: `1px solid ${t.bd}`, borderRadius: 16, padding: "34px 32px", boxShadow: `0 2px 10px ${t.sh}` }}>
-          <button onClick={() => navigate(`/${certification.id}`)} style={{ background: "none", border: "none", padding: 0, color: t.mu, fontSize: 13, marginBottom: 18, font: "inherit" }}>
+          <button onClick={() => navigate(`/${certification.id}`)} style={{ background: "none", border: "none", padding: 0, color: t.mu, fontSize: 13, marginBottom: 18 }}>
             ← Back
           </button>
-          <h2 style={{ fontFamily: "'Source Serif 4', Georgia, serif", fontWeight: 600, fontSize: 28, margin: "0 0 6px" }}>
+          <h2 style={{ fontFamily: HEADING_FONT, fontWeight: 600, fontSize: 28, margin: "0 0 6px" }}>
             Practice session
           </h2>
           <p style={{ margin: "0 0 28px", color: t.mu, fontSize: 14.5 }}>
@@ -97,7 +99,7 @@ export function PracticeSetupPage() {
                   aria-checked={on}
                   onClick={() => setOpenEnded(option.openEnded)}
                   style={{
-                    font: "inherit", textAlign: "left", padding: "13px 15px", borderRadius: 11,
+                    textAlign: "left", padding: "13px 15px", borderRadius: 11,
                     border: `1px solid ${on ? t.ac : t.bd3}`, background: on ? t.acs : t.card,
                   }}
                 >
@@ -110,14 +112,14 @@ export function PracticeSetupPage() {
 
           {!openEnded && (
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 28 }}>
-              {COUNT_OPTIONS.map((n) => {
+              {COUNT_OPTIONS.filter((n) => n <= certification.questionCount).map((n) => {
                 const on = count === n;
                 return (
                   <button
                     key={n}
                     onClick={() => setCount(n)}
                     style={{
-                      padding: "9px 16px", borderRadius: 9, fontSize: 14, fontWeight: 500, font: "inherit",
+                      padding: "9px 16px", borderRadius: 9, fontSize: 14, fontWeight: 500,
                       border: `1px solid ${on ? t.ac : t.bd3}`, background: on ? t.acs : t.card, color: on ? t.ac : t.tx2,
                     }}
                   >
@@ -130,21 +132,7 @@ export function PracticeSetupPage() {
 
           <DrawModeToggle value={drawMode} onChange={setDrawMode} />
 
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, padding: "16px 0", borderTop: `1px solid ${t.bd2}` }}>
-            <div>
-              <div style={{ fontSize: 13, fontWeight: 600 }}>Time limit</div>
-              <div style={{ fontSize: 12.5, color: t.fa, marginTop: 2 }}>Maximum 120 minutes</div>
-            </div>
-            <button
-              onClick={() => setTimed((p) => !p)}
-              style={{
-                width: 52, height: 30, borderRadius: 16, border: `1px solid ${timed ? t.ac : t.bd3}`,
-                background: timed ? t.ac : t.track, position: "relative", padding: 0, transition: "background .18s",
-              }}
-            >
-              <span style={{ position: "absolute", top: 3, left: timed ? 26 : 3, width: 22, height: 22, borderRadius: "50%", background: "#fff", boxShadow: "0 1px 3px rgba(0,0,0,.25)", transition: "left .18s" }} />
-            </button>
-          </div>
+          <SwitchRow title="Time limit" description="Maximum 120 minutes" checked={timed} onChange={setTimed} />
 
           {timed && (
             <div style={{ padding: "4px 0 20px" }}>
@@ -156,7 +144,7 @@ export function PracticeSetupPage() {
                       key={m}
                       onClick={() => setMinutes(m)}
                       style={{
-                        padding: "8px 14px", borderRadius: 9, fontSize: 13.5, fontWeight: 500, font: "inherit",
+                        padding: "8px 14px", borderRadius: 9, fontSize: 13.5, fontWeight: 500,
                         border: `1px solid ${on ? t.ac : t.bd3}`, background: on ? t.acs : t.card, color: on ? t.ac : t.tx2,
                       }}
                     >
@@ -168,48 +156,26 @@ export function PracticeSetupPage() {
             </div>
           )}
 
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, padding: "16px 0", borderTop: `1px solid ${t.bd2}` }}>
-            <div>
-              <div style={{ fontSize: 13, fontWeight: 600 }}>Reveal the solution automatically</div>
-              <div style={{ fontSize: 12.5, color: t.fa, marginTop: 2 }}>
-                Shown as soon as you answer, instead of waiting for "Show solution"
-              </div>
-            </div>
-            <button
-              onClick={toggleAutoReveal}
-              style={{
-                width: 52, height: 30, borderRadius: 16, border: `1px solid ${autoReveal ? t.ac : t.bd3}`,
-                background: autoReveal ? t.ac : t.track, position: "relative", padding: 0, transition: "background .18s",
-                flexShrink: 0,
-              }}
-            >
-              <span style={{ position: "absolute", top: 3, left: autoReveal ? 26 : 3, width: 22, height: 22, borderRadius: "50%", background: "#fff", boxShadow: "0 1px 3px rgba(0,0,0,.25)", transition: "left .18s" }} />
-            </button>
-          </div>
+          <SwitchRow
+            title="Reveal the solution automatically"
+            description={'Shown as soon as you answer, instead of waiting for "Show solution"'}
+            checked={autoReveal}
+            onChange={changeAutoReveal}
+          />
 
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, padding: "16px 0", borderTop: `1px solid ${t.bd2}`, opacity: autoReveal ? 1 : 0.55 }}>
-            <div>
-              <div style={{ fontSize: 13, fontWeight: 600 }}>Live score</div>
-              <div style={{ fontSize: 12.5, color: t.fa, marginTop: 2 }}>
-                {!autoReveal
-                  ? "Available with automatic reveal turned on"
-                  : openEnded
-                    ? "What you'd score if you finished now, counting only the questions you answered"
-                    : "What you'd score if you submitted now: unanswered questions count as zero"}
-              </div>
-            </div>
-            <button
-              onClick={() => setLiveScore((p) => !p)}
-              disabled={!autoReveal}
-              style={{
-                width: 52, height: 30, borderRadius: 16, border: `1px solid ${liveScore ? t.ac : t.bd3}`,
-                background: liveScore ? t.ac : t.track, position: "relative", padding: 0, transition: "background .18s",
-                flexShrink: 0, cursor: autoReveal ? "pointer" : "default",
-              }}
-            >
-              <span style={{ position: "absolute", top: 3, left: liveScore ? 26 : 3, width: 22, height: 22, borderRadius: "50%", background: "#fff", boxShadow: "0 1px 3px rgba(0,0,0,.25)", transition: "left .18s" }} />
-            </button>
-          </div>
+          <SwitchRow
+            title="Live score"
+            description={
+              !autoReveal
+                ? "Available with automatic reveal turned on"
+                : openEnded
+                  ? "What you'd score if you finished now, counting only the questions you answered"
+                  : "What you'd score if you submitted now: unanswered questions count as zero"
+            }
+            checked={liveScore}
+            onChange={setLiveScore}
+            disabled={!autoReveal}
+          />
 
           {error && <p style={{ margin: "0 0 12px", color: t.er, fontSize: 14 }}>{error}</p>}
 
@@ -218,7 +184,7 @@ export function PracticeSetupPage() {
             disabled={loading}
             style={{
               width: "100%", marginTop: 12, padding: 15, border: "none", borderRadius: 11,
-              background: t.ac, color: "#fff", fontSize: 15.5, fontWeight: 600, font: "inherit",
+              background: t.ac, color: "#fff", fontSize: 15.5, fontWeight: 600,
               opacity: loading ? 0.8 : 1,
             }}
           >

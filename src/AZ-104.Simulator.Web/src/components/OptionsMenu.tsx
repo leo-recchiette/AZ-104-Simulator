@@ -57,7 +57,7 @@ export function OptionsMenu({ variant = "default", autoReveal, liveScore }: Opti
         aria-expanded={open}
         style={{
           display: "flex", alignItems: "center", gap: 7, padding: "7px 12px", borderRadius: 9,
-          fontSize: 13, fontWeight: 500, font: "inherit", whiteSpace: "nowrap",
+          fontSize: 13, fontWeight: 500, whiteSpace: "nowrap",
           border: onDark ? "1px solid rgba(255,255,255,.4)" : `1px solid ${t.bd3}`,
           background: onDark ? "rgba(255,255,255,.15)" : t.card,
           color: onDark ? "#fff" : t.mu,
@@ -117,10 +117,10 @@ export function OptionsMenu({ variant = "default", autoReveal, liveScore }: Opti
           <div style={sectionLabelStyle(t.fa)}>Appearance</div>
           <div style={{ display: "flex", gap: 8 }}>
             <button onClick={() => selectTheme("light")} style={themePillStyle(theme === "light", t)}>
-              ☾ Light
+              ☀ Light
             </button>
             <button onClick={() => selectTheme("dark")} style={themePillStyle(theme === "dark", t)}>
-              ☀ Dark
+              ☾ Dark
             </button>
           </div>
         </div>
@@ -138,7 +138,7 @@ function MenuSwitch({ toggle, label }: { toggle: Toggle; label: string }) {
       aria-checked={toggle.value}
       style={{
         display: "flex", alignItems: "center", gap: 12, width: "100%", textAlign: "left",
-        marginBottom: 18, padding: 0, border: "none", background: "none", font: "inherit",
+        marginBottom: 18, padding: 0, border: "none", background: "none",
         color: toggle.value ? t.ac : t.mu,
       }}
     >
@@ -167,14 +167,14 @@ function sectionLabelStyle(fa: string) {
 function stepperStyle(border: string, bg: string, fg: string, disabled: boolean) {
   return {
     width: 34, height: 34, borderRadius: 9, border: `1px solid ${border}`, background: bg, color: fg,
-    fontSize: 17, lineHeight: 1, padding: 0, display: "grid", placeItems: "center", font: "inherit",
+    fontSize: 17, lineHeight: 1, padding: 0, display: "grid", placeItems: "center",
     opacity: disabled ? 0.45 : 1,
   } as const;
 }
 
 function themePillStyle(active: boolean, t: { ac: string; acs: string; bd3: string; card: string; mu: string }) {
   return {
-    flex: 1, padding: "9px 0", borderRadius: 9, fontSize: 13.5, fontWeight: 500, font: "inherit",
+    flex: 1, padding: "9px 0", borderRadius: 9, fontSize: 13.5, fontWeight: 500,
     border: `1.5px solid ${active ? t.ac : t.bd3}`, background: active ? t.acs : t.card, color: active ? t.ac : t.mu,
   } as const;
 }

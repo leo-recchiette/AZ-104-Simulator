@@ -24,3 +24,10 @@ const DATE_SHORT = new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "sh
 export function formatDateShort(iso: string): string {
   return DATE_SHORT.format(new Date(iso));
 }
+
+/** "mm:ss" per orologio e tempo usato di una sessione. */
+export function formatClock(totalSeconds: number): string {
+  const m = Math.floor(totalSeconds / 60);
+  const s = totalSeconds % 60;
+  return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+}

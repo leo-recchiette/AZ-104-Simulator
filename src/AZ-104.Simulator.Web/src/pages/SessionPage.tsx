@@ -2,6 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { useSession } from "../session/SessionContext";
 import { useTheme } from "../theme/ThemeContext";
+import { SummaryRow } from "../components/SummaryRow";
+import { wideButtonStyle } from "../theme/styles";
+import { formatClock } from "../utils/format";
 import { useElapsedTime } from "../hooks/useElapsedTime";
 import { useLiveScore } from "../hooks/useLiveScore";
 import { checkAnswers, getScore, saveAttempt } from "../api/results";
@@ -15,6 +18,7 @@ import { isAnswerStarted, isRevealedWrong } from "../utils/questionShape";
 import { OptionsMenu } from "../components/OptionsMenu";
 import { PASS_MARK_SCORE } from "../constants";
 import type { CertificationDto } from "../types/certification";
+import { HEADING_FONT } from "../theme/fonts";
 
 // Fuori dal tema: stanno sul banner blu, uguale in light e dark.
 const CLOCK_OK = "#3ddc84";
@@ -37,12 +41,6 @@ function scoreColor(score: number | null): string {
   return CLOCK_DANGER;
 }
 
-function fmt(totalSeconds: number): string {
-  const m = Math.floor(totalSeconds / 60);
-  const s = totalSeconds % 60;
-  return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-}
-
 export function SessionPage() {
   const certification = useOutletContext<CertificationDto>();
   const navigate = useNavigate();
@@ -56,6 +54,8 @@ export function SessionPage() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const firedRef = useRef(false);
+  // Un invio alla volta: il tempo che scade mentre getScore e' in corso non deve rilanciarlo.
+  const finishingRef = useRef(false);
   // Evita di ricreare handleFinish a ogni tick.
   const elapsedSecRef = useRef(0);
   // Riassegnato a ogni render: il listener, registrato una volta, vede l'handleNext corrente.
@@ -95,6 +95,8 @@ export function SessionPage() {
   );
 
   const handleFinish = useCallback(async () => {
+    if (finishingRef.current) return;
+    finishingRef.current = true;
     // Niente da valutare: la sessione si scarta.
     if (scored.length === 0) {
       dispatch({ type: "RESET" });
@@ -132,8 +134,9 @@ export function SessionPage() {
         });
       }
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Impossibile calcolare il punteggio.");
+      setError(err instanceof ApiError ? err.message : "Could not calculate the score.");
       setSubmitting(false);
+      finishingRef.current = false;
     }
   }, [dispatch, navigate, scored, submissions, state.certificationId, state.mode, state.drawMode, state.startedAt, state.studyLater]);
 
@@ -206,10 +209,13 @@ export function SessionPage() {
     [autoRevealOn, state.questions, state.currentIndex, state.checkResults, state.answers],
   );
 
+  // Dipende dal contenuto, non dall'array: rispondere alla domanda corrente lo rifa' uguale e annullerebbe la richiesta.
+  const missingKey = JSON.stringify(missingChecks);
   useEffect(() => {
-    if (missingChecks.length === 0) return;
+    const pending = JSON.parse(missingKey) as typeof missingChecks;
+    if (pending.length === 0) return;
     let cancelled = false;
-    checkAnswers(state.certificationId, missingChecks)
+    checkAnswers(state.certificationId, pending)
       .then((results) => {
         if (cancelled) return;
         for (const result of results) dispatch({ type: "SET_CHECK_RESULT", questionNumber: result.questionNumber, result });
@@ -218,13 +224,19 @@ export function SessionPage() {
     return () => {
       cancelled = true;
     };
-  }, [missingChecks, dispatch, state.certificationId]);
+  }, [missingKey, dispatch, state.certificationId]);
 
   if (!question) return null;
 
   async function handleReveal() {
-    const [result] = await checkAnswers(state.certificationId, [{ questionNumber: question.number, userAnswers: value }]);
-    dispatch({ type: "SET_CHECK_RESULT", questionNumber: question.number, result });
+    setError(null);
+    try {
+      const [result] = await checkAnswers(state.certificationId, [{ questionNumber: question.number, userAnswers: value }]);
+      if (result) dispatch({ type: "SET_CHECK_RESULT", questionNumber: question.number, result });
+      else setError("The solution of this question is not available.");
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Could not load the solution.");
+    }
   }
 
   const totalUnits = units.members.length;
@@ -265,7 +277,7 @@ export function SessionPage() {
       try {
         dispatch({ type: "SET_POOL", questions: await getExam(state.certificationId, certification.questionCount, state.drawMode) });
       } catch (err) {
-        setError(err instanceof ApiError ? err.message : "Impossibile caricare altre domande.");
+        setError(err instanceof ApiError ? err.message : "Could not load more questions.");
         return;
       } finally {
         setLoadingMore(false);
@@ -297,7 +309,7 @@ export function SessionPage() {
   }
 
   const timerCaption = limit ? "Time remaining" : "Elapsed";
-  const timeLabel = fmt(limit ? remaining : elapsedSec);
+  const timeLabel = formatClock(limit ? remaining : elapsedSec);
   // In frazione del limite, per valere con qualunque durata.
   let clockColor = CLOCK_OK;
   if (limit) {
@@ -348,7 +360,7 @@ export function SessionPage() {
   );
 
   const modeChipBg = isPractice ? "rgba(255,255,255,.22)" : "rgba(255,255,255,.92)";
-  const modeChipFg = isPractice ? "#fff" : "#0b3fae";
+  const modeChipFg = isPractice ? "#fff" : t.ac;
   const modeLabel = isPractice ? "Practice" : "Simulation";
 
   return (
@@ -362,8 +374,7 @@ export function SessionPage() {
               onClick={() => navigate(`/${state.certificationId}`)}
               title="Back to the home page"
               style={{
-                // "font" e' una shorthand: va prima di size/weight.
-                font: "inherit", fontSize: 14.5, fontWeight: 600, whiteSpace: "nowrap",
+                fontSize: 14.5, fontWeight: 600, whiteSpace: "nowrap",
                 color: "#fff", background: "none", border: "none", padding: 0, cursor: "pointer",
               }}
             >
@@ -431,7 +442,7 @@ export function SessionPage() {
           {showConfirm ? (
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 0" }}>
               <div style={{ width: "100%", maxWidth: 560, background: t.card, border: `1px solid ${t.bd}`, borderRadius: 16, padding: "34px 32px", boxShadow: `0 2px 10px ${t.sh}` }}>
-                <h2 style={{ fontFamily: "'Source Serif 4', Georgia, serif", fontWeight: 600, fontSize: 27, margin: "0 0 8px" }}>
+                <h2 style={{ fontFamily: HEADING_FONT, fontWeight: 600, fontSize: 27, margin: "0 0 8px" }}>
                   {state.openEnded ? "Finish this session?" : "Submit your exam?"}
                 </h2>
                 <p style={{ margin: "0 0 24px", color: t.mu, fontSize: 14.5, lineHeight: 1.55 }}>
@@ -450,7 +461,7 @@ export function SessionPage() {
                     </>
                   )}
                   <SummaryRow label="Flagged for review" value={String(flagCount)} fg={flagCount ? t.warn : t.tx} />
-                  <SummaryRow label="Time used" value={fmt(elapsedSec)} fg={t.tx} />
+                  <SummaryRow label="Time used" value={formatClock(elapsedSec)} fg={t.tx} />
                 </div>
                 {totalUnits - answeredCount > 0 && (
                   <button
@@ -518,12 +529,12 @@ export function SessionPage() {
           style={{ position: "fixed", inset: 0, zIndex: 40, display: "flex", alignItems: "center", justifyContent: "center", padding: 24, background: "rgba(10,12,16,.82)", backdropFilter: "blur(6px)" }}
         >
           <div style={{ width: "100%", maxWidth: 460, background: t.card, border: `1px solid ${t.bd}`, borderRadius: 16, padding: "30px 28px", boxShadow: "0 10px 30px rgba(0,0,0,.25)", textAlign: "center" }}>
-            <h2 id="paused-title" style={{ fontFamily: "'Source Serif 4', Georgia, serif", fontWeight: 600, fontSize: 23, margin: "0 0 8px" }}>
-              Sessione in pausa
+            <h2 id="paused-title" style={{ fontFamily: HEADING_FONT, fontWeight: 600, fontSize: 23, margin: "0 0 8px" }}>
+              Session paused
             </h2>
             <p style={{ margin: "0 0 20px", color: t.mu, fontSize: 14.5, lineHeight: 1.55 }}>
-              Il tempo è fermo e la domanda è nascosta. Riprendi quando vuoi: le risposte già date
-              restano salvate.
+              The clock is stopped and the question is hidden. Resume whenever you like: the answers you have given
+              stay saved.
             </p>
             <div style={{ fontSize: 12.5, color: t.fa, letterSpacing: ".08em", textTransform: "uppercase", fontWeight: 600 }}>
               {timerCaption}
@@ -533,9 +544,9 @@ export function SessionPage() {
             </div>
             <button
               onClick={() => dispatch({ type: "RESUME" })}
-              style={{ width: "100%", padding: 14, borderRadius: 11, border: "none", background: t.ac, fontSize: 14.5, fontWeight: 600, color: "#fff", font: "inherit" }}
+              style={{ width: "100%", padding: 14, borderRadius: 11, border: "none", background: t.ac, fontSize: 14.5, fontWeight: 600, color: "#fff" }}
             >
-              Riprendi
+              Resume
             </button>
           </div>
         </div>
@@ -544,16 +555,15 @@ export function SessionPage() {
       {showExitConfirm && (
         <div style={{ position: "fixed", inset: 0, zIndex: 30, display: "flex", alignItems: "center", justifyContent: "center", padding: 24, background: "rgba(10,12,16,.5)" }}>
           <div style={{ width: "100%", maxWidth: 480, background: t.card, border: `1px solid ${t.bd}`, borderRadius: 16, padding: "30px 28px", boxShadow: "0 10px 30px rgba(0,0,0,.25)" }}>
-            <h2 style={{ fontFamily: "'Source Serif 4', Georgia, serif", fontWeight: 600, fontSize: 23, margin: "0 0 8px" }}>
-              Uscire ora?
+            <h2 style={{ fontFamily: HEADING_FONT, fontWeight: 600, fontSize: 23, margin: "0 0 8px" }}>
+              Leave now?
             </h2>
             <p style={{ margin: "0 0 24px", color: t.mu, fontSize: 14.5, lineHeight: 1.55 }}>
-              L'esame verrà terminato subito. Tutte le domande senza risposta saranno contrassegnate come tali e
-              contate come errate.
+              The exam ends right away. Every unanswered question is marked as such and counted as wrong.
             </p>
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
               <button onClick={() => setShowExitConfirm(false)} style={wideButtonStyle(`1px solid ${t.bd3}`, t.card, t.tx2)}>
-                Annulla
+                Cancel
               </button>
               <button
                 onClick={() => {
@@ -561,9 +571,9 @@ export function SessionPage() {
                   handleFinish();
                 }}
                 disabled={submitting}
-                style={wideButtonStyle("none", "#e5484d", "#fff")}
+                style={wideButtonStyle("none", t.danger, "#fff")}
               >
-                Esci e invia
+                Leave and submit
               </button>
             </div>
           </div>
@@ -580,7 +590,7 @@ export function SessionPage() {
               aria-keyshortcuts="ArrowLeft"
               style={{
                 display: "flex", alignItems: "center", gap: 8, padding: "12px 20px", borderRadius: 10,
-                border: `1px solid ${t.bd3}`, background: t.card, fontSize: 14.5, fontWeight: 500, font: "inherit",
+                border: `1px solid ${t.bd3}`, background: t.card, fontSize: 14.5, fontWeight: 500,
                 color: state.currentIndex === 0 ? t.dis : t.tx2, opacity: state.currentIndex === 0 ? 0.55 : 1,
               }}
             >
@@ -605,32 +615,15 @@ export function SessionPage() {
   );
 }
 
-function SummaryRow({ label, value, fg }: { label: string; value: string; fg: string }) {
-  const { tokens: t } = useTheme();
-  return (
-    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 16px", background: t.card }}>
-      <span style={{ fontSize: 14, color: t.tx2 }}>{label}</span>
-      <span style={{ fontSize: 15, fontWeight: 600, fontVariantNumeric: "tabular-nums", color: fg }}>{value}</span>
-    </div>
-  );
-}
-
 const headerButtonStyle = {
   display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 8,
   border: "1px solid rgba(255,255,255,.35)", background: "rgba(255,255,255,.12)",
-  color: "#fff", fontSize: 12.5, fontWeight: 600, font: "inherit", whiteSpace: "nowrap",
+  color: "#fff", fontSize: 12.5, fontWeight: 600, whiteSpace: "nowrap",
 } as const;
 
 function primaryButtonStyle(ac: string) {
   return {
     display: "flex", alignItems: "center", gap: 8, padding: "12px 22px", borderRadius: 10, border: "none",
-    background: ac, color: "#fff", fontSize: 14.5, fontWeight: 600, font: "inherit",
-  } as const;
-}
-
-function wideButtonStyle(border: string, bg: string, fg: string) {
-  return {
-    flex: 1, minWidth: 150, padding: 14, borderRadius: 11, border, background: bg,
-    fontSize: 14.5, fontWeight: 600, color: fg, font: "inherit",
+    background: ac, color: "#fff", fontSize: 14.5, fontWeight: 600,
   } as const;
 }

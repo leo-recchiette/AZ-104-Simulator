@@ -8,6 +8,7 @@ import type { CertificationDto } from "../types/certification";
 import { OptionsMenu } from "../components/OptionsMenu";
 import { formatDateTime, formatDuration } from "../utils/format";
 import { PASS_MARK_SCORE } from "../constants";
+import { HEADING_FONT } from "../theme/fonts";
 
 /** Elenco dei tentativi conclusi; da qui se ne apre uno per rileggerlo. */
 export function HistoryPage() {
@@ -21,14 +22,14 @@ export function HistoryPage() {
     getAllAttempts(certification.id)
       // L'API li da' dal piu' vecchio; qui serve prima il piu' recente.
       .then((all) => setAttempts(all.slice().reverse()))
-      .catch((err) => setError(err instanceof ApiError ? err.message : "Impossibile caricare lo storico."));
+      .catch((err) => setError(err instanceof ApiError ? err.message : "Could not load the history."));
   }, [certification.id]);
 
   return (
     <div style={{ flex: 1 }}>
       <div style={{ position: "sticky", top: 0, zIndex: 5, background: t.header, backdropFilter: "blur(8px)", borderBottom: "1px solid rgba(255,255,255,.18)" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", padding: "16px 24px", display: "flex", alignItems: "center", gap: 14 }}>
-          <button onClick={() => navigate(`/${certification.id}`)} style={{ background: "none", border: "none", padding: 0, color: "#e4e7ee", fontSize: 13.5, font: "inherit" }}>
+          <button onClick={() => navigate(`/${certification.id}`)} style={{ background: "none", border: "none", padding: 0, color: "#e4e7ee", fontSize: 13.5 }}>
             ← Home
           </button>
           <div style={{ flex: 1 }} />
@@ -42,7 +43,7 @@ export function HistoryPage() {
       </div>
 
       <div style={{ maxWidth: 900, margin: "0 auto", padding: "32px 24px 80px" }}>
-        <h2 style={{ fontFamily: "'Source Serif 4', Georgia, serif", fontWeight: 600, fontSize: 30, margin: "0 0 6px" }}>
+        <h2 style={{ fontFamily: HEADING_FONT, fontWeight: 600, fontSize: 30, margin: "0 0 6px" }}>
           Session history
         </h2>
         <p style={{ margin: "0 0 26px", color: t.mu, fontSize: 14 }}>
@@ -70,7 +71,7 @@ export function HistoryPage() {
                 style={{
                   display: "flex", alignItems: "center", gap: 16, textAlign: "left", width: "100%",
                   background: t.card, border: `1px solid ${t.bd}`, borderRadius: 12, padding: "16px 18px",
-                  color: "inherit", font: "inherit", boxShadow: `0 1px 2px ${t.sh}`,
+                  color: "inherit", boxShadow: `0 1px 2px ${t.sh}`,
                 }}
               >
                 <span style={{

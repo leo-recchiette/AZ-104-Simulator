@@ -81,7 +81,6 @@ export function ImageStack({ filenames }: ImageStackProps) {
           style={{
             display: "flex", alignItems: "center", gap: 4, background: "none", border: "none", padding: 0,
             color: t.ac, letterSpacing: ".03em", textTransform: "uppercase", cursor: "pointer",
-            // Niente font:"inherit": la shorthand azzererebbe fontSize/fontWeight.
             fontSize: 10, fontWeight: 600,
           }}
         >

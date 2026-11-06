@@ -1,4 +1,5 @@
 import { useTheme } from "../theme/ThemeContext";
+import { HEADING_FONT } from "../theme/fonts";
 
 const IMPORT_COMMAND = "docker compose --profile setup run --rm importer";
 
@@ -17,21 +18,21 @@ export function EmptyBankDialog({ onClose }: { onClose: () => void }) {
       }}
     >
       <div style={{ width: "100%", maxWidth: 520, background: t.card, border: `1px solid ${t.warnbd}`, borderRadius: 16, padding: "30px 28px", boxShadow: "0 10px 30px rgba(0,0,0,.25)" }}>
-        <h2 id="empty-bank-title" style={{ fontFamily: "'Source Serif 4', Georgia, serif", fontWeight: 600, fontSize: 23, margin: "0 0 8px" }}>
-          Nessuna domanda disponibile
+        <h2 id="empty-bank-title" style={{ fontFamily: HEADING_FONT, fontWeight: 600, fontSize: 23, margin: "0 0 8px" }}>
+          No questions available
         </h2>
         <p style={{ margin: "0 0 18px", color: t.mu, fontSize: 14.5, lineHeight: 1.55 }}>
-          L'API risponde correttamente, ma il question bank è vuoto: il database non contiene
-          nessuna domanda, quindi la sessione non può partire.
+          The API responds, but the question bank is empty: the database holds no questions, so the session
+          cannot start.
         </p>
         <div style={{ background: t.warnbg, border: `1px solid ${t.warnbd}`, borderRadius: 11, padding: "13px 15px", marginBottom: 24 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 7, color: t.warn, fontSize: 12.5, fontWeight: 600, marginBottom: 9 }}>
             <span aria-hidden="true">⚠</span>
-            <span>Database da popolare</span>
+            <span>The database needs to be populated</span>
           </div>
           <p style={{ margin: "0 0 10px", color: t.warn, fontSize: 13.5, lineHeight: 1.55 }}>
-            Di solito succede quando il volume del database è stato ricreato senza rilanciare
-            l'importer, che non riparte da solo con un <code style={{ fontSize: 12.5 }}>docker compose up</code>:
+            It usually happens when the database volume was recreated without running the importer again, which
+            does not start on its own with <code style={{ fontSize: 12.5 }}>docker compose up</code>:
           </p>
           <code
             style={{
@@ -48,10 +49,10 @@ export function EmptyBankDialog({ onClose }: { onClose: () => void }) {
           onClick={onClose}
           style={{
             width: "100%", padding: 14, borderRadius: 11, border: "none", background: t.ac,
-            fontSize: 14.5, fontWeight: 600, color: "#fff", font: "inherit",
+            fontSize: 14.5, fontWeight: 600, color: "#fff",
           }}
         >
-          Ho capito
+          Got it
         </button>
       </div>
     </div>

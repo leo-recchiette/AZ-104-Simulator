@@ -47,8 +47,7 @@ function fromDto(dto: ActiveSessionDto): SessionState {
   const flags: Record<number, boolean> = {};
   for (const index of dto.flaggedIndexes) flags[index] = true;
   const studyLater: Record<number, boolean> = {};
-  // Un'API non ancora aggiornata non lo manda.
-  for (const number of dto.studyLaterQuestions ?? []) studyLater[number] = true;
+  for (const number of dto.studyLaterQuestions) studyLater[number] = true;
 
   // savedAt - startedAt e' il tempo giocato: riancorato ad adesso, l'app chiusa non consuma tempo.
   const playedMs = Math.max(0, new Date(dto.savedAt).getTime() - new Date(dto.startedAt).getTime());

@@ -51,10 +51,11 @@ export function QuestionCard({ question, value, onChange, flagged, onToggleFlag,
       ? question.prompts.map((_, ri) => revealed || isRowComplete(value[ri], correct.answerRows[ri]?.answer))
       : undefined;
 
-  // Il risultato lo chiede SessionPage; resta nascosto finche' la risposta non e' completa.
+  // Il risultato lo chiede SessionPage; si apre da solo a risposta completa. Solo aprire, mai chiudere: chiuderebbe
+  // anche il pannello aperto a mano con "Show solution" su una domanda senza risposta.
   useEffect(() => {
     if (!autoReveal || !checkResult?.correctAnswer) return;
-    setPanelOpen(isAnswerComplete(question, value, checkResult.correctAnswer));
+    if (isAnswerComplete(question, value, checkResult.correctAnswer)) setPanelOpen(true);
   }, [autoReveal, checkResult, question, value]);
 
   // A senso unico: richiuderla sbloccherebbe le risposte, che dipendono da "revealed".
@@ -85,7 +86,7 @@ export function QuestionCard({ question, value, onChange, flagged, onToggleFlag,
             style={{
               display: "flex", alignItems: "center", gap: 7, padding: "7px 13px", borderRadius: 9, fontSize: 13, fontWeight: 500,
               border: `1px solid ${studyLater ? t.ac : t.bd3}`, background: studyLater ? t.acs : t.card,
-              color: studyLater ? t.ac : t.mu, whiteSpace: "nowrap", font: "inherit",
+              color: studyLater ? t.ac : t.mu, whiteSpace: "nowrap",
             }}
           >
             <BookmarkIcon filled={studyLater} />
@@ -96,7 +97,7 @@ export function QuestionCard({ question, value, onChange, flagged, onToggleFlag,
             style={{
               display: "flex", alignItems: "center", gap: 7, padding: "7px 13px", borderRadius: 9, fontSize: 13, fontWeight: 500,
               border: `1px solid ${flagged ? t.warnbd : t.bd3}`, background: flagged ? t.warnbg : t.card,
-              color: flagged ? t.warn : t.mu, whiteSpace: "nowrap", font: "inherit",
+              color: flagged ? t.warn : t.mu, whiteSpace: "nowrap",
             }}
           >
             {flagged ? "◆" : "◇"} {flagged ? "Flagged for review" : "Flag for review"}
@@ -104,8 +105,8 @@ export function QuestionCard({ question, value, onChange, flagged, onToggleFlag,
           <button
             onClick={onRequestExit}
             style={{
-              background: "#e5484d", border: "1px solid #e5484d", borderRadius: 9, padding: "7px 13px",
-              color: "#fff", fontSize: 13, fontWeight: 600, whiteSpace: "nowrap", font: "inherit",
+              background: t.danger, border: `1px solid ${t.danger}`, borderRadius: 9, padding: "7px 13px",
+              color: "#fff", fontSize: 13, fontWeight: 600, whiteSpace: "nowrap",
             }}
           >
             Exit &amp; submit
@@ -141,7 +142,7 @@ export function QuestionCard({ question, value, onChange, flagged, onToggleFlag,
               onClick={handleReveal}
               aria-disabled={revealed || undefined}
               style={{
-                padding: "11px 18px", borderRadius: 10, fontSize: 14, fontWeight: 600, font: "inherit",
+                padding: "11px 18px", borderRadius: 10, fontSize: 14, fontWeight: 600,
                 border: `1px solid ${revealed ? t.okbd : t.bd3}`, background: revealed ? t.okbg : t.card,
                 color: revealed ? t.ok : t.tx2,
                 cursor: revealed ? "default" : "pointer",

@@ -42,8 +42,7 @@ export function RowSelectAnswer({ prompts, value, onChange, answerRows, answered
         const rawCorrect = answeredRowsOnly && !isRowComplete(value[ri], rowAnswer) ? undefined : rowAnswer;
         const correctSet =
           rawCorrect !== undefined ? new Set((parseMultiValueAnswer(rawCorrect) ?? [rawCorrect]).map((s) => s.toLowerCase())) : undefined;
-        // Un'API non ancora aggiornata non manda selectCount: nessun tetto, come prima.
-        const limit = row.selectCount > 0 ? row.selectCount : row.options.length;
+        const limit = row.selectCount;
         const single = limit === 1;
         const rowLocked = lockedRows?.[ri] ?? false;
         return (
@@ -74,7 +73,7 @@ export function RowSelectAnswer({ prompts, value, onChange, answerRows, answered
                     aria-disabled={rowLocked || undefined}
                     style={{
                       padding: "9px 15px", borderRadius: 9, fontSize: 13.5, fontWeight: 500,
-                      border: `1.5px solid ${bd}`, background: bg, color: fg, font: "inherit",
+                      border: `1.5px solid ${bd}`, background: bg, color: fg,
                       cursor: rowLocked ? "default" : "pointer",
                     }}
                   >

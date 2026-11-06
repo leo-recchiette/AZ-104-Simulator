@@ -46,7 +46,7 @@ export function ResumeSessionBanner({ style }: ResumeSessionBannerProps) {
         onClick={() => navigate(`/${resumable.certificationId}/session`)}
         style={{
           padding: "11px 20px", borderRadius: 10, border: "none", background: t.ac, color: "#fff",
-          font: "inherit", fontSize: 14.5, fontWeight: 600,
+          fontSize: 14.5, fontWeight: 600,
         }}
       >
         Resume
@@ -55,7 +55,7 @@ export function ResumeSessionBanner({ style }: ResumeSessionBannerProps) {
         onClick={() => dispatch({ type: "RESET" })}
         style={{
           padding: "11px 16px", borderRadius: 10, border: `1px solid ${t.bd3}`, background: t.card,
-          color: t.tx2, font: "inherit", fontSize: 14.5, fontWeight: 600,
+          color: t.tx2, fontSize: 14.5, fontWeight: 600,
         }}
       >
         Discard

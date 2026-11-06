@@ -41,7 +41,6 @@ export function GroupNav({ members, currentIndex, answers, wrong, onSelect }: Gr
                 display: "flex", alignItems: "center", gap: 9, padding: "9px 11px", borderRadius: 9,
                 border: `1.5px solid ${current ? t.ac : t.bd3}`, background: current ? t.acs : t.card,
                 color: current ? t.ac : t.tx2, textAlign: "left",
-                // Niente font:"inherit": la shorthand azzererebbe fontSize/fontWeight.
                 fontSize: 13.5, fontWeight: current ? 600 : 500,
               }}
             >

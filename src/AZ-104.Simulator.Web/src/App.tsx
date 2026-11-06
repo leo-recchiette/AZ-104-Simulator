@@ -13,12 +13,15 @@ import { ResultsPage } from "./pages/ResultsPage";
 import { HistoryPage } from "./pages/HistoryPage";
 import { AttemptDetailPage } from "./pages/AttemptDetailPage";
 
-/** Aspetta il ripristino prima di decidere, altrimenti un reload rimanderebbe indietro. Senza sessione si torna alla certificazione. */
-function RequireSession({ children }: { children: ReactNode }) {
+/**
+ * Aspetta il ripristino prima di decidere, altrimenti un reload rimanderebbe indietro. Senza sessione, o con la
+ * sessione nello stato sbagliato (il Back del browser fra /session e /results), si torna alla certificazione.
+ */
+function RequireSession({ status, children }: { status: "in-progress" | "finished"; children: ReactNode }) {
   const certification = useOutletContext<CertificationDto>();
   const { state, restoring } = useSession();
   if (restoring) return <LoadingScreen text="Restoring your session..." />;
-  if (state.questions.length === 0) return <Navigate to={`/${certification.id}`} replace />;
+  if (state.questions.length === 0 || state.status !== status) return <Navigate to={`/${certification.id}`} replace />;
   return <>{children}</>;
 }
 
@@ -78,7 +81,7 @@ export function App() {
           <Route
             path="session"
             element={
-              <RequireSession>
+              <RequireSession status="in-progress">
                 <SessionPage />
               </RequireSession>
             }
@@ -86,7 +89,7 @@ export function App() {
           <Route
             path="results"
             element={
-              <RequireSession>
+              <RequireSession status="finished">
                 <ResultsPage />
               </RequireSession>
             }

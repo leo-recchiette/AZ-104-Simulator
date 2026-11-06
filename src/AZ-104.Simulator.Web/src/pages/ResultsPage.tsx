@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSession } from "../session/SessionContext";
 import { useTheme } from "../theme/ThemeContext";
+import { SummaryRow } from "../components/SummaryRow";
+import { wideButtonStyle } from "../theme/styles";
+import { formatClock } from "../utils/format";
 import { checkAnswers } from "../api/results";
 import { ApiError } from "../api/client";
 import type { AnswerCheckResultDto, QuestionAnswerDto } from "../types/answer";
@@ -14,6 +17,7 @@ import { ReviewGroupCard } from "../components/review/ReviewGroupCard";
 import { reviewUnits } from "../utils/reviewUnits";
 import { FilterPill } from "../components/FilterPill";
 import { MAX_SCORE, PASS_MARK_SCORE } from "../constants";
+import { HEADING_FONT } from "../theme/fonts";
 
 interface GradedEntry {
   no: number;
@@ -25,12 +29,6 @@ interface GradedEntry {
 }
 
 type ReviewFilter = "wrong" | "studyLater";
-
-function fmt(totalSeconds: number): string {
-  const m = Math.floor(totalSeconds / 60);
-  const s = totalSeconds % 60;
-  return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-}
 
 export function ResultsPage() {
   const navigate = useNavigate();
@@ -49,7 +47,7 @@ export function ResultsPage() {
     }));
     checkAnswers(state.certificationId, submissions)
       .then(setReview)
-      .catch((err) => setError(err instanceof ApiError ? err.message : "Impossibile caricare la revisione."));
+      .catch((err) => setError(err instanceof ApiError ? err.message : "Could not load the review."));
     // Va eseguito una sola volta all'arrivo su questa pagina.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -96,7 +94,7 @@ export function ResultsPage() {
       <div style={{ flex: 1 }}>
         <div style={{ position: "sticky", top: 0, zIndex: 5, background: t.header, backdropFilter: "blur(8px)", borderBottom: "1px solid rgba(255,255,255,.18)" }}>
           <div style={{ maxWidth: 1000, margin: "0 auto", padding: "16px 24px", display: "flex", alignItems: "center", gap: 14 }}>
-            <button onClick={() => setShowReview(false)} style={{ background: "none", border: "none", padding: 0, color: "#e4e7ee", fontSize: 13.5, font: "inherit" }}>
+            <button onClick={() => setShowReview(false)} style={{ background: "none", border: "none", padding: 0, color: "#e4e7ee", fontSize: 13.5 }}>
               ← Result
             </button>
             <div style={{ flex: 1 }} />
@@ -109,7 +107,7 @@ export function ResultsPage() {
           </div>
         </div>
         <div style={{ maxWidth: 1000, margin: "0 auto", padding: "32px 24px 80px" }}>
-          <h2 style={{ fontFamily: "'Source Serif 4', Georgia, serif", fontWeight: 600, fontSize: 30, margin: "0 0 18px" }}>
+          <h2 style={{ fontFamily: HEADING_FONT, fontWeight: 600, fontSize: 30, margin: "0 0 18px" }}>
             {reviewFilter === "studyLater" ? "Saved to study later" : "What you got wrong"}
           </h2>
           <div style={{ display: "flex", gap: 8, marginBottom: 18, flexWrap: "wrap" }}>
@@ -172,7 +170,7 @@ export function ResultsPage() {
             {modeLabel} · result
           </div>
           <div style={{ display: "flex", alignItems: "flex-end", gap: 16, margin: "14px 0 4px", flexWrap: "wrap" }}>
-            <span style={{ fontFamily: "'Source Serif 4', Georgia, serif", fontSize: 64, fontWeight: 600, lineHeight: 1, letterSpacing: "-.02em" }}>
+            <span style={{ fontFamily: HEADING_FONT, fontSize: 64, fontWeight: 600, lineHeight: 1, letterSpacing: "-.02em" }}>
               {score}
               <span style={{ fontSize: 22, fontWeight: 500, color: t.fa, letterSpacing: 0 }}> / {MAX_SCORE}</span>
             </span>
@@ -195,7 +193,7 @@ export function ResultsPage() {
             </p>
           )}
           <p style={{ margin: "0 0 26px", color: t.mu, fontSize: 14 }}>
-            Pass mark {PASS_MARK_SCORE} · Time used {fmt(state.timeUsedSeconds ?? 0)}
+            Pass mark {PASS_MARK_SCORE} · Time used {formatClock(state.timeUsedSeconds ?? 0)}
           </p>
           <div style={{ display: "flex", flexDirection: "column", gap: 1, background: t.bd2, border: `1px solid ${t.bd2}`, borderRadius: 12, overflow: "hidden", marginBottom: 26 }}>
             <SummaryRow label="Questions" value={String(state.questions.length)} fg={t.tx} />
@@ -221,21 +219,4 @@ export function ResultsPage() {
       </div>
     </div>
   );
-}
-
-function SummaryRow({ label, value, fg }: { label: string; value: string; fg: string }) {
-  const { tokens: t } = useTheme();
-  return (
-    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 16px", background: t.card }}>
-      <span style={{ fontSize: 14, color: t.tx2 }}>{label}</span>
-      <span style={{ fontSize: 15, fontWeight: 600, fontVariantNumeric: "tabular-nums", color: fg }}>{value}</span>
-    </div>
-  );
-}
-
-function wideButtonStyle(border: string, bg: string, fg: string) {
-  return {
-    flex: 1, minWidth: 170, padding: 14, borderRadius: 11, border, background: bg,
-    fontSize: 14.5, fontWeight: 600, color: fg, font: "inherit",
-  } as const;
 }

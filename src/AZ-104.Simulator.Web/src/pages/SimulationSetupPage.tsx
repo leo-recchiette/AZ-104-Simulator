@@ -11,6 +11,7 @@ import { EmptyBankDialog } from "../components/EmptyBankDialog";
 import { ResumeSessionBanner } from "../components/ResumeSessionBanner";
 import { DrawModeToggle } from "../components/DrawModeToggle";
 import { MAX_SCORE, PASS_MARK_SCORE, SIMULATION_DEFAULT_DRAW_MODE } from "../constants";
+import { HEADING_FONT } from "../theme/fonts";
 
 export function SimulationSetupPage() {
   const certification = useOutletContext<CertificationDto>();
@@ -44,7 +45,7 @@ export function SimulationSetupPage() {
       dispatch({ type: "START_SESSION", certificationId: certification.id, mode: "exam", drawMode, questions, timeLimitSeconds: certification.examTimeLimitMinutes * 60 });
       navigate(`/${certification.id}/session`);
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Impossibile caricare le domande.");
+      setError(err instanceof ApiError ? err.message : "Could not load the questions.");
       setLoading(false);
     }
   }
@@ -55,10 +56,10 @@ export function SimulationSetupPage() {
       {emptyBank && <EmptyBankDialog onClose={() => setEmptyBank(false)} />}
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 24px" }}>
         <div style={{ width: "100%", maxWidth: 620, background: t.card, border: `1px solid ${t.bd}`, borderRadius: 16, padding: "34px 32px", boxShadow: `0 2px 10px ${t.sh}` }}>
-          <button onClick={() => navigate(`/${certification.id}`)} style={{ background: "none", border: "none", padding: 0, color: t.mu, fontSize: 13, marginBottom: 18, font: "inherit" }}>
+          <button onClick={() => navigate(`/${certification.id}`)} style={{ background: "none", border: "none", padding: 0, color: t.mu, fontSize: 13, marginBottom: 18 }}>
             ← Back
           </button>
-          <h2 style={{ fontFamily: "'Source Serif 4', Georgia, serif", fontWeight: 600, fontSize: 28, margin: "0 0 6px" }}>
+          <h2 style={{ fontFamily: HEADING_FONT, fontWeight: 600, fontSize: 28, margin: "0 0 6px" }}>
             Simulation
           </h2>
           <p style={{ margin: "0 0 28px", color: t.mu, fontSize: 14.5 }}>
@@ -83,7 +84,7 @@ export function SimulationSetupPage() {
             disabled={loading}
             style={{
               width: "100%", marginTop: 12, padding: 15, border: "none", borderRadius: 11,
-              background: t.ac, color: "#fff", fontSize: 15.5, fontWeight: 600, font: "inherit",
+              background: t.ac, color: "#fff", fontSize: 15.5, fontWeight: 600,
               opacity: loading ? 0.8 : 1,
             }}
           >

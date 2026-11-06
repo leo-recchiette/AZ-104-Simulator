@@ -9,7 +9,7 @@ import { ResumeSessionBanner } from "../components/ResumeSessionBanner";
 import { ProgressChart } from "../components/ProgressChart";
 import { MAX_SCORE, PASS_MARK_SCORE } from "../constants";
 import { formatDateShort } from "../utils/format";
-import { imageUrl } from "../utils/images";
+import { CertificationBadge, HeroBackdrop, HeroTitle } from "../components/Hero";
 
 /** Sessioni recenti: la loro media dice dove sei adesso. */
 const RECENT_COUNT = 5;
@@ -28,7 +28,6 @@ export function ModeSelectPage() {
       .then(setHistory)
       .catch((err) => console.error("Impossibile caricare lo storico dei tentativi:", err));
   }, [certification.id]);
-
 
   const shown = useMemo(() => (range ? history.slice(range[0], range[1] + 1) : history), [history, range]);
 
@@ -52,152 +51,128 @@ export function ModeSelectPage() {
   return (
     <>
       <FloatingThemeToggle />
-      <div style={{ flex: 1, position: "relative", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 24px", background: `${t.modeBg}, ${t.bg}` }}>
-        <div style={{ position: "absolute", top: -180, left: -120, width: 520, height: 520, borderRadius: "50%", background: `radial-gradient(circle, ${t.glowA}, transparent 70%)`, filter: "blur(10px)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", bottom: -220, right: -160, width: 640, height: 640, borderRadius: "50%", background: `radial-gradient(circle, ${t.glowB}, transparent 70%)`, filter: "blur(10px)", pointerEvents: "none" }} />
-        <div style={{ width: "100%", maxWidth: 760, position: "relative" }}>
-          <button onClick={() => navigate("/")} style={{ background: "none", border: "none", padding: 0, color: t.mu, fontSize: 13, marginBottom: 18, font: "inherit" }}>
-            ← All certifications
-          </button>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 24, marginBottom: 36 }}>
-            <div style={{ flex: "1 1 340px" }}>
-              <div style={{ fontSize: 11, letterSpacing: ".14em", textTransform: "uppercase", color: t.fa, fontWeight: 600 }}>
-                {certification.name}
-              </div>
-              {/* backgroundImage e non background: aggiornando la shorthand al cambio di tema React azzererebbe il clip sul testo. */}
-              <h1 style={{
-                fontFamily: "Roboto, 'IBM Plex Sans', sans-serif", fontWeight: 700, fontSize: 46, lineHeight: 1.1,
-                margin: "14px 0 10px", letterSpacing: "-.01em", backgroundImage: t.hero,
-                WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent",
-              }}>
-                {certification.code} Simulator
-              </h1>
-              <p style={{ margin: 0, color: t.mu, fontSize: 16, lineHeight: 1.55, maxWidth: "52ch" }}>
-                Question bank of {certification.questionCount} items. Choose how you want to work: practise at your own pace with solutions
-                available, or sit a timed simulation under exam conditions.
-              </p>
+      <HeroBackdrop>
+        <button onClick={() => navigate("/")} style={{ background: "none", border: "none", padding: 0, color: t.mu, fontSize: 13, marginBottom: 18 }}>
+          ← All certifications
+        </button>
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 24, marginBottom: 36 }}>
+          <div style={{ flex: "1 1 340px" }}>
+            <HeroTitle eyebrow={certification.name}>{certification.code} Simulator</HeroTitle>
+            <p style={{ margin: 0, color: t.mu, fontSize: 16, lineHeight: 1.55, maxWidth: "52ch" }}>
+              Question bank of {certification.questionCount} items. Choose how you want to work: practise at your own pace with solutions
+              available, or sit a timed simulation under exam conditions.
+            </p>
+          </div>
+          <CertificationBadge certificationId={certification.id} alt={certification.name} align="right" />
+        </div>
+
+        <ResumeSessionBanner />
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 18 }}>
+          <button
+            onClick={() => navigate(`/${certification.id}/practice/setup`)}
+            style={{
+              textAlign: "left", background: t.card, border: `1px solid ${t.bd}`, borderRadius: 14,
+              padding: "26px 24px 24px", boxShadow: `0 1px 2px ${t.sh}`, color: "inherit",
+              transition: "box-shadow .18s, border-color .18s, transform .18s",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+              <span style={{ width: 30, height: 30, borderRadius: 8, background: t.acs, color: t.ac, display: "grid", placeItems: "center" }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M4 4a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H7a1 1 0 0 0 0 2h12a1 1 0 1 1 0 2H6a2 2 0 0 1-2-2V4Zm2 0v13.09A2 2 0 0 1 7 17h12V4H6Z" />
+                  <path d="M9 2h4v8l-2-1.4L9 10V2Z" />
+                </svg>
+              </span>
+              <span style={{ fontSize: 19, fontWeight: 600 }}>Practice</span>
             </div>
-            <img
-              src={imageUrl(`${certification.id}/badge.png`)}
-              alt={certification.name}
-              // badge.png nella cartella del dataset e' facoltativo: senza, niente immagine rotta.
-              onError={(e) => {
-                e.currentTarget.style.display = "none";
-              }}
-              // Solo l'altezza: i badge non sono tutti quadrati (TA-004 e' 300x360).
-              height={128}
-              style={{ width: "auto", flexShrink: 0, display: "block" }}
-            />
-          </div>
+            <p style={{ margin: 0, color: t.mu, fontSize: 14, lineHeight: 1.5 }}>
+              Pick how many questions you want and whether to run a clock. Reveal the correct answer and the
+              explanation on any question.
+            </p>
+          </button>
 
-          <ResumeSessionBanner />
+          <button
+            onClick={() => navigate(`/${certification.id}/simulation/setup`)}
+            style={{
+              textAlign: "left", background: t.card, border: `1px solid ${t.bd}`, borderRadius: 14,
+              padding: "26px 24px 24px", boxShadow: `0 1px 2px ${t.sh}`, color: "inherit",
+              transition: "box-shadow .18s, border-color .18s, transform .18s",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+              <span style={{ width: 30, height: 30, borderRadius: 8, background: t.tx, color: t.card, display: "grid", placeItems: "center" }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6Z" />
+                  <path d="M8.8 11.6 6 21l6-3 6 3-2.8-9.4 1.7-1.2-2.9.6-2 1.8-2-1.8-2.9-.6 1.7 1.2Z" />
+                </svg>
+              </span>
+              <span style={{ fontSize: 19, fontWeight: 600 }}>Simulation</span>
+            </div>
+            <p style={{ margin: 0, color: t.mu, fontSize: 14, lineHeight: 1.5 }}>
+              {`${certification.examQuestionCount} questions, ${certification.examTimeLimitMinutes} minutes on the clock, no solutions until you submit.`}
+            </p>
+          </button>
+        </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 18 }}>
-            <button
-              onClick={() => navigate(`/${certification.id}/practice/setup`)}
-              style={{
-                textAlign: "left", background: t.card, border: `1px solid ${t.bd}`, borderRadius: 14,
-                padding: "26px 24px 24px", boxShadow: `0 1px 2px ${t.sh}`, color: "inherit",
-                transition: "box-shadow .18s, border-color .18s, transform .18s", font: "inherit",
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
-                <span style={{ width: 30, height: 30, borderRadius: 8, background: t.acs, color: t.ac, display: "grid", placeItems: "center" }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M4 4a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v15a1 1 0 0 1-1 1H7a1 1 0 0 0 0 2h12a1 1 0 1 1 0 2H6a2 2 0 0 1-2-2V4Zm2 0v13.09A2 2 0 0 1 7 17h12V4H6Z" />
-                    <path d="M9 2h4v8l-2-1.4L9 10V2Z" />
-                  </svg>
-                </span>
-                <span style={{ fontSize: 19, fontWeight: 600 }}>Practice</span>
+        <p style={{ margin: "28px 0 0", fontSize: 12.5, color: t.fa2 }}>
+          Passing score {PASS_MARK_SCORE} out of {MAX_SCORE}. One point per correct component, no deductions for wrong answers.
+        </p>
+
+        {history.length > 0 && (
+          <div style={{ marginTop: 32, background: t.card, border: `1px solid ${t.bd}`, borderRadius: 14, padding: "24px 26px", boxShadow: `0 1px 2px ${t.sh}` }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+              <div style={{ fontSize: 11, letterSpacing: ".1em", textTransform: "uppercase", fontWeight: 600, color: t.fa }}>
+                Your progress
               </div>
-              <p style={{ margin: 0, color: t.mu, fontSize: 14, lineHeight: 1.5 }}>
-                Pick how many questions you want and whether to run a clock. Reveal the correct answer and the
-                explanation on any question.
-              </p>
-            </button>
-
-            <button
-              onClick={() => navigate(`/${certification.id}/simulation/setup`)}
-              style={{
-                textAlign: "left", background: t.card, border: `1px solid ${t.bd}`, borderRadius: 14,
-                padding: "26px 24px 24px", boxShadow: `0 1px 2px ${t.sh}`, color: "inherit",
-                transition: "box-shadow .18s, border-color .18s, transform .18s", font: "inherit",
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
-                <span style={{ width: 30, height: 30, borderRadius: 8, background: t.tx, color: t.card, display: "grid", placeItems: "center" }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6Z" />
-                    <path d="M8.8 11.6 6 21l6-3 6 3-2.8-9.4 1.7-1.2-2.9.6-2 1.8-2-1.8-2.9-.6 1.7 1.2Z" />
-                  </svg>
+              <button
+                onClick={() => navigate(`/${certification.id}/history`)}
+                style={{
+                  marginLeft: "auto", padding: "7px 13px", borderRadius: 999, border: `1px solid ${t.bd3}`,
+                  background: t.card, color: t.tx2, fontSize: 13, fontWeight: 600,
+                }}
+              >
+                View history ({history.length})
+              </button>
+            </div>
+            {range && (
+              <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", margin: "-4px 0 14px", fontSize: 12.5, color: t.mu }}>
+                <span>
+                  Sessions {range[0] + 1}–{range[1] + 1} of {history.length} · {formatDateShort(shown[0].endTime)} –{" "}
+                  {formatDateShort(shown[shown.length - 1].endTime)}
                 </span>
-                <span style={{ fontSize: 19, fontWeight: 600 }}>Simulation</span>
-              </div>
-              <p style={{ margin: 0, color: t.mu, fontSize: 14, lineHeight: 1.5 }}>
-                {`${certification.examQuestionCount} questions, ${certification.examTimeLimitMinutes} minutes on the clock, no solutions until you submit.`}
-              </p>
-            </button>
-          </div>
-
-          <p style={{ margin: "28px 0 0", fontSize: 12.5, color: t.fa2 }}>
-            Passing score {PASS_MARK_SCORE} out of {MAX_SCORE}. One point per correct component, no deductions for wrong answers.
-          </p>
-
-          {history.length > 0 && (
-            <div style={{ marginTop: 32, background: t.card, border: `1px solid ${t.bd}`, borderRadius: 14, padding: "24px 26px", boxShadow: `0 1px 2px ${t.sh}` }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-                <div style={{ fontSize: 11, letterSpacing: ".1em", textTransform: "uppercase", fontWeight: 600, color: t.fa }}>
-                  Your progress
-                </div>
                 <button
-                  onClick={() => navigate(`/${certification.id}/history`)}
-                  style={{
-                    marginLeft: "auto", padding: "7px 13px", borderRadius: 999, border: `1px solid ${t.bd3}`,
-                    background: t.card, color: t.tx2, font: "inherit", fontSize: 13, fontWeight: 600,
-                  }}
+                  onClick={() => setRange(null)}
+                  style={{ background: "none", border: "none", padding: 0, color: t.ac, fontSize: 12.5, fontWeight: 600 }}
                 >
-                  View history ({history.length})
+                  Reset zoom
                 </button>
               </div>
-              {range && (
-                <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", margin: "-4px 0 14px", fontSize: 12.5, color: t.mu }}>
-                  <span>
-                    Sessions {range[0] + 1}–{range[1] + 1} of {history.length} · {formatDateShort(shown[0].endTime)} –{" "}
-                    {formatDateShort(shown[shown.length - 1].endTime)}
-                  </span>
-                  <button
-                    onClick={() => setRange(null)}
-                    style={{ background: "none", border: "none", padding: 0, color: t.ac, font: "inherit", fontSize: 12.5, fontWeight: 600 }}
-                  >
-                    Reset zoom
-                  </button>
-                </div>
-              )}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(118px, 1fr))", gap: 14, marginBottom: 10 }}>
-                {/* Senza Simulation nel periodo il trattino e' neutro: rosso o verde sembrerebbe un valore. */}
-                <StatTile label="Worst Simulation score" value={stats ? String(stats.worst) : "—"} color={stats ? t.er : t.fa} />
-                <StatTile label="Best Simulation score" value={stats ? String(stats.best) : "—"} color={stats ? t.ok : t.fa} />
-                <StatTile
-                  label={recentCount === 1 ? "Last Simulation" : `Last ${recentCount} Simulations average`}
-                  title={recentCount === 1 ? "Score of the only Simulation in this period" : `Average of the last ${recentCount} Simulations`}
-                  value={stats ? String(stats.recent) : "—"}
-                  color={!stats ? t.fa : stats.recent >= PASS_MARK_SCORE ? t.ok : t.er}
-                />
-                <StatTile
-                  label="Passed in a row"
-                  title={`Consecutive Simulations at or above ${PASS_MARK_SCORE}, up to the latest`}
-                  value={stats ? String(stats.streak) : "—"}
-                  color={!stats ? t.fa : stats.streak ? t.ok : t.mu}
-                />
-              </div>
-              <div style={{ fontSize: 11.5, color: t.fa, marginBottom: 22 }}>
-                {stats ? "Simulation sessions only · the chart shows every session" : "No Simulation in this period · the chart shows every session"}
-              </div>
-              <ProgressChart attempts={history} range={range} onRangeChange={setRange} />
+            )}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(118px, 1fr))", gap: 14, marginBottom: 10 }}>
+              {/* Senza Simulation nel periodo il trattino e' neutro: rosso o verde sembrerebbe un valore. */}
+              <StatTile label="Worst Simulation score" value={stats ? String(stats.worst) : "—"} color={stats ? t.er : t.fa} />
+              <StatTile label="Best Simulation score" value={stats ? String(stats.best) : "—"} color={stats ? t.ok : t.fa} />
+              <StatTile
+                label={recentCount === 1 ? "Last Simulation" : `Last ${recentCount} Simulations average`}
+                title={recentCount === 1 ? "Score of the only Simulation in this period" : `Average of the last ${recentCount} Simulations`}
+                value={stats ? String(stats.recent) : "—"}
+                color={!stats ? t.fa : stats.recent >= PASS_MARK_SCORE ? t.ok : t.er}
+              />
+              <StatTile
+                label="Passed in a row"
+                title={`Consecutive Simulations at or above ${PASS_MARK_SCORE}, up to the latest`}
+                value={stats ? String(stats.streak) : "—"}
+                color={!stats ? t.fa : stats.streak ? t.ok : t.mu}
+              />
             </div>
-          )}
-        </div>
-      </div>
+            <div style={{ fontSize: 11.5, color: t.fa, marginBottom: 22 }}>
+              {stats ? "Simulation sessions only · the chart shows every session" : "No Simulation in this period · the chart shows every session"}
+            </div>
+            <ProgressChart attempts={history} range={range} onRangeChange={setRange} />
+          </div>
+        )}
+      </HeroBackdrop>
     </>
   );
 }

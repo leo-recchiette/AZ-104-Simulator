@@ -14,8 +14,7 @@ export function getAnswerShape(question: QuestionDto): AnswerShape {
 /** Le domande a righe contano come risposte solo con tutte le righe valorizzate. */
 export function isQuestionAnswered(question: QuestionDto, value: string[]): boolean {
   const shape = getAnswerShape(question);
-  if (shape === "options") return value.length > 0;
-  if (shape === "draggable") return value.length > 0;
+  if (shape !== "prompts") return value.length > 0;
   return value.filter(Boolean).length === question.prompts.length;
 }
 
@@ -117,5 +116,5 @@ export function correctLineOutcomes(
   }
   const grades =
     shape === "draggable" && question.unorderedAnswer ? gradeUnordered(submitted, correct.answerRows) : gradeRows(submitted, correct.answerRows);
-  return grades.length === lines.length ? grades.map((g) => g.isCorrect) : null;
+  return grades.length === lines.length ? grades : null;
 }
